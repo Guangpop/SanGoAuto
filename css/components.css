@@ -343,6 +343,288 @@
     gap: var(--space-4);
 }
 
+/* Cities and Generals Display */
+.cities-overview,
+.generals-overview {
+    margin-bottom: var(--space-6);
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: var(--space-4);
+    box-shadow: 0 2px 4px var(--shadow);
+}
+
+.cities-overview h4,
+.generals-overview h4 {
+    color: var(--primary-color);
+    margin-bottom: var(--space-3);
+    font-size: var(--font-size-lg);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: var(--space-2);
+}
+
+.cities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+}
+
+.city-card {
+    background: var(--surface-alt);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--space-3);
+    transition: var(--transition);
+}
+
+.city-card.player-controlled {
+    border-color: var(--secondary-color);
+    background: rgba(218, 165, 32, 0.1);
+}
+
+.city-card h5 {
+    color: var(--primary-color);
+    margin-bottom: var(--space-2);
+    font-size: var(--font-size-base);
+}
+
+.city-stats {
+    margin-bottom: var(--space-2);
+}
+
+.city-stat {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-1);
+    font-size: var(--font-size-sm);
+}
+
+.stat-label {
+    color: var(--text-secondary);
+}
+
+.stat-value {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.city-garrison {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    border-top: 1px solid var(--border);
+    padding-top: var(--space-1);
+}
+
+.enemy-cities-summary {
+    background: rgba(220, 20, 60, 0.1);
+    border: 1px solid rgba(220, 20, 60, 0.3);
+    border-radius: var(--radius-sm);
+    padding: var(--space-3);
+}
+
+.enemy-cities-summary h5 {
+    color: var(--accent-color);
+    margin-bottom: var(--space-2);
+    font-size: var(--font-size-base);
+}
+
+.enemy-city-item {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-1) 0;
+    border-bottom: 1px solid rgba(220, 20, 60, 0.2);
+    font-size: var(--font-size-sm);
+}
+
+.enemy-city-item:last-child {
+    border-bottom: none;
+}
+
+.enemy-city-item.adjacent {
+    background: rgba(220, 20, 60, 0.2);
+    border-color: var(--accent-color);
+}
+
+.enemy-city-item.adjacent .city-name {
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+.city-name {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.city-faction {
+    color: var(--text-secondary);
+}
+
+/* Equipment Unlock Display */
+.equipment-unlock {
+    background: rgba(139, 69, 19, 0.1);
+    border: 1px solid var(--primary-color);
+    border-radius: var(--radius-sm);
+    padding: var(--space-2);
+    margin-top: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--primary-color);
+    text-align: center;
+}
+
+/* Generals Grid */
+.generals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-3);
+}
+
+.general-card {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--space-3);
+    transition: var(--transition);
+}
+
+.general-card:hover {
+    box-shadow: 0 4px 8px var(--shadow);
+    transform: translateY(-2px);
+}
+
+.general-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-2);
+}
+
+.general-header h5 {
+    color: var(--primary-color);
+    margin: 0;
+    font-size: var(--font-size-base);
+}
+
+.general-level {
+    background: var(--secondary-color);
+    color: var(--text-light);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: bold;
+}
+
+.general-attributes {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--space-1);
+    margin-bottom: var(--space-2);
+}
+
+.attr-mini {
+    background: var(--surface);
+    text-align: center;
+    padding: var(--space-1);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+}
+
+.general-troops {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    text-align: center;
+    padding: var(--space-1);
+    background: rgba(139, 69, 19, 0.1);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-1);
+}
+
+.general-status {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    text-align: center;
+    padding: var(--space-1);
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: var(--radius-sm);
+}
+
+.city-connections {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    border-top: 1px solid var(--border);
+    padding-top: var(--space-1);
+    margin-top: var(--space-1);
+}
+
+/* Game Statistics Display */
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-3);
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-2);
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+}
+
+.stat-item .stat-label {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.stat-item .stat-value {
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: var(--font-size-base);
+}
+
+/* Responsive Design for New Components */
+@media (max-width: 768px) {
+    .cities-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .generals-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .general-attributes {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-1);
+    }
+
+    .stats-container {
+        grid-template-columns: 1fr;
+    }
+
+    .enemy-cities-summary {
+        margin-top: var(--space-3);
+    }
+}
+
+@media (max-width: 480px) {
+    .cities-overview,
+    .generals-overview {
+        padding: var(--space-2);
+    }
+
+    .city-card,
+    .general-card {
+        padding: var(--space-2);
+    }
+
+    .general-attributes {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 /* Utility Classes */
 .text-center {
     text-align: center;

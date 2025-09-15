@@ -1,0 +1,207 @@
+[
+  {
+    "id": "cao_cao",
+    "name": "曹操",
+    "faction": "wei",
+    "attributes": {
+      "strength": 72,
+      "intelligence": 96,
+      "leadership": 98,
+      "politics": 95,
+      "charisma": 85,
+      "destiny": 90
+    },
+    "level": 8,
+    "equipment": {
+      "weapon": null,
+      "armor": null,
+      "accessory": null,
+      "mount": null
+    },
+    "troops": 2000,
+    "maxTroops": 3000,
+    "status": "enemy",
+    "biography": "魏武帝，三國時期政治家、軍事家、文學家。挾天子以令諸侯，統一北方。",
+    "portrait": "cao_cao.jpg"
+  },
+  {
+    "id": "liu_bei",
+    "name": "劉備",
+    "faction": "shu",
+    "attributes": {
+      "strength": 68,
+      "intelligence": 75,
+      "leadership": 88,
+      "politics": 82,
+      "charisma": 95,
+      "destiny": 85
+    },
+    "level": 7,
+    "equipment": {},
+    "troops": 1500,
+    "maxTroops": 2500,
+    "status": "neutral",
+    "biography": "蜀漢昭烈帝，漢室宗親。以仁德著稱，桃園三結義，創立蜀漢政權。",
+    "portrait": "liu_bei.jpg"
+  },
+  {
+    "id": "sun_quan",
+    "name": "孫權",
+    "faction": "wu",
+    "attributes": {
+      "strength": 65,
+      "intelligence": 85,
+      "leadership": 90,
+      "politics": 88,
+      "charisma": 82,
+      "destiny": 80
+    },
+    "level": 7,
+    "equipment": {},
+    "troops": 1800,
+    "maxTroops": 2800,
+    "status": "enemy",
+    "biography": "東吳大帝，繼承父兄基業，稱霸江東。善於用人，建立水師強國。",
+    "portrait": "sun_quan.jpg"
+  },
+  {
+    "id": "guan_yu",
+    "name": "關羽",
+    "faction": "shu",
+    "attributes": {
+      "strength": 98,
+      "intelligence": 78,
+      "leadership": 85,
+      "politics": 65,
+      "charisma": 88,
+      "destiny": 70
+    },
+    "level": 6,
+    "equipment": {},
+    "troops": 1200,
+    "maxTroops": 2000,
+    "status": "neutral",
+    "biography": "武聖關公，劉備義弟。忠義雙全，勇冠三軍，溫酒斬華雄，過五關斬六將。",
+    "portrait": "guan_yu.jpg"
+  },
+  {
+    "id": "zhang_fei",
+    "name": "張飛",
+    "faction": "shu",
+    "attributes": {
+      "strength": 95,
+      "intelligence": 45,
+      "leadership": 75,
+      "politics": 30,
+      "charisma": 65,
+      "destiny": 60
+    },
+    "level": 5,
+    "equipment": {},
+    "troops": 1000,
+    "maxTroops": 1800,
+    "status": "neutral",
+    "biography": "燕人張翼德，劉備義弟。性如烈火，勇猛無匹，長坂橋上喝退曹軍。",
+    "portrait": "zhang_fei.jpg"
+  },
+  {
+    "id": "zhao_yun",
+    "name": "趙雲",
+    "faction": "shu",
+    "attributes": {
+      "strength": 92,
+      "intelligence": 80,
+      "leadership": 85,
+      "politics": 70,
+      "charisma": 85,
+      "destiny": 75
+    },
+    "level": 6,
+    "equipment": {},
+    "troops": 1100,
+    "maxTroops": 2000,
+    "status": "neutral",
+    "biography": "常山趙子龍，劉備心腹大將。忠勇雙全，長坂坡七進七出救阿斗。",
+    "portrait": "zhao_yun.jpg"
+  },
+  {
+    "id": "zhou_yu",
+    "name": "周瑜",
+    "faction": "wu",
+    "attributes": {
+      "strength": 78,
+      "intelligence": 95,
+      "leadership": 88,
+      "politics": 85,
+      "charisma": 90,
+      "destiny": 65
+    },
+    "level": 6,
+    "equipment": {},
+    "troops": 1400,
+    "maxTroops": 2200,
+    "status": "enemy",
+    "biography": "東吳都督，美周郎。才華橫溢，精通音律兵法，赤壁之戰大破曹軍。",
+    "portrait": "zhou_yu.jpg"
+  },
+  {
+    "id": "xu_chu",
+    "name": "許褚",
+    "faction": "wei",
+    "attributes": {
+      "strength": 96,
+      "intelligence": 55,
+      "leadership": 70,
+      "politics": 40,
+      "charisma": 60,
+      "destiny": 55
+    },
+    "level": 4,
+    "equipment": {},
+    "troops": 800,
+    "maxTroops": 1500,
+    "status": "enemy",
+    "biography": "魏國猛將，曹操貼身護衛。力大無窮，忠心耿耿，有虎痴之稱。",
+    "portrait": "xu_chu.jpg"
+  },
+  {
+    "id": "ma_chao",
+    "name": "馬超",
+    "faction": "other",
+    "attributes": {
+      "strength": 94,
+      "intelligence": 70,
+      "leadership": 82,
+      "politics": 55,
+      "charisma": 80,
+      "destiny": 65
+    },
+    "level": 5,
+    "equipment": {},
+    "troops": 1000,
+    "maxTroops": 1800,
+    "status": "neutral",
+    "biography": "西涼錦馬超，馬騰之子。驍勇善戰，後歸順劉備，封五虎上將。",
+    "portrait": "ma_chao.jpg"
+  },
+  {
+    "id": "dong_zhuo",
+    "name": "董卓",
+    "faction": "other",
+    "attributes": {
+      "strength": 75,
+      "intelligence": 65,
+      "leadership": 78,
+      "politics": 25,
+      "charisma": 15,
+      "destiny": 30
+    },
+    "level": 6,
+    "equipment": {},
+    "troops": 1500,
+    "maxTroops": 2500,
+    "status": "enemy",
+    "biography": "東漢末年權臣，挾持漢帝，專橫跋扈，最終被呂布所殺。",
+    "portrait": "dong_zhuo.jpg"
+  }
+]

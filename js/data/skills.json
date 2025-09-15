@@ -1,0 +1,507 @@
+[
+  {
+    "id": "fire_attack",
+    "name": "火攻",
+    "description": "運用火攻戰術，對敵軍造成巨大傷害",
+    "type": "combat",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "combat_bonus",
+        "target": "damage",
+        "value": 25,
+        "duration": "battle",
+        "description": "戰鬥時額外造成25%傷害"
+      }
+    ],
+    "trigger": {
+      "condition": "battle",
+      "probability": 70
+    },
+    "icon": "🔥"
+  },
+  {
+    "id": "heaven_chosen",
+    "name": "天選之人",
+    "description": "受天命眷顧，全方位能力提升",
+    "type": "special",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "attribute_bonus",
+        "target": "all_attributes",
+        "value": 2,
+        "duration": "permanent",
+        "description": "所有能力值+2"
+      },
+      {
+        "type": "attribute_bonus",
+        "target": "destiny",
+        "value": 10,
+        "duration": "permanent",
+        "description": "天命+10"
+      }
+    ],
+    "trigger": {
+      "condition": "always"
+    },
+    "icon": "⭐"
+  },
+  {
+    "id": "defensive_stance",
+    "name": "堅守不出",
+    "description": "採取防守策略，大幅減少受到的傷害",
+    "type": "combat",
+    "starCost": 1,
+    "effects": [
+      {
+        "type": "combat_bonus",
+        "target": "defense",
+        "value": 50,
+        "duration": "defense",
+        "description": "防守戰時傷害減半"
+      }
+    ],
+    "trigger": {
+      "condition": "defense",
+      "probability": 80
+    },
+    "icon": "🛡️"
+  },
+  {
+    "id": "brilliant_strategy",
+    "name": "妙計連環",
+    "description": "智謀過人，能夠施展精妙戰術",
+    "type": "combat",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "attribute_bonus",
+        "target": "intelligence",
+        "value": 5,
+        "duration": "permanent",
+        "description": "智力+5"
+      },
+      {
+        "type": "combat_bonus",
+        "target": "skill_success",
+        "value": 20,
+        "duration": "battle",
+        "description": "技能成功率+20%"
+      }
+    ],
+    "trigger": {
+      "condition": "battle",
+      "probability": 60
+    },
+    "icon": "🧠"
+  },
+  {
+    "id": "wealthy_merchant",
+    "name": "富商之道",
+    "description": "精通商道，增加金錢收入",
+    "type": "economic",
+    "starCost": 1,
+    "effects": [
+      {
+        "type": "special",
+        "target": "gold_production",
+        "value": 50,
+        "duration": "permanent",
+        "description": "金錢產出+50%"
+      }
+    ],
+    "trigger": {
+      "condition": "always"
+    },
+    "icon": "💰"
+  },
+  {
+    "id": "iron_will",
+    "name": "鐵血意志",
+    "description": "意志堅定，提升統御力和抗性",
+    "type": "passive",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "attribute_bonus",
+        "target": "leadership",
+        "value": 8,
+        "duration": "permanent",
+        "description": "統治+8"
+      },
+      {
+        "type": "combat_bonus",
+        "target": "damage_resistance",
+        "value": 20,
+        "duration": "permanent",
+        "description": "受到傷害-20%"
+      }
+    ],
+    "trigger": {
+      "condition": "always"
+    },
+    "icon": "⚔️"
+  },
+  {
+    "id": "silver_tongue",
+    "name": "能言善辯",
+    "description": "口才出眾，更容易招降敵將",
+    "type": "passive",
+    "starCost": 1,
+    "effects": [
+      {
+        "type": "attribute_bonus",
+        "target": "charisma",
+        "value": 6,
+        "duration": "permanent",
+        "description": "魅力+6"
+      },
+      {
+        "type": "special",
+        "target": "recruitment_bonus",
+        "value": 30,
+        "duration": "permanent",
+        "description": "將領投降率+30%"
+      }
+    ],
+    "trigger": {
+      "condition": "always"
+    },
+    "icon": "🗣️"
+  },
+  {
+    "id": "divine_weapon",
+    "name": "神兵天降",
+    "description": "獲得傳說級武器的機會大增",
+    "type": "special",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "special",
+        "target": "legendary_drop_rate",
+        "value": 200,
+        "duration": "permanent",
+        "description": "傳說裝備掉落率+200%"
+      }
+    ],
+    "trigger": {
+      "condition": "always"
+    },
+    "icon": "⚡"
+  },
+  {
+    "id": "rapid_march",
+    "name": "神行千里",
+    "description": "行軍速度提升，攻城時常能搶得先機",
+    "type": "combat",
+    "starCost": 1,
+    "effects": [
+      {
+        "type": "combat_bonus",
+        "target": "first_strike",
+        "value": 40,
+        "duration": "battle",
+        "description": "40%機率獲得先手攻擊"
+      }
+    ],
+    "trigger": {
+      "condition": "battle",
+      "probability": 40
+    },
+    "icon": "💨"
+  },
+  {
+    "id": "loyal_followers",
+    "name": "忠心護主",
+    "description": "獲得忠誠部下，增加兵力上限",
+    "type": "passive",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "max_troops",
+        "value": 500,
+        "duration": "permanent",
+        "description": "兵力上限+500"
+      },
+      {
+        "type": "attribute_bonus",
+        "target": "leadership",
+        "value": 3,
+        "duration": "permanent",
+        "description": "統治+3"
+      }
+    ],
+    "trigger": {
+      "condition": "always"
+    },
+    "icon": "👥"
+  },
+  {
+    "id": "master_politician",
+    "name": "治國安邦",
+    "description": "政治手腕高超，城池管理更有效率",
+    "type": "economic",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "attribute_bonus",
+        "target": "politics",
+        "value": 7,
+        "duration": "permanent",
+        "description": "政治+7"
+      },
+      {
+        "type": "special",
+        "target": "city_production",
+        "value": 30,
+        "duration": "permanent",
+        "description": "所有城池產出+30%"
+      }
+    ],
+    "trigger": {
+      "condition": "always"
+    },
+    "icon": "🏛️"
+  },
+  {
+    "id": "berserker_rage",
+    "name": "狂戰之怒",
+    "description": "戰鬥中有機會進入狂暴狀態",
+    "type": "combat",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "combat_bonus",
+        "target": "damage",
+        "value": 100,
+        "duration": "battle",
+        "description": "15%機率造成雙倍傷害"
+      },
+      {
+        "type": "attribute_bonus",
+        "target": "strength",
+        "value": 4,
+        "duration": "permanent",
+        "description": "武力+4"
+      }
+    ],
+    "trigger": {
+      "condition": "battle",
+      "probability": 15
+    },
+    "icon": "😤"
+  },
+  {
+    "id": "scholar_wisdom",
+    "name": "博學多才",
+    "description": "飽讀詩書，智力大幅提升",
+    "type": "passive",
+    "starCost": 1,
+    "effects": [
+      {
+        "type": "attribute_bonus",
+        "target": "intelligence",
+        "value": 10,
+        "duration": "permanent",
+        "description": "智力+10"
+      }
+    ],
+    "trigger": {
+      "condition": "always"
+    },
+    "icon": "📚"
+  },
+  {
+    "id": "lucky_star",
+    "name": "福星高照",
+    "description": "運氣極佳，好事連連",
+    "type": "special",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "attribute_bonus",
+        "target": "destiny",
+        "value": 15,
+        "duration": "permanent",
+        "description": "天命+15"
+      },
+      {
+        "type": "special",
+        "target": "positive_event_rate",
+        "value": 50,
+        "duration": "permanent",
+        "description": "正面事件機率+50%"
+      }
+    ],
+    "trigger": {
+      "condition": "always"
+    },
+    "icon": "🍀"
+  },
+  {
+    "id": "master_craftsman",
+    "name": "能工巧匠",
+    "description": "手藝精湛，裝備品質提升",
+    "type": "economic",
+    "starCost": 1,
+    "effects": [
+      {
+        "type": "special",
+        "target": "equipment_quality",
+        "value": 25,
+        "duration": "permanent",
+        "description": "裝備品質提升25%"
+      }
+    ],
+    "trigger": {
+      "condition": "always"
+    },
+    "icon": "🔨"
+  },
+  {
+    "id": "network_spy",
+    "name": "間諜網絡",
+    "description": "情報網絡發達，戰前能獲得敵情",
+    "type": "combat",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "combat_bonus",
+        "target": "pre_battle_info",
+        "value": 100,
+        "duration": "battle",
+        "description": "戰前必定獲得敵軍情報"
+      },
+      {
+        "type": "combat_bonus",
+        "target": "accuracy",
+        "value": 20,
+        "duration": "battle",
+        "description": "攻擊命中率+20%"
+      }
+    ],
+    "trigger": {
+      "condition": "battle",
+      "probability": 100
+    },
+    "icon": "🕵️"
+  },
+  {
+    "id": "dragon_bloodline",
+    "name": "真龍血脈",
+    "description": "擁有帝王血統，天生領袖氣質",
+    "type": "special",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "attribute_bonus",
+        "target": "charisma",
+        "value": 5,
+        "duration": "permanent",
+        "description": "魅力+5"
+      },
+      {
+        "type": "attribute_bonus",
+        "target": "leadership",
+        "value": 5,
+        "duration": "permanent",
+        "description": "統治+5"
+      },
+      {
+        "type": "special",
+        "target": "general_loyalty",
+        "value": 30,
+        "duration": "permanent",
+        "description": "將領忠誠度+30%"
+      }
+    ],
+    "trigger": {
+      "condition": "always"
+    },
+    "icon": "🐉"
+  },
+  {
+    "id": "beast_tamer",
+    "name": "馴獸大師",
+    "description": "善於馴養戰獸，增強軍隊戰力",
+    "type": "combat",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "cavalry_bonus",
+        "value": 40,
+        "duration": "permanent",
+        "description": "騎兵戰力+40%"
+      },
+      {
+        "type": "special",
+        "target": "mount_drop_rate",
+        "value": 100,
+        "duration": "permanent",
+        "description": "坐騎掉落率+100%"
+      }
+    ],
+    "trigger": {
+      "condition": "always"
+    },
+    "icon": "🐎"
+  },
+  {
+    "id": "medical_knowledge",
+    "name": "岐黃之術",
+    "description": "精通醫術，能治療傷兵",
+    "type": "passive",
+    "starCost": 1,
+    "effects": [
+      {
+        "type": "special",
+        "target": "troop_recovery",
+        "value": 20,
+        "duration": "permanent",
+        "description": "戰後兵力恢復20%"
+      },
+      {
+        "type": "attribute_bonus",
+        "target": "intelligence",
+        "value": 3,
+        "duration": "permanent",
+        "description": "智力+3"
+      }
+    ],
+    "trigger": {
+      "condition": "always"
+    },
+    "icon": "💊"
+  },
+  {
+    "id": "iron_fortress",
+    "name": "銅牆鐵壁",
+    "description": "築城技術高超，城池防禦力大增",
+    "type": "passive",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "city_defense",
+        "value": 50,
+        "duration": "permanent",
+        "description": "所有城池防禦+50%"
+      },
+      {
+        "type": "combat_bonus",
+        "target": "siege_defense",
+        "value": 30,
+        "duration": "defense",
+        "description": "守城戰傷害減少30%"
+      }
+    ],
+    "trigger": {
+      "condition": "defense",
+      "probability": 80
+    },
+    "icon": "🏰"
+  }
+]

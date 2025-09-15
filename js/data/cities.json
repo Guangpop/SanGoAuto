@@ -1,0 +1,92 @@
+[
+  {
+    "id": "luoyang",
+    "name": "洛陽",
+    "faction": "other",
+    "garrison": ["dong_zhuo"],
+    "connections": ["xuchang", "changan"],
+    "goldProduction": 200,
+    "troopProduction": 150,
+    "defenseValue": 300,
+    "position": {
+      "x": 400,
+      "y": 250
+    },
+    "description": "東漢帝都，政治中心，兵家必爭之地"
+  },
+  {
+    "id": "xuchang",
+    "name": "許昌",
+    "faction": "wei",
+    "garrison": ["cao_cao", "xu_chu"],
+    "connections": ["luoyang", "jiangxia"],
+    "goldProduction": 180,
+    "troopProduction": 200,
+    "defenseValue": 280,
+    "position": {
+      "x": 420,
+      "y": 320
+    },
+    "description": "曹魏重鎮，北方雄城，人才薈萃"
+  },
+  {
+    "id": "jiangxia",
+    "name": "江夏",
+    "faction": "shu",
+    "garrison": ["liu_bei", "guan_yu"],
+    "connections": ["xuchang", "jianye", "chengdu"],
+    "goldProduction": 150,
+    "troopProduction": 120,
+    "defenseValue": 200,
+    "position": {
+      "x": 450,
+      "y": 400
+    },
+    "description": "長江要衝，水陸交通樞紐"
+  },
+  {
+    "id": "jianye",
+    "name": "建業",
+    "faction": "wu",
+    "garrison": ["sun_quan", "zhou_yu"],
+    "connections": ["jiangxia", "chengdu"],
+    "goldProduction": 220,
+    "troopProduction": 160,
+    "defenseValue": 250,
+    "position": {
+      "x": 520,
+      "y": 450
+    },
+    "description": "東吳都城，江東富庶之地，水師強盛"
+  },
+  {
+    "id": "chengdu",
+    "name": "成都",
+    "faction": "shu",
+    "garrison": ["zhang_fei", "zhao_yun"],
+    "connections": ["jiangxia", "jianye", "changan"],
+    "goldProduction": 170,
+    "troopProduction": 140,
+    "defenseValue": 320,
+    "position": {
+      "x": 300,
+      "y": 480
+    },
+    "description": "蜀漢根據地，天府之國，易守難攻"
+  },
+  {
+    "id": "changan",
+    "name": "長安",
+    "faction": "other",
+    "garrison": ["ma_chao"],
+    "connections": ["luoyang", "chengdu"],
+    "goldProduction": 190,
+    "troopProduction": 130,
+    "defenseValue": 290,
+    "position": {
+      "x": 320,
+      "y": 300
+    },
+    "description": "西北重鎮，古都長安，關中要地"
+  }
+]

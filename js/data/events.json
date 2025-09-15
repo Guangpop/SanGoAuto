@@ -1,0 +1,443 @@
+[
+  {
+    "id": "divine_weapon_descends",
+    "name": "天降神兵",
+    "type": "positive",
+    "description": "天空中忽然雷鳴閃電，一把神兵從天而降！",
+    "baseProbability": 3,
+    "destinyModifier": 15,
+    "requirements": [
+      {
+        "type": "level",
+        "operator": ">=",
+        "value": 3
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "get_legendary_weapon",
+        "name": "獲得傳說武器",
+        "description": "你獲得了一把傳說級武器！",
+        "probability": 100,
+        "effects": [
+          {
+            "type": "gain_equipment",
+            "target": "legendary_weapon",
+            "description": "獲得隨機傳說武器"
+          }
+        ]
+      }
+    ],
+    "isChoice": false
+  },
+  {
+    "id": "wise_hermit_visit",
+    "name": "賢才投奔",
+    "type": "positive",
+    "description": "有隱士聽聞你的名聲，前來投奔",
+    "baseProbability": 8,
+    "destinyModifier": 10,
+    "requirements": [
+      {
+        "type": "attribute",
+        "target": "charisma",
+        "operator": ">=",
+        "value": 15
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "recruit_hermit",
+        "name": "接納隱士",
+        "description": "隱士加入你的陣營，並帶來寶貴的智慧",
+        "probability": 100,
+        "effects": [
+          {
+            "type": "gain_general",
+            "description": "獲得高智力將領"
+          },
+          {
+            "type": "attribute_change",
+            "target": "intelligence",
+            "value": 2,
+            "description": "智力+2"
+          }
+        ]
+      }
+    ],
+    "isChoice": false
+  },
+  {
+    "id": "yellow_turban_rebellion",
+    "name": "黃巾起義",
+    "type": "negative",
+    "description": "黃巾軍在你的領土內發動起義，威脅城池安全",
+    "baseProbability": 12,
+    "destinyModifier": -5,
+    "requirements": [
+      {
+        "type": "city_count",
+        "operator": ">=",
+        "value": 2
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "suppress_rebellion",
+        "name": "鎮壓起義",
+        "description": "你成功鎮壓了起義，但損失了部分兵力",
+        "probability": 70,
+        "effects": [
+          {
+            "type": "lose_troops",
+            "value": 200,
+            "description": "損失200兵力"
+          },
+          {
+            "type": "attribute_change",
+            "target": "politics",
+            "value": 1,
+            "description": "政治+1（治理經驗）"
+          }
+        ]
+      },
+      {
+        "id": "rebellion_spreads",
+        "name": "起義蔓延",
+        "description": "起義蔓延，你失去了一座城池",
+        "probability": 30,
+        "effects": [
+          {
+            "type": "lose_city",
+            "description": "失去一座隨機城池"
+          }
+        ]
+      }
+    ],
+    "isChoice": false
+  },
+  {
+    "id": "merchant_caravan",
+    "name": "商隊來訪",
+    "type": "choice",
+    "description": "一支富有的商隊路過你的領地，提出了交易請求",
+    "baseProbability": 15,
+    "destinyModifier": 5,
+    "outcomes": [
+      {
+        "id": "trade_gold_for_equipment",
+        "name": "用金錢購買裝備",
+        "description": "花費500金錢購買優質裝備",
+        "probability": 100,
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": -500,
+            "description": "支付500金錢"
+          },
+          {
+            "type": "gain_equipment",
+            "target": "rare_equipment",
+            "description": "獲得稀有裝備"
+          }
+        ]
+      },
+      {
+        "id": "tax_caravan",
+        "name": "徵收過路稅",
+        "description": "向商隊徵收過路稅",
+        "probability": 100,
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": 300,
+            "description": "獲得300金錢"
+          },
+          {
+            "type": "attribute_change",
+            "target": "charisma",
+            "value": -1,
+            "description": "魅力-1（名聲受損）"
+          }
+        ]
+      },
+      {
+        "id": "let_pass_freely",
+        "name": "免費放行",
+        "description": "讓商隊自由通過",
+        "probability": 100,
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "charisma",
+            "value": 2,
+            "description": "魅力+2（仁德之名）"
+          }
+        ]
+      }
+    ],
+    "isChoice": true
+  },
+  {
+    "id": "natural_disaster",
+    "name": "天災橫行",
+    "type": "negative",
+    "description": "你的領地遭受了嚴重的自然災害",
+    "baseProbability": 10,
+    "destinyModifier": -8,
+    "outcomes": [
+      {
+        "id": "disaster_recovery",
+        "name": "災後重建",
+        "description": "災害造成了損失，但人民團結一心重建家園",
+        "probability": 100,
+        "effects": [
+          {
+            "type": "lose_troops",
+            "value": 150,
+            "description": "損失150兵力"
+          },
+          {
+            "type": "gain_gold",
+            "value": -200,
+            "description": "損失200金錢用於重建"
+          },
+          {
+            "type": "attribute_change",
+            "target": "politics",
+            "value": 2,
+            "description": "政治+2（災難管理經驗）"
+          }
+        ]
+      }
+    ],
+    "isChoice": false
+  },
+  {
+    "id": "enemy_invasion",
+    "name": "敵軍來襲",
+    "type": "negative",
+    "description": "敵對勢力突然進攻你的邊境城池！",
+    "baseProbability": 15,
+    "destinyModifier": -3,
+    "requirements": [
+      {
+        "type": "city_count",
+        "operator": ">=",
+        "value": 2
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "successful_defense",
+        "name": "成功守城",
+        "description": "你成功擊退了敵軍，還俘虜了一些士兵",
+        "probability": 60,
+        "effects": [
+          {
+            "type": "lose_troops",
+            "value": 100,
+            "description": "損失100兵力"
+          },
+          {
+            "type": "attribute_change",
+            "target": "strength",
+            "value": 1,
+            "description": "武力+1（實戰經驗）"
+          },
+          {
+            "type": "gain_gold",
+            "value": 150,
+            "description": "戰利品+150金錢"
+          }
+        ]
+      },
+      {
+        "id": "failed_defense",
+        "name": "守城失敗",
+        "description": "敵軍攻破了城池，你損失慘重",
+        "probability": 40,
+        "effects": [
+          {
+            "type": "lose_city",
+            "description": "失去被攻擊的城池"
+          },
+          {
+            "type": "lose_troops",
+            "value": 300,
+            "description": "損失300兵力"
+          }
+        ]
+      }
+    ],
+    "isChoice": false
+  },
+  {
+    "id": "ancient_artifact",
+    "name": "古物現世",
+    "type": "positive",
+    "description": "你的部下在古墓中發現了神秘的古代遺物",
+    "baseProbability": 5,
+    "destinyModifier": 12,
+    "requirements": [
+      {
+        "type": "attribute",
+        "target": "intelligence",
+        "operator": ">=",
+        "value": 20
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "decipher_artifact",
+        "name": "破解古物",
+        "description": "你成功破解了古物的秘密，獲得了強大的力量",
+        "probability": 100,
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "destiny",
+            "value": 5,
+            "description": "天命+5"
+          },
+          {
+            "type": "gain_equipment",
+            "target": "legendary_accessory",
+            "description": "獲得傳說配飾"
+          }
+        ]
+      }
+    ],
+    "isChoice": false
+  },
+  {
+    "id": "scholarly_debate",
+    "name": "學者辯論",
+    "type": "choice",
+    "description": "一位著名學者挑戰你進行學術辯論",
+    "baseProbability": 12,
+    "destinyModifier": 3,
+    "requirements": [
+      {
+        "type": "attribute",
+        "target": "intelligence",
+        "operator": ">=",
+        "value": 12
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "accept_debate",
+        "name": "接受辯論",
+        "description": "你接受了辯論挑戰",
+        "probability": 70,
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "intelligence",
+            "value": 3,
+            "description": "智力+3（辯論勝利）"
+          },
+          {
+            "type": "attribute_change",
+            "target": "charisma",
+            "value": 2,
+            "description": "魅力+2（學識名聲）"
+          }
+        ]
+      },
+      {
+        "id": "decline_debate",
+        "name": "婉拒辯論",
+        "description": "你禮貌地拒絕了辯論",
+        "probability": 100,
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "charisma",
+            "value": -1,
+            "description": "魅力-1（被認為怯戰）"
+          }
+        ]
+      }
+    ],
+    "isChoice": true
+  },
+  {
+    "id": "bumper_harvest",
+    "name": "五穀豐登",
+    "type": "positive",
+    "description": "你的領地迎來了豐收年，糧食充足，人心安定",
+    "baseProbability": 18,
+    "destinyModifier": 8,
+    "outcomes": [
+      {
+        "id": "harvest_prosperity",
+        "name": "豐收繁榮",
+        "description": "豐收帶來了繁榮，增加了稅收和兵員",
+        "probability": 100,
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": 400,
+            "description": "獲得400金錢（豐收稅收）"
+          },
+          {
+            "type": "lose_troops",
+            "value": -200,
+            "description": "增加200兵力（新兵入伍）"
+          },
+          {
+            "type": "attribute_change",
+            "target": "politics",
+            "value": 1,
+            "description": "政治+1（民心所向）"
+          }
+        ]
+      }
+    ],
+    "isChoice": false
+  },
+  {
+    "id": "legendary_general_appears",
+    "name": "英雄慕名",
+    "type": "positive",
+    "description": "一位傳奇將領聽聞你的名聲，前來投靠",
+    "baseProbability": 6,
+    "destinyModifier": 20,
+    "requirements": [
+      {
+        "type": "attribute",
+        "target": "charisma",
+        "operator": ">=",
+        "value": 25
+      },
+      {
+        "type": "level",
+        "operator": ">=",
+        "value": 5
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "legendary_joins",
+        "name": "傳奇歸順",
+        "description": "傳奇將領決定追隨於你",
+        "probability": 100,
+        "effects": [
+          {
+            "type": "gain_general",
+            "description": "獲得傳奇級將領"
+          },
+          {
+            "type": "attribute_change",
+            "target": "charisma",
+            "value": 3,
+            "description": "魅力+3（英雄相惜）"
+          }
+        ]
+      }
+    ],
+    "isChoice": false
+  }
+]

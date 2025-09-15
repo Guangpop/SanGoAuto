@@ -1,0 +1,243 @@
+[
+  {
+    "id": "wooden_sword",
+    "name": "木劍",
+    "type": "weapon",
+    "rarity": "common",
+    "attributeBonus": {
+      "strength": 1
+    },
+    "description": "簡陋的木製劍，聊勝於無",
+    "requirements": {
+      "minCityCount": 0
+    }
+  },
+  {
+    "id": "iron_sword",
+    "name": "鐵劍",
+    "type": "weapon",
+    "rarity": "common",
+    "attributeBonus": {
+      "strength": 3
+    },
+    "description": "普通的鐵製長劍，削鐵如泥",
+    "requirements": {
+      "minCityCount": 1
+    }
+  },
+  {
+    "id": "qinggang_sword",
+    "name": "青罡劍",
+    "type": "weapon",
+    "rarity": "rare",
+    "attributeBonus": {
+      "strength": 5,
+      "intelligence": 10
+    },
+    "specialEffects": [
+      {
+        "type": "damage_bonus",
+        "value": 15,
+        "description": "對智力低於自己的敵人額外傷害+15%"
+      }
+    ],
+    "description": "名劍青罡，劍身泛著青光，增強持有者的智慧",
+    "requirements": {
+      "minCityCount": 3
+    }
+  },
+  {
+    "id": "qinglong_yanyue_dao",
+    "name": "青龍偃月刀",
+    "type": "weapon",
+    "rarity": "legendary",
+    "attributeBonus": {
+      "strength": 20,
+      "charisma": 5
+    },
+    "specialEffects": [
+      {
+        "type": "special",
+        "value": 25,
+        "description": "25%機率觸發「義薄雲天」，大幅提升攻擊力"
+      }
+    ],
+    "description": "關聖帝君的神兵利器，重八十二斤，削鐵如泥",
+    "requirements": {
+      "eventOnly": true
+    }
+  },
+  {
+    "id": "leather_armor",
+    "name": "皮甲",
+    "type": "armor",
+    "rarity": "common",
+    "attributeBonus": {
+      "leadership": 2
+    },
+    "description": "簡單的皮革護甲，提供基本防護",
+    "requirements": {
+      "minCityCount": 0
+    }
+  },
+  {
+    "id": "chain_mail",
+    "name": "鎖子甲",
+    "type": "armor",
+    "rarity": "rare",
+    "attributeBonus": {
+      "leadership": 8,
+      "strength": 2
+    },
+    "specialEffects": [
+      {
+        "type": "defense_bonus",
+        "value": 20,
+        "description": "受到物理攻擊傷害-20%"
+      }
+    ],
+    "description": "精良的鎖子甲，由無數鐵環編織而成",
+    "requirements": {
+      "minCityCount": 4
+    }
+  },
+  {
+    "id": "dragon_scale_armor",
+    "name": "龍鱗甲",
+    "type": "armor",
+    "rarity": "legendary",
+    "attributeBonus": {
+      "leadership": 15,
+      "destiny": 10
+    },
+    "specialEffects": [
+      {
+        "type": "special",
+        "value": 50,
+        "description": "受到致命攻擊時50%機率完全抵擋"
+      }
+    ],
+    "description": "傳說中的龍鱗製成的神甲，刀槍不入",
+    "requirements": {
+      "eventOnly": true
+    }
+  },
+  {
+    "id": "jade_pendant",
+    "name": "玉佩",
+    "type": "accessory",
+    "rarity": "common",
+    "attributeBonus": {
+      "charisma": 2
+    },
+    "description": "溫潤的玉石佩飾，彰顯身份",
+    "requirements": {
+      "minCityCount": 1
+    }
+  },
+  {
+    "id": "strategist_scroll",
+    "name": "兵書卷軸",
+    "type": "accessory",
+    "rarity": "rare",
+    "attributeBonus": {
+      "intelligence": 12,
+      "politics": 5
+    },
+    "specialEffects": [
+      {
+        "type": "special",
+        "value": 20,
+        "description": "戰鬥前20%機率獲得敵軍情報"
+      }
+    ],
+    "description": "記載兵法韜略的古老卷軸",
+    "requirements": {
+      "minCityCount": 3
+    }
+  },
+  {
+    "id": "imperial_seal",
+    "name": "傳國玉璽",
+    "type": "accessory",
+    "rarity": "legendary",
+    "attributeBonus": {
+      "charisma": 25,
+      "politics": 20,
+      "destiny": 15
+    },
+    "specialEffects": [
+      {
+        "type": "special",
+        "value": 100,
+        "description": "所有將領忠誠度大幅提升，招降成功率+50%"
+      }
+    ],
+    "description": "秦始皇傳下的皇帝印璽，得之者得天下",
+    "requirements": {
+      "eventOnly": true
+    }
+  },
+  {
+    "id": "common_horse",
+    "name": "戰馬",
+    "type": "mount",
+    "rarity": "common",
+    "attributeBonus": {
+      "strength": 2,
+      "leadership": 1
+    },
+    "description": "普通的戰馬，提升機動性",
+    "requirements": {
+      "minCityCount": 2
+    }
+  },
+  {
+    "id": "fine_horse",
+    "name": "良駒",
+    "type": "mount",
+    "rarity": "rare",
+    "attributeBonus": {
+      "strength": 6,
+      "leadership": 4
+    },
+    "specialEffects": [
+      {
+        "type": "first_strike",
+        "value": 25,
+        "description": "25%機率在戰鬥中獲得先手"
+      }
+    ],
+    "description": "千里良駒，日行千里夜行八百",
+    "requirements": {
+      "minCityCount": 4
+    }
+  },
+  {
+    "id": "red_hare",
+    "name": "赤兔馬",
+    "type": "mount",
+    "rarity": "legendary",
+    "attributeBonus": {
+      "strength": 15,
+      "leadership": 10,
+      "charisma": 8
+    },
+    "specialEffects": [
+      {
+        "type": "first_strike",
+        "value": 60,
+        "description": "60%機率獲得先手攻擊"
+      },
+      {
+        "type": "special",
+        "value": 30,
+        "description": "戰鬥中30%機率進行二次攻擊"
+      }
+    ],
+    "description": "人中呂布，馬中赤兔。傳說中的神駒",
+    "requirements": {
+      "eventOnly": true
+    }
+  }
+]
