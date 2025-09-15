@@ -1,0 +1,43 @@
+{
+  "name": "sangoauto",
+  "version": "1.0.0",
+  "description": "三國天命放置小遊戲 - Three Kingdoms Destiny Idle Game",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 8000",
+    "serve": "npx serve .",
+    "build": "echo 'No build step needed for static site'",
+    "deploy": "gh-pages -d .",
+    "lint": "echo 'Add linting when needed'",
+    "test": "echo 'Add testing when needed'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/username/SanGoAuto.git"
+  },
+  "keywords": [
+    "game",
+    "idle",
+    "three-kingdoms",
+    "javascript",
+    "html5",
+    "browser-game",
+    "放置遊戲",
+    "三國"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "homepage": "https://username.github.io/SanGoAuto",
+  "devDependencies": {
+    "gh-pages": "^6.0.0",
+    "serve": "^14.2.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

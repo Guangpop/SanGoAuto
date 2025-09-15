@@ -1,0 +1,164 @@
+{
+  "game": {
+    "title": "三國天命",
+    "subtitle": "放置養成小遊戲",
+    "loading": "正在載入遊戲資源...",
+    "version": "版本"
+  },
+  "menu": {
+    "newGame": "開始新遊戲",
+    "loadGame": "載入遊戲",
+    "settings": "設定",
+    "rules": "遊戲規則"
+  },
+  "skillSelection": {
+    "title": "天命技能選擇",
+    "remainingStars": "剩餘星星",
+    "currentRound": "輪數",
+    "skipRound": "跳過此輪",
+    "confirmSelection": "確認選擇",
+    "starCost": "消耗",
+    "skillTypes": {
+      "combat": "戰鬥技能",
+      "passive": "被動技能",
+      "economic": "經濟技能",
+      "special": "特殊技能"
+    }
+  },
+  "attributes": {
+    "strength": "武力",
+    "intelligence": "智力",
+    "leadership": "統治",
+    "politics": "政治",
+    "charisma": "魅力",
+    "destiny": "天命",
+    "strengthDesc": "攻擊傷害基礎值",
+    "intelligenceDesc": "技能成功率與技能傷害",
+    "leadershipDesc": "帶兵數量與承受傷害上限",
+    "politicsDesc": "城池產資源量、守城成功率",
+    "charismaDesc": "俘虜將領的投降率 & 將領自動投奔的機率",
+    "destinyDesc": "隨機事件發生機率加乘、隱藏 buff"
+  },
+  "resources": {
+    "gold": "金錢",
+    "troops": "兵力",
+    "cities": "城池"
+  },
+  "game": {
+    "level": "等級",
+    "pause": "暫停",
+    "resume": "繼續",
+    "save": "存檔",
+    "speed": "速度",
+    "eventLog": "事件記錄",
+    "mapOverview": "天下大勢",
+    "clearLog": "清除"
+  },
+  "events": {
+    "types": {
+      "positive": "吉兆",
+      "negative": "凶兆",
+      "neutral": "常事",
+      "choice": "抉擇"
+    }
+  },
+  "gameOver": {
+    "victory": "天下統一！",
+    "defeat": "英雄末路",
+    "stats": {
+      "playTime": "遊戲時長",
+      "level": "最終等級",
+      "citiesControlled": "統治城池",
+      "battlesWon": "勝利戰鬥",
+      "generalsRecruited": "招募將領"
+    },
+    "restart": "重新開始",
+    "mainMenu": "返回主選單"
+  },
+  "settings": {
+    "title": "遊戲設定",
+    "language": "語言",
+    "soundSettings": "音效設定",
+    "soundEnabled": "音效",
+    "musicEnabled": "背景音樂",
+    "autoSaveInterval": "自動存檔間隔 (秒)",
+    "close": "關閉"
+  },
+  "rules": {
+    "title": "遊戲規則",
+    "content": {
+      "overview": {
+        "title": "遊戲概述",
+        "description": "這是一款三國題材的放置養成遊戲。玩家在開局時進行技能選擇和能力值分配，之後遊戲將自動推進，通過隨機事件、攻城戰、招降將領等方式發展勢力，最終目標是統一天下。"
+      },
+      "gameFlow": {
+        "title": "遊戲流程",
+        "steps": [
+          "開局獲得10顆星星",
+          "進行3輪技能選擇，每輪從3個隨機技能中選擇1個或跳過",
+          "剩餘星星轉換為能力值點數",
+          "遊戲自動進行：隨機事件 → 攻城戰 → 招降將領 → 升級",
+          "重複循環直到統一天下或戰敗"
+        ]
+      },
+      "attributes": {
+        "title": "能力值說明",
+        "list": [
+          "武力：影響戰鬥傷害",
+          "智力：影響技能成功率和傷害",
+          "統治：影響帶兵數量和承受傷害",
+          "政治：影響城池資源產出和守城成功率",
+          "魅力：影響將領投降率和自動投奔機率",
+          "天命：隱藏屬性，影響隨機事件機率"
+        ]
+      },
+      "tips": {
+        "title": "遊戲小貼士",
+        "list": [
+          "技能選擇會影響整局遊戲，請慎重考慮",
+          "天命值雖然隱藏，但對遊戲進程影響很大",
+          "平衡發展各項能力值比專精單項更有利",
+          "傳說裝備只能通過特殊事件獲得",
+          "遊戲支援多倍速，可根據需要調整"
+        ]
+      }
+    }
+  },
+  "equipment": {
+    "rarity": {
+      "common": "普通",
+      "rare": "稀有",
+      "legendary": "傳說"
+    },
+    "types": {
+      "weapon": "武器",
+      "armor": "護甲",
+      "accessory": "配飾",
+      "mount": "坐騎"
+    }
+  },
+  "factions": {
+    "wei": "魏",
+    "shu": "蜀",
+    "wu": "吳",
+    "other": "其他",
+    "player": "玩家"
+  },
+  "messages": {
+    "gameLoaded": "遊戲載入成功",
+    "gameSaved": "遊戲保存成功",
+    "skillSelected": "技能選擇完成",
+    "battleWon": "攻城勝利！",
+    "battleLost": "攻城失敗",
+    "generalRecruited": "將領加入！",
+    "levelUp": "等級提升！",
+    "equipmentObtained": "獲得裝備",
+    "eventTriggered": "事件觸發"
+  },
+  "errors": {
+    "saveLoadFailed": "存檔讀取失敗",
+    "dataCorrupted": "遊戲數據損壞",
+    "networkError": "網路連接異常",
+    "unknownError": "未知錯誤"
+  }
+}

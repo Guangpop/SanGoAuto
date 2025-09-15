@@ -1,0 +1,164 @@
+{
+  "game": {
+    "title": "Three Kingdoms Destiny",
+    "subtitle": "Idle Cultivation Game",
+    "loading": "Loading game resources...",
+    "version": "Version"
+  },
+  "menu": {
+    "newGame": "New Game",
+    "loadGame": "Load Game",
+    "settings": "Settings",
+    "rules": "Game Rules"
+  },
+  "skillSelection": {
+    "title": "Destiny Skill Selection",
+    "remainingStars": "Remaining Stars",
+    "currentRound": "Round",
+    "skipRound": "Skip Round",
+    "confirmSelection": "Confirm Selection",
+    "starCost": "Cost",
+    "skillTypes": {
+      "combat": "Combat Skill",
+      "passive": "Passive Skill",
+      "economic": "Economic Skill",
+      "special": "Special Skill"
+    }
+  },
+  "attributes": {
+    "strength": "Strength",
+    "intelligence": "Intelligence",
+    "leadership": "Leadership",
+    "politics": "Politics",
+    "charisma": "Charisma",
+    "destiny": "Destiny",
+    "strengthDesc": "Base attack damage value",
+    "intelligenceDesc": "Skill success rate and skill damage",
+    "leadershipDesc": "Troop capacity and damage absorption",
+    "politicsDesc": "City resource production and defense success rate",
+    "charismaDesc": "General surrender rate & automatic recruitment probability",
+    "destinyDesc": "Random event probability bonus and hidden buffs"
+  },
+  "resources": {
+    "gold": "Gold",
+    "troops": "Troops",
+    "cities": "Cities"
+  },
+  "game": {
+    "level": "Level",
+    "pause": "Pause",
+    "resume": "Resume",
+    "save": "Save",
+    "speed": "Speed",
+    "eventLog": "Event Log",
+    "mapOverview": "World Overview",
+    "clearLog": "Clear"
+  },
+  "events": {
+    "types": {
+      "positive": "Fortune",
+      "negative": "Misfortune",
+      "neutral": "Common",
+      "choice": "Choice"
+    }
+  },
+  "gameOver": {
+    "victory": "Empire Unified!",
+    "defeat": "Hero's End",
+    "stats": {
+      "playTime": "Play Time",
+      "level": "Final Level",
+      "citiesControlled": "Cities Controlled",
+      "battlesWon": "Battles Won",
+      "generalsRecruited": "Generals Recruited"
+    },
+    "restart": "Restart",
+    "mainMenu": "Main Menu"
+  },
+  "settings": {
+    "title": "Game Settings",
+    "language": "Language",
+    "soundSettings": "Sound Settings",
+    "soundEnabled": "Sound Effects",
+    "musicEnabled": "Background Music",
+    "autoSaveInterval": "Auto-save Interval (seconds)",
+    "close": "Close"
+  },
+  "rules": {
+    "title": "Game Rules",
+    "content": {
+      "overview": {
+        "title": "Game Overview",
+        "description": "This is a Three Kingdoms-themed idle cultivation game. Players make skill selections and attribute allocations at the start, then the game progresses automatically through random events, city battles, general recruitment, and other mechanics to build your faction with the ultimate goal of unifying the realm."
+      },
+      "gameFlow": {
+        "title": "Game Flow",
+        "steps": [
+          "Start with 10 stars",
+          "Complete 3 rounds of skill selection, choosing 1 from 3 random skills or skip each round",
+          "Remaining stars convert to attribute points",
+          "Game auto-progresses: Random Events → City Battles → General Recruitment → Level Up",
+          "Repeat cycle until realm unification or defeat"
+        ]
+      },
+      "attributes": {
+        "title": "Attribute Descriptions",
+        "list": [
+          "Strength: Affects battle damage",
+          "Intelligence: Affects skill success rate and damage",
+          "Leadership: Affects troop capacity and damage absorption",
+          "Politics: Affects city resource production and defense success rate",
+          "Charisma: Affects general surrender rate and automatic recruitment",
+          "Destiny: Hidden attribute affecting random event probabilities"
+        ]
+      },
+      "tips": {
+        "title": "Game Tips",
+        "list": [
+          "Skill selections affect the entire game, choose carefully",
+          "Destiny value is hidden but greatly influences game progression",
+          "Balanced development of all attributes is better than specializing",
+          "Legendary equipment can only be obtained through special events",
+          "Game supports multiple speeds, adjust as needed"
+        ]
+      }
+    }
+  },
+  "equipment": {
+    "rarity": {
+      "common": "Common",
+      "rare": "Rare",
+      "legendary": "Legendary"
+    },
+    "types": {
+      "weapon": "Weapon",
+      "armor": "Armor",
+      "accessory": "Accessory",
+      "mount": "Mount"
+    }
+  },
+  "factions": {
+    "wei": "Wei",
+    "shu": "Shu",
+    "wu": "Wu",
+    "other": "Other",
+    "player": "Player"
+  },
+  "messages": {
+    "gameLoaded": "Game loaded successfully",
+    "gameSaved": "Game saved successfully",
+    "skillSelected": "Skill selection completed",
+    "battleWon": "City conquest successful!",
+    "battleLost": "City conquest failed",
+    "generalRecruited": "General recruited!",
+    "levelUp": "Level up!",
+    "equipmentObtained": "Equipment obtained",
+    "eventTriggered": "Event triggered"
+  },
+  "errors": {
+    "saveLoadFailed": "Failed to load save data",
+    "dataCorrupted": "Game data corrupted",
+    "networkError": "Network connection error",
+    "unknownError": "Unknown error"
+  }
+}

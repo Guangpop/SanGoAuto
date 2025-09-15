@@ -1,0 +1,274 @@
+/* 三國天命 - 動畫效果 */
+
+/* 淡入淡出效果 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+/* 滑入效果 */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 縮放效果 */
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* 搖晃效果 */
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+/* 發光效果 */
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 5px var(--secondary-color);
+    }
+    50% {
+        box-shadow: 0 0 20px var(--secondary-color), 0 0 30px var(--secondary-color);
+    }
+    100% {
+        box-shadow: 0 0 5px var(--secondary-color);
+    }
+}
+
+/* 打字機效果 */
+@keyframes typing {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes blink {
+    0%, 50% {
+        border-color: transparent;
+    }
+    51%, 100% {
+        border-color: var(--primary-color);
+    }
+}
+
+/* 應用動畫的類別 */
+.fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.fade-out {
+    animation: fadeOut 0.3s ease-in forwards;
+}
+
+.slide-in-up {
+    animation: slideInUp 0.4s ease-out forwards;
+}
+
+.slide-in-down {
+    animation: slideInDown 0.4s ease-out forwards;
+}
+
+.zoom-in {
+    animation: zoomIn 0.3s ease-out forwards;
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+.glow {
+    animation: glow 2s ease-in-out infinite;
+}
+
+/* 技能卡片特殊動畫 */
+.skill-card.animate-select {
+    animation: zoomIn 0.3s ease-out, glow 0.5s ease-in-out;
+}
+
+.skill-card.animate-deselect {
+    animation: pulse 0.2s ease-out;
+}
+
+/* 事件訊息動畫 */
+.event-message {
+    animation: slideInUp 0.4s ease-out;
+}
+
+.event-message.removing {
+    animation: fadeOut 0.3s ease-in forwards;
+}
+
+/* 數值變化動畫 */
+.value-increase {
+    animation: pulse 0.3s ease-out, glow 0.5s ease-in-out;
+    color: #22C55E !important;
+}
+
+.value-decrease {
+    animation: shake 0.3s ease-in-out;
+    color: var(--accent-color) !important;
+}
+
+/* 按鈕互動動畫 */
+.btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transition: width 0.3s ease, height 0.3s ease;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+}
+
+.btn:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* 載入動畫 */
+.loading-dots {
+    display: inline-block;
+}
+
+.loading-dots::after {
+    content: '';
+    animation: loadingDots 1.5s infinite;
+}
+
+@keyframes loadingDots {
+    0% { content: ''; }
+    25% { content: '.'; }
+    50% { content: '..'; }
+    75% { content: '...'; }
+    100% { content: ''; }
+}
+
+/* 地圖動畫 */
+.city-node {
+    transition: var(--transition);
+}
+
+.city-node:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+}
+
+.city-node.player-controlled {
+    animation: glow 3s ease-in-out infinite;
+}
+
+.city-node.under-attack {
+    animation: pulse 1s ease-in-out infinite;
+}
+
+/* 響應式動畫設定 */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .pulse,
+    .glow,
+    .loading-spinner {
+        animation: none !important;
+    }
+}
+
+/* 觸控設備優化 */
+@media (hover: none) and (pointer: coarse) {
+    .btn:hover,
+    .skill-card:hover,
+    .city-node:hover {
+        transform: none;
+    }
+
+    .btn:active {
+        transform: scale(0.95);
+    }
+}
