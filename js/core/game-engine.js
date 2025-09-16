@@ -452,26 +452,44 @@ class GameEngine {
         if (!this.isRunning || this.gameState.status !== 'playing') return;
 
         this.gameState.currentTurn++;
-        gameLogger.game('回合', `--- 第 ${this.gameState.currentTurn} 回合開始 ---`);
+
+        // 收集回合內所有訊息，稍後分批顯示
+        const turnMessages = [];
+
+        turnMessages.push({
+            category: '回合',
+            message: `--- 第 ${this.gameState.currentTurn} 回合開始 ---`
+        });
 
         try {
             // 1. 資源產出階段
-            await this.processResourceProduction();
+            const resourceMessages = await this.processResourceProductionWithMessages();
+            turnMessages.push(...resourceMessages);
 
             // 2. 隨機事件階段
-            await this.processRandomEvents();
+            const eventMessages = await this.processRandomEventsWithMessages();
+            turnMessages.push(...eventMessages);
 
             // 3. 戰鬥階段
-            await this.processBattle();
+            const battleMessages = await this.processBattleWithMessages();
+            turnMessages.push(...battleMessages);
 
             // 4. 收編階段
-            await this.processRecruitment();
+            const recruitmentMessages = await this.processRecruitmentWithMessages();
+            turnMessages.push(...recruitmentMessages);
 
             // 5. 升級階段
-            await this.processLevelUp();
+            const levelUpMessages = await this.processLevelUpWithMessages();
+            turnMessages.push(...levelUpMessages);
 
             // 6. 維護成本階段
-            await this.processMaintenanceCosts();
+            const maintenanceMessages = await this.processMaintenanceCostsWithMessages();
+            turnMessages.push(...maintenanceMessages);
+
+            // 分批延遲顯示所有訊息
+            if (turnMessages.length > 0) {
+                gameLogger.delayedLogBatch(turnMessages, 200, 2000);
+            }
 
             // 檢查遊戲結束條件
             if (this.checkGameEnd()) {
@@ -515,9 +533,19 @@ class GameEngine {
     }
 
     /**
-     * 處理資源產出階段
+     * 處理資源產出階段（原版本）
      */
     async processResourceProduction() {
+        const messages = await this.processResourceProductionWithMessages();
+        // 原版本立即記錄日誌
+        messages.forEach(msg => gameLogger.game(msg.category, msg.message, msg.data));
+    }
+
+    /**
+     * 處理資源產出階段（返回訊息版本）
+     */
+    async processResourceProductionWithMessages() {
+        const messages = [];
         const playerCities = Array.from(this.gameState.cities.values())
             .filter(city => city.faction === 'player');
 
@@ -548,9 +576,13 @@ class GameEngine {
         this.updateTroopLimits();
 
         if (totalGoldProduction > 0 || troopsGained > 0) {
-            gameLogger.game('資源產出',
-                `城池產出：金錢+${totalGoldProduction}，兵力+${troopsGained}`);
+            messages.push({
+                category: '資源產出',
+                message: `城池產出：金錢+${totalGoldProduction}，兵力+${troopsGained}`
+            });
         }
+
+        return messages;
     }
 
     /**
@@ -595,9 +627,20 @@ class GameEngine {
     }
 
     /**
-     * 處理隨機事件
+     * 處理隨機事件（原版本）
      */
     async processRandomEvents() {
+        const messages = await this.processRandomEventsWithMessages();
+        // 原版本立即記錄日誌
+        messages.forEach(msg => gameLogger.game(msg.category, msg.message, msg.data));
+    }
+
+    /**
+     * 處理隨機事件（返回訊息版本）
+     */
+    async processRandomEventsWithMessages() {
+        const messages = [];
+
         // 動態調整事件觸發數量 - 增加更多隨機性
         let eventCount;
         const destiny = this.gameState.player.attributes.destiny || 0;
@@ -627,9 +670,14 @@ class GameEngine {
         for (let i = 0; i < eventCount; i++) {
             const event = this.selectRandomEvent();
             if (event) {
-                this.executeEvent(event);
+                const eventMessage = this.executeEventWithMessage(event);
+                if (eventMessage) {
+                    messages.push(eventMessage);
+                }
             }
         }
+
+        return messages;
     }
 
     /**
@@ -696,9 +744,19 @@ class GameEngine {
     }
 
     /**
-     * 執行事件
+     * 執行事件（原版本）
      */
     executeEvent(event) {
+        const message = this.executeEventWithMessage(event);
+        if (message) {
+            gameLogger.game(message.category, message.message, message.data);
+        }
+    }
+
+    /**
+     * 執行事件（返回訊息版本）
+     */
+    executeEventWithMessage(event) {
         let selectedOutcome;
 
         if (event.isChoice) {
@@ -719,7 +777,6 @@ class GameEngine {
         }
 
         if (selectedOutcome) {
-            gameLogger.logEvent(event.name, event.type, selectedOutcome.name, selectedOutcome.effects);
             this.applyEventEffects(selectedOutcome.effects);
 
             // 記錄事件歷史
@@ -729,7 +786,33 @@ class GameEngine {
                 timestamp: Date.now(),
                 description: `${event.name} - ${selectedOutcome.name}`
             });
+
+            // 返回格式化的訊息
+            const typeIcon = this._getEventTypeIcon(event.type);
+            const effectStr = selectedOutcome.effects.length > 0 ?
+                `，效果：${selectedOutcome.effects.map(e => e.description).join('、')}` : '';
+
+            return {
+                category: '隨機事件',
+                message: `${typeIcon}【${event.name}】- ${selectedOutcome.name}${effectStr}`,
+                data: selectedOutcome.effects
+            };
         }
+
+        return null;
+    }
+
+    /**
+     * 獲取事件類型圖示
+     */
+    _getEventTypeIcon(type) {
+        const icons = {
+            positive: '✨',
+            negative: '⚡',
+            neutral: '📜',
+            choice: '🤔'
+        };
+        return icons[type] || '📝';
     }
 
     /**
@@ -1168,6 +1251,232 @@ class GameEngine {
      */
     getGameState() {
         return this.gameState;
+    }
+
+    // === 新增的訊息收集版本方法 ===
+
+    /**
+     * 處理戰鬥階段（返回訊息版本）
+     */
+    async processBattleWithMessages() {
+        const messages = [];
+
+        // 檢查是否有足夠兵力戰鬥
+        if (this.gameState.player.troops < 50) {
+            messages.push({
+                category: '戰鬥',
+                message: '兵力不足，暫停攻城'
+            });
+            return messages;
+        }
+
+        // 選擇目標城池（僅限相鄰城池）
+        const targetCity = this.selectAdjacentBattleTarget();
+        if (!targetCity) {
+            messages.push({
+                category: '戰鬥',
+                message: '沒有可攻打的相鄰城池'
+            });
+            return messages;
+        }
+
+        // 計算戰鬥力（結合屬性、技能、裝備、兵力）
+        const playerCombatPower = this.calculatePlayerCombatPower();
+        const enemyCombatPower = this.calculateEnemyCombatPower(targetCity);
+
+        // 戰鬥結算
+        const battleResult = this.resolveBattleWithTroops(playerCombatPower, enemyCombatPower);
+
+        // 處理戰鬥結果
+        this.gameState.player.troops -= battleResult.playerCasualties;
+
+        const resultText = battleResult.victory ? '勝利' : '失敗';
+        const casualtyText = battleResult.playerCasualties > 0 ? `，損失${battleResult.playerCasualties}兵力` : '';
+
+        messages.push({
+            category: '戰鬥',
+            message: `攻打【${targetCity.name}】${resultText}（我方戰力:${playerCombatPower.totalPower} vs 敵方戰力:${enemyCombatPower.totalPower}）${casualtyText}`
+        });
+
+        if (battleResult.victory) {
+            this.gameState.player.battlesWon++;
+            this.captureCity(targetCity);
+
+            messages.push({
+                category: '佔領',
+                message: `🏰 成功佔領【${targetCity.name}】`
+            });
+
+            // 戰勝後有機會俘獲敵將
+            const captureMessages = this.processCapturedGeneralsWithMessages(targetCity);
+            messages.push(...captureMessages);
+        } else {
+            this.gameState.player.battlesLost++;
+        }
+
+        return messages;
+    }
+
+    /**
+     * 處理俘獲的將領（返回訊息版本）
+     */
+    processCapturedGeneralsWithMessages(city) {
+        const messages = [];
+
+        if (city.garrison.length === 0) return messages;
+
+        city.garrison.forEach(generalId => {
+            const general = this.gameState.availableGenerals.find(g => g.id === generalId);
+            if (general && general.status !== 'ally') {
+                // 根據魅力值決定是否招降
+                const recruitmentRate = GameHelpers.calculateRecruitmentRate(
+                    this.gameState.player.attributes.charisma,
+                    general.level
+                );
+
+                const success = GameHelpers.checkProbability(recruitmentRate);
+                const result = success ? '成功' : '失敗';
+
+                messages.push({
+                    category: '招降',
+                    message: `招降【${general.name}】${result}（成功率:${Math.round(recruitmentRate)}%）`
+                });
+
+                if (success) {
+                    general.status = 'ally';
+                    general.faction = 'player';
+                    this.gameState.player.generalsRecruited++;
+
+                    // 分配兵力給新將領
+                    this.allocateTroopsToGeneral(general);
+                }
+            }
+        });
+
+        return messages;
+    }
+
+    /**
+     * 處理收編階段（返回訊息版本）
+     */
+    async processRecruitmentWithMessages() {
+        const messages = [];
+
+        // 簡化實現：有機會獲得隨機將領
+        if (GameHelpers.checkProbability(20)) { // 20%機率
+            const availableGeneral = GameHelpers.randomChoice(
+                this.gameState.availableGenerals.filter(g => g.status !== 'player')
+            );
+
+            if (availableGeneral) {
+                const successRate = GameHelpers.calculateRecruitmentRate(
+                    this.gameState.player.attributes.charisma,
+                    availableGeneral.level
+                );
+
+                const success = GameHelpers.checkProbability(successRate);
+                const result = success ? '成功' : '失敗';
+
+                messages.push({
+                    category: '招降',
+                    message: `招降【${availableGeneral.name}】${result}（成功率:${Math.round(successRate)}%）`
+                });
+
+                if (success) {
+                    availableGeneral.status = 'ally';
+                    availableGeneral.faction = 'player';
+                    this.gameState.player.generalsRecruited++;
+                }
+            }
+        }
+
+        return messages;
+    }
+
+    /**
+     * 處理升級階段（返回訊息版本）
+     */
+    async processLevelUpWithMessages() {
+        const messages = [];
+
+        if (this.gameState.player.battlesWon > 0 &&
+            this.gameState.player.battlesWon % 2 === 0 && // 每2勝升1級
+            this.gameState.player.level < 10) {
+
+            this.gameState.player.level++;
+
+            // 隨機屬性提升
+            const attributeGains = {};
+            const totalGain = GameHelpers.randomInt(3, 8);
+            const attributes = ['strength', 'intelligence', 'leadership', 'politics', 'charisma'];
+
+            for (let i = 0; i < totalGain; i++) {
+                const attr = GameHelpers.randomChoice(attributes);
+                attributeGains[attr] = (attributeGains[attr] || 0) + 1;
+                this.gameState.player.attributes[attr] =
+                    GameHelpers.clamp(this.gameState.player.attributes[attr] + 1, 0, 100);
+            }
+
+            const gainStr = Object.entries(attributeGains)
+                .filter(([_, value]) => value > 0)
+                .map(([key, value]) => `${this._getAttributeName(key)}+${value}`)
+                .join(', ');
+
+            messages.push({
+                category: '升級',
+                message: `升級至Lv.${this.gameState.player.level}，${gainStr}`
+            });
+        }
+
+        return messages;
+    }
+
+    /**
+     * 處理維護成本階段（返回訊息版本）
+     */
+    async processMaintenanceCostsWithMessages() {
+        const messages = [];
+
+        // 計算城池維護成本
+        const maintenanceCost = this.gameState.player.citiesControlled * 20;
+        this.gameState.player.maintenanceCost = maintenanceCost;
+
+        if (this.gameState.player.gold >= maintenanceCost) {
+            this.gameState.player.gold -= maintenanceCost;
+            if (maintenanceCost > 0) {
+                messages.push({
+                    category: '維護成本',
+                    message: `支付城池維護費用：${maintenanceCost}金錢`
+                });
+            }
+        } else {
+            // 金錢不足時的懲罰
+            const shortage = maintenanceCost - this.gameState.player.gold;
+            this.gameState.player.gold = 0;
+            this.gameState.player.troops = Math.max(0, this.gameState.player.troops - shortage * 2);
+
+            messages.push({
+                category: '維護成本',
+                message: `💰 金錢不足！損失${shortage * 2}兵力代替維護費用`
+            });
+        }
+
+        return messages;
+    }
+
+    /**
+     * 獲取屬性名稱
+     */
+    _getAttributeName(key) {
+        const names = {
+            strength: '武力',
+            intelligence: '智力',
+            leadership: '統治',
+            politics: '政治',
+            charisma: '魅力',
+            destiny: '天命'
+        };
+        return names[key] || key;
     }
 }
 

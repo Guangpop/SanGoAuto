@@ -115,6 +115,43 @@ class GameLogger {
         }
     }
 
+    /**
+     * 延遲顯示日誌訊息
+     * @param {string} level 日誌級別
+     * @param {string} category 分類
+     * @param {string} message 訊息
+     * @param {Object} data 額外數據
+     * @param {number} delay 延遲時間（毫秒）
+     */
+    delayedLog(level, category, message, data = null, delay = 0) {
+        if (delay <= 0) {
+            this._log(level, category, message, data);
+        } else {
+            setTimeout(() => {
+                this._log(level, category, message, data);
+            }, delay);
+        }
+    }
+
+    /**
+     * 批量延遲顯示訊息
+     * @param {Array} messages 訊息陣列，每項包含 {level, category, message, data?, delay?}
+     * @param {number} baseDelay 基礎延遲時間
+     * @param {number} interval 訊息間隔時間
+     */
+    delayedLogBatch(messages, baseDelay = 0, interval = 2000) {
+        messages.forEach((msg, index) => {
+            const totalDelay = baseDelay + (index * interval);
+            this.delayedLog(
+                msg.level || 'GAME',
+                msg.category || '遊戲',
+                msg.message,
+                msg.data || null,
+                totalDelay
+            );
+        });
+    }
+
     // === 公共日誌方法 ===
 
     debug(category, message, data) {

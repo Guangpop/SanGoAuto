@@ -159,11 +159,180 @@
 
 /* 事件訊息動畫 */
 .event-message {
-    animation: slideInUp 0.4s ease-out;
+    animation: slideInLeft 0.6s ease-out;
+    transform-origin: left center;
 }
 
 .event-message.removing {
     animation: fadeOut 0.3s ease-in forwards;
+}
+
+/* 左滑入效果 */
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* 右滑入效果 */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* 漸現打字效果 */
+@keyframes typewriter {
+    from {
+        width: 0;
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    to {
+        width: 100%;
+        opacity: 1;
+    }
+}
+
+/* 滑動加淡入組合動畫 */
+@keyframes slideInFade {
+    0% {
+        opacity: 0;
+        transform: translateX(-50px) scale(0.95);
+    }
+    50% {
+        opacity: 0.7;
+        transform: translateX(-10px) scale(0.98);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+/* 彈跳入場效果 */
+@keyframes bounceInLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    60% {
+        opacity: 1;
+        transform: translateX(10px);
+    }
+    80% {
+        transform: translateX(-5px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* 應用新動畫的類別 */
+.slide-in-left {
+    animation: slideInLeft 0.6s ease-out forwards;
+}
+
+.slide-in-right {
+    animation: slideInRight 0.6s ease-out forwards;
+}
+
+.slide-in-fade {
+    animation: slideInFade 0.8s ease-out forwards;
+}
+
+.bounce-in-left {
+    animation: bounceInLeft 0.8s ease-out forwards;
+}
+
+.typewriter-effect {
+    animation: typewriter 1s ease-out forwards;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+/* 特殊的訊息類型動畫 */
+.event-message.battle-result {
+    animation: bounceInLeft 0.8s ease-out forwards;
+}
+
+.event-message.resource-change {
+    animation: slideInFade 0.7s ease-out forwards;
+}
+
+.event-message.level-up {
+    animation: zoomIn 0.5s ease-out forwards, glow 1s ease-in-out;
+}
+
+.event-message.random-event {
+    animation: slideInLeft 0.6s ease-out forwards;
+}
+
+/* 延遲動畫類別 */
+.delay-1 { animation-delay: 0.2s; }
+.delay-2 { animation-delay: 0.4s; }
+.delay-3 { animation-delay: 0.6s; }
+.delay-4 { animation-delay: 0.8s; }
+.delay-5 { animation-delay: 1.0s; }
+
+/* 事件訊息容器樣式 */
+.event-message {
+    transition: all 0.6s ease-out;
+    opacity: 0;
+    transform: translateX(-100%);
+    margin-bottom: 8px;
+    padding: 12px;
+    border-radius: 6px;
+    border-left: 4px solid var(--primary-color);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+}
+
+/* 不同類型事件的邊框顏色 */
+.event-message.positive {
+    border-left-color: #22C55E;
+}
+
+.event-message.negative {
+    border-left-color: var(--accent-color);
+}
+
+.event-message.neutral {
+    border-left-color: var(--secondary-color);
+}
+
+.event-message.special {
+    border-left-color: #F59E0B;
+    background: rgba(245, 158, 11, 0.1);
+}
+
+/* 事件訊息內容樣式 */
+.event-timestamp {
+    font-size: 0.8em;
+    opacity: 0.7;
+    margin-bottom: 4px;
+}
+
+.event-title {
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 4px;
+}
+
+.event-description {
+    line-height: 1.4;
 }
 
 /* 數值變化動畫 */
