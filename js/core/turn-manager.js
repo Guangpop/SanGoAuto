@@ -142,8 +142,24 @@ class TurnManager {
             turnMessages.push(...maintenanceMessages);
 
             // 分批延遲顯示所有訊息
+            let actualInterval = this.turnInterval;
             if (turnMessages.length > 0) {
                 gameLogger.delayedLogBatch(turnMessages, 200, 2000);
+
+                // 計算事件顯示完畢需要的時間
+                const baseDelay = 200;
+                const eventInterval = 2000;
+                const lastEventTime = baseDelay + ((turnMessages.length - 1) * eventInterval);
+                const buffer = 500; // 緩衝時間
+
+                // 確保下一個回合在所有事件顯示完畢後開始
+                const requiredInterval = lastEventTime + buffer;
+                actualInterval = Math.max(actualInterval, requiredInterval);
+
+                gameLogger.debug('時間管理',
+                    `事件數量: ${turnMessages.length}, 最後事件時間: ${lastEventTime}ms, ` +
+                    `調整回合間隔: ${this.turnInterval}ms → ${actualInterval}ms`
+                );
             }
 
             // 檢查遊戲結束條件
@@ -155,8 +171,7 @@ class TurnManager {
             gameLogger.error('遊戲', '回合處理出錯', error);
         }
 
-        // 隨機調整回合間隔 - 增加節奏變化
-        let actualInterval = this.turnInterval;
+        // 進一步隨機調整回合間隔 - 增加節奏變化
 
         // 根據天命值和當前狀況調整間隔
         const destiny = this.gameEngine.gameState.player.attributes.destiny || 0;
