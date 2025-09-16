@@ -1,653 +1,180 @@
-/* 三國天命 - 組件樣式 */
+/* 三國天命 - 組件樣式導入 */
 
-/* Buttons */
-.btn {
-    display: inline-flex;
+/* Import all component styles */
+@import url('./components/buttons.css');
+@import url('./components/skills.css');
+@import url('./components/game-info.css');
+@import url('./components/event-log.css');
+@import url('./components/modals.css');
+
+/* General Component Utilities */
+.section-header {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    padding: var(--space-3) var(--space-5);
-    font-size: var(--font-size-base);
-    font-weight: 500;
-    text-decoration: none;
-    border: 2px solid transparent;
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: var(--transition);
-    user-select: none;
-    min-width: 120px;
+    padding: var(--space-3) var(--space-4);
+    background: var(--background-hover);
+    border-bottom: 1px solid var(--border);
+    border-radius: var(--radius) var(--radius) 0 0;
 }
 
-.btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.btn-primary {
-    background: var(--primary-color);
-    color: var(--text-light);
-    border-color: var(--primary-color);
-}
-
-.btn-primary:hover:not(:disabled) {
-    background: var(--secondary-color);
-    border-color: var(--secondary-color);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3);
-}
-
-.btn-secondary {
-    background: var(--surface);
+.section-header h3 {
+    margin: 0;
     color: var(--primary-color);
-    border-color: var(--primary-color);
+    font-size: var(--font-size-lg);
 }
 
-.btn-secondary:hover:not(:disabled) {
-    background: var(--primary-color);
-    color: var(--text-light);
-}
-
-.btn-small {
-    padding: var(--space-1) var(--space-3);
-    font-size: var(--font-size-sm);
-    min-width: auto;
-}
-
-/* Skill Selection Components */
-.selection-content {
-    width: 100%;
-    max-width: 800px;
-    padding: var(--space-6);
-    background: var(--surface);
-    border-radius: var(--radius-lg);
-    box-shadow: 0 8px 32px var(--shadow);
-}
-
-.selection-header {
+/* Loading Components */
+.loading-content {
     text-align: center;
-    margin-bottom: var(--space-6);
-    padding-bottom: var(--space-4);
-    border-bottom: 2px solid var(--border);
+    padding: var(--space-8);
 }
 
-.selection-header h2 {
-    font-size: var(--font-size-2xl);
+.loading-content h1 {
+    font-size: var(--font-size-3xl);
     color: var(--primary-color);
     margin-bottom: var(--space-4);
 }
 
-.stars-info {
-    font-size: var(--font-size-lg);
-    color: var(--text-secondary);
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid var(--border);
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: var(--space-4) auto;
 }
 
-.stars-count {
-    font-weight: bold;
-    color: var(--secondary-color);
-    font-size: var(--font-size-xl);
-    margin: 0 var(--space-2);
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-.skills-container {
-    margin-bottom: var(--space-6);
-}
-
-.skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--space-4);
-    margin-bottom: var(--space-6);
-}
-
-.skill-card {
-    background: var(--surface-alt);
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    padding: var(--space-4);
-    cursor: pointer;
-    transition: var(--transition);
-    position: relative;
-}
-
-.skill-card:hover {
-    border-color: var(--secondary-color);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px var(--shadow);
-}
-
-.skill-card.selected {
-    border-color: var(--accent-color);
-    background: rgba(220, 20, 60, 0.1);
-}
-
-.skill-card.affordable {
-    border-color: var(--primary-color);
-}
-
-.skill-card.expensive {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.skill-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: var(--space-3);
-}
-
-.skill-name {
-    font-size: var(--font-size-lg);
-    font-weight: bold;
-    color: var(--primary-color);
-}
-
-.skill-cost {
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
-    background: var(--secondary-color);
-    color: var(--text-light);
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--radius-sm);
-    font-weight: bold;
-}
-
-.skill-description {
-    color: var(--text-secondary);
-    line-height: 1.6;
-    margin-bottom: var(--space-3);
-}
-
-.skill-effects {
-    list-style: none;
-    padding: 0;
-}
-
-.skill-effects li {
-    background: rgba(139, 69, 19, 0.1);
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--radius-sm);
-    font-size: var(--font-size-sm);
-    color: var(--primary-color);
-    margin-bottom: var(--space-1);
-}
-
-.selection-controls {
-    display: flex;
-    justify-content: center;
-    gap: var(--space-4);
-}
-
-/* Modal Components */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-.modal.active {
-    display: flex;
-}
-
-.modal-content {
+/* Menu Components */
+.menu-content {
+    text-align: center;
+    padding: var(--space-8);
     background: var(--surface);
     border-radius: var(--radius-lg);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    max-width: 500px;
-    width: 90%;
-    max-height: 80vh;
+    box-shadow: 0 8px 32px var(--shadow);
+    margin: var(--space-4);
+}
+
+.game-header {
+    margin-bottom: var(--space-6);
+}
+
+.game-title {
+    font-size: var(--font-size-4xl);
+    color: var(--primary-color);
+    margin-bottom: var(--space-2);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.game-subtitle {
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.main-nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: center;
+}
+
+/* Game Controls */
+.game-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+}
+
+/* Map Overview */
+.map-overview {
+    background: var(--surface);
+    border-radius: var(--radius);
     overflow: hidden;
+    border: 1px solid var(--border);
+    height: 100%;
     display: flex;
     flex-direction: column;
 }
 
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--space-4) var(--space-6);
-    background: var(--primary-color);
-    color: var(--text-light);
-}
-
-.modal-header h3 {
-    font-size: var(--font-size-xl);
-    margin: 0;
-}
-
-.modal-close {
-    background: none;
-    border: none;
-    color: var(--text-light);
-    font-size: var(--font-size-2xl);
-    cursor: pointer;
-    padding: 0;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-body {
-    padding: var(--space-6);
+.map-container {
+    flex: 1;
+    padding: var(--space-4);
     overflow-y: auto;
+    max-height: 500px;
 }
 
-/* Form Components */
-.setting-group {
-    margin-bottom: var(--space-5);
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .game-controls {
+        justify-content: center;
+    }
+
+    .player-info {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .player-attributes {
+        justify-content: center;
+    }
 }
 
-.setting-group label {
-    display: block;
-    margin-bottom: var(--space-2);
-    font-weight: 500;
-    color: var(--text-primary);
-}
-
-.setting-group select,
-.setting-group input[type="range"] {
-    width: 100%;
-    padding: var(--space-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    background: var(--surface);
-}
-
-.checkbox-label {
-    display: flex !important;
-    align-items: center;
-    gap: var(--space-2);
-    margin-bottom: var(--space-2) !important;
-    cursor: pointer;
-}
-
-.checkbox-label input[type="checkbox"] {
-    width: auto;
-}
-
-/* Event Message Components */
-.event-message {
-    background: var(--surface);
-    border-left: 4px solid var(--secondary-color);
-    padding: var(--space-3);
-    margin-bottom: var(--space-2);
-    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-    box-shadow: 0 1px 3px var(--shadow);
-}
-
-.event-message.positive {
-    border-color: #22C55E;
-}
-
-.event-message.negative {
-    border-color: var(--accent-color);
-}
-
-.event-message.neutral {
-    border-color: var(--text-secondary);
-}
-
-.event-timestamp {
-    font-size: var(--font-size-xs);
-    color: var(--text-secondary);
-    margin-bottom: var(--space-1);
-}
-
-.event-title {
-    font-weight: bold;
-    color: var(--primary-color);
-    margin-bottom: var(--space-1);
-}
-
-.event-description {
-    color: var(--text-secondary);
-    line-height: 1.4;
-}
-
-/* Game Over Screen */
-.game-over-content {
-    text-align: center;
-    background: var(--surface);
-    padding: var(--space-8);
-    border-radius: var(--radius-lg);
-    box-shadow: 0 8px 32px var(--shadow);
-    max-width: 600px;
-    width: 90%;
-}
-
-.game-over-content h2 {
-    font-size: var(--font-size-2xl);
-    margin-bottom: var(--space-6);
-    color: var(--primary-color);
-}
-
-.stats-container {
-    background: var(--surface-alt);
-    border-radius: var(--radius);
-    padding: var(--space-4);
-    margin-bottom: var(--space-6);
-}
-
-.game-over-controls {
-    display: flex;
-    justify-content: center;
-    gap: var(--space-4);
-}
-
-/* Cities and Generals Display */
-.cities-overview,
-.generals-overview {
-    margin-bottom: var(--space-6);
-    background: var(--surface);
-    border-radius: var(--radius);
-    padding: var(--space-4);
-    box-shadow: 0 2px 4px var(--shadow);
-}
-
-.cities-overview h4,
-.generals-overview h4 {
-    color: var(--primary-color);
-    margin-bottom: var(--space-3);
-    font-size: var(--font-size-lg);
-    border-bottom: 1px solid var(--border);
-    padding-bottom: var(--space-2);
-}
-
-.cities-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--space-3);
-    margin-bottom: var(--space-4);
-}
-
-.city-card {
-    background: var(--surface-alt);
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    padding: var(--space-3);
-    transition: var(--transition);
-}
-
-.city-card.player-controlled {
-    border-color: var(--secondary-color);
-    background: rgba(218, 165, 32, 0.1);
-}
-
-.city-card h5 {
-    color: var(--primary-color);
-    margin-bottom: var(--space-2);
-    font-size: var(--font-size-base);
-}
-
-.city-stats {
-    margin-bottom: var(--space-2);
-}
-
-.city-stat {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: var(--space-1);
-    font-size: var(--font-size-sm);
-}
-
-.stat-label {
-    color: var(--text-secondary);
-}
-
-.stat-value {
-    color: var(--primary-color);
-    font-weight: bold;
-}
-
-.city-garrison {
-    font-size: var(--font-size-xs);
-    color: var(--text-secondary);
-    border-top: 1px solid var(--border);
-    padding-top: var(--space-1);
-}
-
-.enemy-cities-summary {
-    background: rgba(220, 20, 60, 0.1);
-    border: 1px solid rgba(220, 20, 60, 0.3);
-    border-radius: var(--radius-sm);
-    padding: var(--space-3);
-}
-
-.enemy-cities-summary h5 {
-    color: var(--accent-color);
-    margin-bottom: var(--space-2);
-    font-size: var(--font-size-base);
-}
-
-.enemy-city-item {
-    display: flex;
-    justify-content: space-between;
-    padding: var(--space-1) 0;
-    border-bottom: 1px solid rgba(220, 20, 60, 0.2);
-    font-size: var(--font-size-sm);
-}
-
-.enemy-city-item:last-child {
-    border-bottom: none;
-}
-
-.enemy-city-item.adjacent {
-    background: rgba(220, 20, 60, 0.2);
-    border-color: var(--accent-color);
-}
-
-.enemy-city-item.adjacent .city-name {
-    font-weight: bold;
-    color: var(--accent-color);
-}
-
-.city-name {
-    color: var(--text-primary);
-    font-weight: 500;
-}
-
-.city-faction {
-    color: var(--text-secondary);
-}
-
-/* Equipment Unlock Display */
-.equipment-unlock {
-    background: rgba(139, 69, 19, 0.1);
-    border: 1px solid var(--primary-color);
-    border-radius: var(--radius-sm);
-    padding: var(--space-2);
-    margin-top: var(--space-2);
-    font-size: var(--font-size-sm);
-    color: var(--primary-color);
-    text-align: center;
-}
-
-/* Generals Grid */
-.generals-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: var(--space-3);
-}
-
-.general-card {
-    background: var(--surface-alt);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: var(--space-3);
-    transition: var(--transition);
-}
-
-.general-card:hover {
-    box-shadow: 0 4px 8px var(--shadow);
-    transform: translateY(-2px);
-}
-
-.general-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--space-2);
-}
-
-.general-header h5 {
-    color: var(--primary-color);
-    margin: 0;
-    font-size: var(--font-size-base);
-}
-
-.general-level {
-    background: var(--secondary-color);
-    color: var(--text-light);
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--radius-sm);
-    font-size: var(--font-size-xs);
-    font-weight: bold;
-}
-
-.general-attributes {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: var(--space-1);
-    margin-bottom: var(--space-2);
-}
-
-.attr-mini {
-    background: var(--surface);
-    text-align: center;
-    padding: var(--space-1);
-    border-radius: var(--radius-sm);
-    font-size: var(--font-size-xs);
-    color: var(--text-secondary);
-    border: 1px solid var(--border);
-}
-
-.general-troops {
-    font-size: var(--font-size-sm);
-    color: var(--text-secondary);
-    text-align: center;
-    padding: var(--space-1);
-    background: rgba(139, 69, 19, 0.1);
-    border-radius: var(--radius-sm);
-    margin-bottom: var(--space-1);
-}
-
-.general-status {
-    font-size: var(--font-size-xs);
-    color: var(--text-secondary);
-    text-align: center;
-    padding: var(--space-1);
-    background: rgba(0, 0, 0, 0.05);
-    border-radius: var(--radius-sm);
-}
-
-.city-connections {
-    font-size: var(--font-size-xs);
-    color: var(--text-secondary);
-    border-top: 1px solid var(--border);
-    padding-top: var(--space-1);
-    margin-top: var(--space-1);
-}
-
-/* Game Statistics Display */
-.stats-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--space-3);
-}
-
-.stat-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--space-2);
-    background: var(--surface);
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
-}
-
-.stat-item .stat-label {
-    color: var(--text-secondary);
-    font-size: var(--font-size-sm);
-}
-
-.stat-item .stat-value {
-    color: var(--primary-color);
-    font-weight: bold;
-    font-size: var(--font-size-base);
-}
-
-/* Responsive Design for New Components */
 @media (max-width: 768px) {
+    .menu-content {
+        margin: var(--space-2);
+        padding: var(--space-6);
+    }
+
+    .game-title {
+        font-size: var(--font-size-3xl);
+    }
+
+    .skills-grid {
+        grid-template-columns: 1fr;
+    }
+
     .cities-grid {
         grid-template-columns: 1fr;
     }
 
     .generals-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    }
-
-    .general-attributes {
-        grid-template-columns: repeat(3, 1fr);
-        gap: var(--space-1);
-    }
-
-    .stats-container {
         grid-template-columns: 1fr;
     }
 
-    .enemy-cities-summary {
-        margin-top: var(--space-3);
+    .player-attributes {
+        gap: var(--space-2);
+    }
+
+    .player-resources {
+        gap: var(--space-3);
     }
 }
 
 @media (max-width: 480px) {
-    .cities-overview,
-    .generals-overview {
-        padding: var(--space-2);
+    .selection-content {
+        padding: var(--space-4);
     }
 
-    .city-card,
-    .general-card {
-        padding: var(--space-2);
+    .skill-header {
+        flex-direction: column;
+        gap: var(--space-2);
+        align-items: center;
     }
 
-    .general-attributes {
-        grid-template-columns: repeat(2, 1fr);
+    .main-nav {
+        gap: var(--space-2);
+    }
+
+    .btn {
+        min-width: 100px;
+        font-size: var(--font-size-sm);
     }
 }
-
-/* Utility Classes */
-.text-center {
-    text-align: center;
-}
-
-.text-primary {
-    color: var(--primary-color);
-}
-
-.text-secondary {
-    color: var(--text-secondary);
-}
-
-.text-accent {
-    color: var(--accent-color);
-}
-
-.mb-0 { margin-bottom: 0; }
-.mb-2 { margin-bottom: var(--space-2); }
-.mb-4 { margin-bottom: var(--space-4); }
-.mb-6 { margin-bottom: var(--space-6); }
-
-.mt-0 { margin-top: 0; }
-.mt-2 { margin-top: var(--space-2); }
-.mt-4 { margin-top: var(--space-4); }
-.mt-6 { margin-top: var(--space-6); }

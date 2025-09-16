@@ -1,0 +1,285 @@
+/* 三國天命 - 遊戲信息組件樣式 */
+
+/* Player Info Panel */
+.player-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    align-items: center;
+    padding: var(--space-4);
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 2px solid var(--border);
+}
+
+.player-basic {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.player-basic h3 {
+    margin: 0;
+    color: var(--primary-color);
+    font-size: var(--font-size-lg);
+}
+
+.player-level {
+    background: var(--secondary-color);
+    color: var(--text-light);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+}
+
+.player-attributes {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+}
+
+.attribute {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+    min-width: 60px;
+}
+
+.attr-label {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.attr-value {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--primary-color);
+    padding: var(--space-1);
+    min-width: 40px;
+    text-align: center;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+}
+
+.player-resources {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.resource {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+.resource-label {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.resource-value {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--secondary-color);
+}
+
+/* Cities Overview */
+.cities-overview {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: var(--space-4);
+    margin-bottom: var(--space-4);
+}
+
+.cities-overview h4 {
+    color: var(--primary-color);
+    margin-bottom: var(--space-3);
+    font-size: var(--font-size-lg);
+}
+
+.cities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+}
+
+.city-card {
+    background: var(--background-hover);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--space-3);
+    transition: var(--transition);
+}
+
+.city-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+}
+
+.city-card.player-controlled {
+    border-color: var(--success-color);
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.city-card h5 {
+    margin: 0 0 var(--space-2) 0;
+    color: var(--primary-color);
+    font-size: var(--font-size-base);
+}
+
+.city-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+}
+
+.city-stat {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--font-size-sm);
+}
+
+.stat-label {
+    color: var(--text-secondary);
+}
+
+.stat-value {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.city-connections, .city-garrison {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-1);
+    line-height: 1.4;
+}
+
+/* Enemy Cities Summary */
+.enemy-cities-summary {
+    background: var(--background-hover);
+    border-radius: var(--radius);
+    padding: var(--space-3);
+}
+
+.enemy-cities-summary h5 {
+    color: var(--primary-color);
+    margin-bottom: var(--space-2);
+    font-size: var(--font-size-base);
+}
+
+.enemy-city-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-1) 0;
+    border-bottom: 1px solid var(--border);
+    font-size: var(--font-size-sm);
+}
+
+.enemy-city-item:last-child {
+    border-bottom: none;
+}
+
+.enemy-city-item.adjacent {
+    background: rgba(239, 68, 68, 0.1);
+    border-radius: var(--radius-sm);
+    padding: var(--space-1) var(--space-2);
+    margin: var(--space-1) 0;
+}
+
+.city-name {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.city-faction {
+    color: var(--text-secondary);
+    font-size: var(--font-size-xs);
+}
+
+/* Generals Overview */
+.generals-overview {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: var(--space-4);
+    margin-top: var(--space-4);
+}
+
+.generals-overview h4 {
+    color: var(--primary-color);
+    margin-bottom: var(--space-3);
+    font-size: var(--font-size-lg);
+}
+
+.generals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--space-3);
+}
+
+.general-card {
+    background: var(--background-hover);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--space-3);
+    transition: var(--transition);
+}
+
+.general-card:hover {
+    border-color: var(--secondary-color);
+    transform: translateY(-1px);
+}
+
+.general-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-2);
+}
+
+.general-header h5 {
+    margin: 0;
+    color: var(--primary-color);
+    font-size: var(--font-size-base);
+}
+
+.general-level {
+    background: var(--secondary-color);
+    color: var(--text-light);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+}
+
+.general-attributes {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+}
+
+.attr-mini {
+    background: var(--primary-color);
+    color: var(--text-light);
+    padding: var(--space-1);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-align: center;
+    min-width: 24px;
+}
+
+.general-troops, .general-status {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-1);
+}

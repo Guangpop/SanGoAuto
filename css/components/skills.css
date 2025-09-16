@@ -1,0 +1,165 @@
+/* 三國天命 - 技能組件樣式 */
+
+/* Skill Selection Components */
+.selection-content {
+    width: 100%;
+    max-width: 800px;
+    padding: var(--space-6);
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 32px var(--shadow);
+}
+
+.selection-header {
+    text-align: center;
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-4);
+    border-bottom: 2px solid var(--border);
+}
+
+.selection-header h2 {
+    font-size: var(--font-size-2xl);
+    color: var(--primary-color);
+    margin-bottom: var(--space-4);
+}
+
+.stars-info {
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+}
+
+.stars-count {
+    font-weight: bold;
+    color: var(--secondary-color);
+    font-size: var(--font-size-xl);
+    margin: 0 var(--space-2);
+}
+
+.skills-container {
+    margin-bottom: var(--space-6);
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+}
+
+.skill-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--space-4);
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.skill-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    transition: left 0.5s ease;
+}
+
+.skill-card:hover::before {
+    left: 100%;
+}
+
+.skill-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px var(--shadow);
+}
+
+.skill-card.affordable {
+    border-color: var(--success-color);
+}
+
+.skill-card.expensive {
+    border-color: var(--border);
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.skill-card.expensive:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: var(--border);
+}
+
+.skill-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-3);
+}
+
+.skill-name {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.skill-cost {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    background: var(--secondary-color);
+    color: var(--text-light);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    font-weight: bold;
+    font-size: var(--font-size-sm);
+}
+
+.skill-description {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: var(--space-3);
+}
+
+.skill-effects {
+    margin-bottom: var(--space-3);
+}
+
+.skill-effect {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    background: var(--background-hover);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-1);
+    border-left: 2px solid var(--primary-color);
+}
+
+.skill-type {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    background: var(--primary-color);
+    color: var(--text-light);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+}
+
+.selection-controls {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-4);
+}
