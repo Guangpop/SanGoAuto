@@ -140,7 +140,9 @@ class UIManager {
      */
     async waitForGameEngine() {
         const checkEngine = () => {
-            if (window.gameEngine && window.gameEngine.gameData.skills.length > 0) {
+            if (window.gameEngine &&
+                window.gameEngine.dataReady &&
+                window.gameEngine.gameData.skills.length > 0) {
                 this.gameEngine = window.gameEngine;
                 this.showMainMenu();
             } else {

@@ -13,6 +13,7 @@ class GameEngine {
 
         this.gameState = null;
         this.isRunning = false;
+        this.dataReady = false; // 添加數據準備標誌
 
         // 初始化子系統
         this.skillSystem = new SkillSystem(this);
@@ -41,6 +42,7 @@ class GameEngine {
             ]);
 
             this.gameData = { skills, cities, generals, equipment, events };
+            this.dataReady = true; // 標記數據準備完成
             gameLogger.info('系統', '遊戲資源載入完成');
 
         } catch (error) {

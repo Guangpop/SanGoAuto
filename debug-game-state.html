@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>遊戲狀態診斷工具</title>
+    <style>
+        body { font-family: 'Courier New', monospace; margin: 20px; }
+        .debug-section { border: 1px solid #ccc; margin: 10px 0; padding: 15px; }
+        .status-good { color: green; font-weight: bold; }
+        .status-bad { color: red; font-weight: bold; }
+        .status-warning { color: orange; font-weight: bold; }
+        pre { background: #f5f5f5; padding: 10px; overflow: auto; }
+        button { padding: 10px 15px; margin: 5px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 遊戲狀態診斷工具</h1>
+
+    <div class="debug-section">
+        <h2>快速診斷</h2>
+        <button onclick="runDiagnostics()">運行診斷</button>
+        <button onclick="forceStartGame()">強制啟動遊戲</button>
+        <button onclick="clearDebugOutput()">清除輸出</button>
+        <div id="diagnosis-output"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>實時狀態監控</h2>
+        <button onclick="startMonitoring()">開始監控</button>
+        <button onclick="stopMonitoring()">停止監控</button>
+        <div id="monitoring-output"></div>
+    </div>
+
+    <!-- 載入遊戲文件 -->
+    <script src="js/utils/helpers.js"></script>
+    <script src="js/utils/logger.js"></script>
+    <script src="js/core/skill-system.js"></script>
+    <script src="js/core/battle-system.js"></script>
+    <script src="js/core/event-system.js"></script>
+    <script src="js/core/turn-manager.js"></script>
+    <script src="js/core/game-engine.js"></script>
+    <script src="js/ui/components/skill-ui.js"></script>
+    <script src="js/ui/components/game-ui.js"></script>
+    <script src="js/ui/components/event-log-ui.js"></script>
+    <script src="js/ui/ui-manager.js"></script>
+
+    <script>
+        let monitoringInterval = null;
+
+        function log(message, type = 'info') {
+            const output = document.getElementById('diagnosis-output');
+            const className = type === 'good' ? 'status-good' :
+                             type === 'bad' ? 'status-bad' :
+                             type === 'warning' ? 'status-warning' : '';
+
+            const div = document.createElement('div');
+            div.className = className;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            output.appendChild(div);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function clearDebugOutput() {
+            document.getElementById('diagnosis-output').innerHTML = '';
+            document.getElementById('monitoring-output').innerHTML = '';
+        }
+
+        async function runDiagnostics() {
+            log('=== 開始遊戲狀態診斷 ===');
+
+            // 1. 檢查全局對象
+            log('1. 檢查全局對象...');
+
+            if (typeof window.gameEngine === 'undefined') {
+                log('❌ gameEngine 未定義', 'bad');
+                return;
+            } else {
+                log('✅ gameEngine 已載入', 'good');
+            }
+
+            if (typeof window.uiManager === 'undefined') {
+                log('❌ uiManager 未定義', 'bad');
+            } else {
+                log('✅ uiManager 已載入', 'good');
+            }
+
+            // 2. 檢查遊戲數據
+            log('2. 檢查遊戲數據...');
+
+            if (!window.gameEngine.gameData || !window.gameEngine.gameData.skills) {
+                log('❌ 遊戲數據未載入', 'bad');
+                log('   提示：等待數據載入完成', 'warning');
+                setTimeout(runDiagnostics, 2000);
+                return;
+            } else {
+                log(`✅ 遊戲數據已載入 (${window.gameEngine.gameData.skills.length} 個技能)`, 'good');
+            }
+
+            // 3. 檢查遊戲狀態
+            log('3. 檢查遊戲狀態...');
+
+            if (!window.gameEngine.gameState) {
+                log('❌ gameState 未初始化', 'bad');
+            } else {
+                const status = window.gameEngine.gameState.status;
+                const isRunning = window.gameEngine.isRunning;
+
+                log(`📊 遊戲狀態: ${status}`, status === 'playing' ? 'good' : 'warning');
+                log(`🏃 遊戲運行: ${isRunning}`, isRunning ? 'good' : 'warning');
+
+                if (window.gameEngine.gameState.currentTurn !== undefined) {
+                    log(`🔄 當前回合: ${window.gameEngine.gameState.currentTurn}`);
+                }
+            }
+
+            // 4. 檢查技能系統
+            log('4. 檢查技能系統...');
+
+            if (window.gameEngine.skillSystem) {
+                const skillSelection = window.gameEngine.skillSystem.skillSelection;
+                if (skillSelection) {
+                    log(`⭐ 技能選擇進行中 - 第${skillSelection.round}輪，剩餘${skillSelection.remainingStars}星`);
+                    log(`🎯 已選技能: ${skillSelection.selectedSkills.length}個`);
+                    log(`📋 可選技能: ${skillSelection.availableSkills.length}個`);
+                } else {
+                    log('💤 技能選擇未啟動');
+                }
+            }
+
+            // 5. 檢查回合管理器
+            log('5. 檢查回合管理器...');
+
+            if (window.gameEngine.turnManager) {
+                const hasGameLoop = !!window.gameEngine.turnManager.gameLoop;
+                log(`⏰ 遊戲循環: ${hasGameLoop ? '運行中' : '未運行'}`, hasGameLoop ? 'good' : 'warning');
+            }
+
+            // 6. 檢查UI狀態
+            log('6. 檢查UI狀態...');
+
+            if (window.uiManager) {
+                log(`🖼️ 當前螢幕: ${window.uiManager.currentScreen}`);
+
+                const skillElements = window.uiManager.elements.skillSelection;
+                if (skillElements && skillElements.skipBtn) {
+                    log('✅ 技能選擇UI元素正常');
+
+                    // 檢查按鈕事件
+                    const hasClickHandler = skillElements.skipBtn.onclick ||
+                                          skillElements.skipBtn.addEventListener;
+                    log(`🖱️ 跳過按鈕事件: ${hasClickHandler ? '已綁定' : '未綁定'}`,
+                        hasClickHandler ? 'good' : 'bad');
+                } else {
+                    log('❌ 技能選擇UI元素缺失', 'bad');
+                }
+            }
+
+            log('=== 診斷完成 ===');
+        }
+
+        function forceStartGame() {
+            log('🚀 強制啟動遊戲流程...');
+
+            if (!window.gameEngine) {
+                log('❌ gameEngine不存在，無法啟動', 'bad');
+                return;
+            }
+
+            try {
+                // 如果在技能選擇階段，強制完成
+                if (window.gameEngine.gameState.status === 'skill_selection') {
+                    log('⏭️ 強制完成技能選擇...');
+
+                    if (window.gameEngine.skillSystem && window.gameEngine.skillSystem.skillSelection) {
+                        // 跳過剩餘所有輪次
+                        while (window.gameEngine.skillSystem.skillSelection.round <= 3) {
+                            window.gameEngine.skillSystem.skipSkillRound();
+                        }
+                    } else {
+                        // 直接設置狀態並啟動遊戲
+                        window.gameEngine.gameState.status = 'playing';
+                        window.gameEngine.turnManager.startMainGameLoop();
+                    }
+
+                    log('✅ 遊戲強制啟動完成', 'good');
+                } else if (window.gameEngine.gameState.status === 'playing') {
+                    if (!window.gameEngine.isRunning) {
+                        log('🔄 重新啟動遊戲循環...');
+                        window.gameEngine.turnManager.startMainGameLoop();
+                    } else {
+                        log('ℹ️ 遊戲已經在運行中', 'good');
+                    }
+                } else {
+                    log(`⚠️ 遊戲狀態異常: ${window.gameEngine.gameState.status}`, 'warning');
+                }
+            } catch (error) {
+                log(`❌ 啟動失敗: ${error.message}`, 'bad');
+                console.error('強制啟動遊戲錯誤:', error);
+            }
+        }
+
+        function startMonitoring() {
+            if (monitoringInterval) {
+                clearInterval(monitoringInterval);
+            }
+
+            const output = document.getElementById('monitoring-output');
+            output.innerHTML = '<h3>實時監控中...</h3>';
+
+            monitoringInterval = setInterval(() => {
+                if (!window.gameEngine) return;
+
+                const status = window.gameEngine.gameState ? window.gameEngine.gameState.status : 'undefined';
+                const isRunning = window.gameEngine.isRunning;
+                const currentTurn = window.gameEngine.gameState ? window.gameEngine.gameState.currentTurn : 0;
+                const hasGameLoop = window.gameEngine.turnManager ? !!window.gameEngine.turnManager.gameLoop : false;
+
+                output.innerHTML = `
+                    <h3>實時監控 - ${new Date().toLocaleTimeString()}</h3>
+                    <pre>
+遊戲狀態: ${status}
+遊戲運行: ${isRunning}
+當前回合: ${currentTurn}
+遊戲循環: ${hasGameLoop ? '運行中' : '停止'}
+技能選擇: ${window.gameEngine.skillSystem && window.gameEngine.skillSystem.skillSelection ?
+    `第${window.gameEngine.skillSystem.skillSelection.round}輪` : '未啟動'}
+                    </pre>
+                `;
+            }, 1000);
+
+            log('📡 開始實時監控...', 'good');
+        }
+
+        function stopMonitoring() {
+            if (monitoringInterval) {
+                clearInterval(monitoringInterval);
+                monitoringInterval = null;
+                document.getElementById('monitoring-output').innerHTML = '<p>監控已停止</p>';
+                log('🛑 停止實時監控', 'warning');
+            }
+        }
+
+        // 頁面載入完成後自動運行診斷
+        window.addEventListener('load', () => {
+            setTimeout(runDiagnostics, 1000);
+        });
+    </script>
+</body>
+</html>
