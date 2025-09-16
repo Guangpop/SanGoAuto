@@ -31,365 +31,227 @@
         "type": "attribute_bonus",
         "target": "all_attributes",
         "value": 2,
-        "duration": "permanent",
-        "description": "所有能力值+2"
+        "description": "所有屬性 +2"
       },
       {
         "type": "attribute_bonus",
         "target": "destiny",
         "value": 10,
-        "duration": "permanent",
-        "description": "天命+10"
+        "description": "天命 +10"
       }
     ],
-    "trigger": {
-      "condition": "always"
-    },
     "icon": "⭐"
   },
   {
     "id": "defensive_stance",
     "name": "堅守不出",
-    "description": "採取防守策略，大幅減少受到的傷害",
-    "type": "combat",
+    "description": "採取防守姿態，大幅減少戰鬥傷亡",
+    "type": "passive",
     "starCost": 1,
     "effects": [
       {
-        "type": "combat_bonus",
+        "type": "special",
         "target": "defense",
         "value": 50,
-        "duration": "defense",
         "description": "防守戰時傷害減半"
       }
     ],
-    "trigger": {
-      "condition": "defense",
-      "probability": 80
-    },
     "icon": "🛡️"
   },
   {
-    "id": "brilliant_strategy",
-    "name": "妙計連環",
-    "description": "智謀過人，能夠施展精妙戰術",
+    "id": "water_warfare",
+    "name": "水戰精通",
+    "description": "精通水上作戰，在江河湖泊戰鬥時獲得優勢",
     "type": "combat",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "combat_bonus",
+        "target": "water_battle",
+        "value": 40,
+        "description": "水戰時戰鬥力 +40%"
+      }
+    ],
+    "icon": "🌊"
+  },
+  {
+    "id": "mounted_charge",
+    "name": "鐵騎突擊",
+    "description": "率領騎兵衝鋒，先手攻擊機率大增",
+    "type": "combat",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "first_strike",
+        "value": 30,
+        "description": "30%機率先手攻擊"
+      }
+    ],
+    "icon": "🐎"
+  },
+  {
+    "id": "brilliant_strategy",
+    "name": "神機妙算",
+    "description": "智謀超群，能看透敵人弱點",
+    "type": "passive",
     "starCost": 2,
     "effects": [
       {
         "type": "attribute_bonus",
         "target": "intelligence",
-        "value": 5,
-        "duration": "permanent",
-        "description": "智力+5"
-      },
-      {
-        "type": "combat_bonus",
-        "target": "skill_success",
-        "value": 20,
-        "duration": "battle",
-        "description": "技能成功率+20%"
+        "value": 8,
+        "description": "智力 +8"
       }
     ],
-    "trigger": {
-      "condition": "battle",
-      "probability": 60
-    },
     "icon": "🧠"
   },
   {
-    "id": "wealthy_merchant",
-    "name": "富商之道",
-    "description": "精通商道，增加金錢收入",
-    "type": "economic",
+    "id": "iron_will",
+    "name": "鋼鐵意志",
+    "description": "意志堅定，永不屈服",
+    "type": "passive",
     "starCost": 1,
     "effects": [
       {
         "type": "special",
-        "target": "gold_production",
-        "value": 50,
-        "duration": "permanent",
-        "description": "金錢產出+50%"
+        "target": "morale",
+        "value": 25,
+        "description": "士氣永不下降，戰敗時傷亡減少25%"
       }
     ],
-    "trigger": {
-      "condition": "always"
-    },
-    "icon": "💰"
+    "icon": "💪"
   },
   {
-    "id": "iron_will",
-    "name": "鐵血意志",
-    "description": "意志堅定，提升統御力和抗性",
+    "id": "golden_tongue",
+    "name": "三寸不爛之舌",
+    "description": "能言善辯，大幅提升招降成功率",
     "type": "passive",
     "starCost": 2,
-    "effects": [
-      {
-        "type": "attribute_bonus",
-        "target": "leadership",
-        "value": 8,
-        "duration": "permanent",
-        "description": "統治+8"
-      },
-      {
-        "type": "combat_bonus",
-        "target": "damage_resistance",
-        "value": 20,
-        "duration": "permanent",
-        "description": "受到傷害-20%"
-      }
-    ],
-    "trigger": {
-      "condition": "always"
-    },
-    "icon": "⚔️"
-  },
-  {
-    "id": "silver_tongue",
-    "name": "能言善辯",
-    "description": "口才出眾，更容易招降敵將",
-    "type": "passive",
-    "starCost": 1,
     "effects": [
       {
         "type": "attribute_bonus",
         "target": "charisma",
-        "value": 6,
-        "duration": "permanent",
-        "description": "魅力+6"
-      },
-      {
-        "type": "special",
-        "target": "recruitment_bonus",
-        "value": 30,
-        "duration": "permanent",
-        "description": "將領投降率+30%"
+        "value": 12,
+        "description": "魅力 +12"
       }
     ],
-    "trigger": {
-      "condition": "always"
-    },
-    "icon": "🗣️"
+    "icon": "💬"
   },
   {
-    "id": "divine_weapon",
-    "name": "神兵天降",
-    "description": "獲得傳說級武器的機會大增",
-    "type": "special",
-    "starCost": 3,
-    "effects": [
-      {
-        "type": "special",
-        "target": "legendary_drop_rate",
-        "value": 200,
-        "duration": "permanent",
-        "description": "傳說裝備掉落率+200%"
-      }
-    ],
-    "trigger": {
-      "condition": "always"
-    },
-    "icon": "⚡"
-  },
-  {
-    "id": "rapid_march",
-    "name": "神行千里",
-    "description": "行軍速度提升，攻城時常能搶得先機",
-    "type": "combat",
-    "starCost": 1,
-    "effects": [
-      {
-        "type": "combat_bonus",
-        "target": "first_strike",
-        "value": 40,
-        "duration": "battle",
-        "description": "40%機率獲得先手攻擊"
-      }
-    ],
-    "trigger": {
-      "condition": "battle",
-      "probability": 40
-    },
-    "icon": "💨"
-  },
-  {
-    "id": "loyal_followers",
-    "name": "忠心護主",
-    "description": "獲得忠誠部下，增加兵力上限",
-    "type": "passive",
-    "starCost": 2,
-    "effects": [
-      {
-        "type": "special",
-        "target": "max_troops",
-        "value": 500,
-        "duration": "permanent",
-        "description": "兵力上限+500"
-      },
-      {
-        "type": "attribute_bonus",
-        "target": "leadership",
-        "value": 3,
-        "duration": "permanent",
-        "description": "統治+3"
-      }
-    ],
-    "trigger": {
-      "condition": "always"
-    },
-    "icon": "👥"
-  },
-  {
-    "id": "master_politician",
-    "name": "治國安邦",
-    "description": "政治手腕高超，城池管理更有效率",
+    "id": "economic_genius",
+    "name": "經世濟民",
+    "description": "精通治理，城池產出大幅提升",
     "type": "economic",
     "starCost": 2,
     "effects": [
       {
-        "type": "attribute_bonus",
-        "target": "politics",
-        "value": 7,
-        "duration": "permanent",
-        "description": "政治+7"
-      },
-      {
         "type": "special",
-        "target": "city_production",
-        "value": 30,
-        "duration": "permanent",
-        "description": "所有城池產出+30%"
+        "target": "city_income",
+        "value": 50,
+        "description": "城池金錢產出 +50%"
       }
     ],
-    "trigger": {
-      "condition": "always"
-    },
-    "icon": "🏛️"
+    "icon": "💰"
   },
   {
     "id": "berserker_rage",
-    "name": "狂戰之怒",
-    "description": "戰鬥中有機會進入狂暴狀態",
+    "name": "狂戰士",
+    "description": "戰鬥時進入狂暴狀態，戰鬥力大增但傷亡也增加",
     "type": "combat",
     "starCost": 2,
     "effects": [
       {
         "type": "combat_bonus",
         "target": "damage",
-        "value": 100,
-        "duration": "battle",
-        "description": "15%機率造成雙倍傷害"
-      },
-      {
-        "type": "attribute_bonus",
-        "target": "strength",
-        "value": 4,
-        "duration": "permanent",
-        "description": "武力+4"
+        "value": 60,
+        "description": "戰鬥力 +60%，但傷亡 +20%"
       }
     ],
-    "trigger": {
-      "condition": "battle",
-      "probability": 15
-    },
-    "icon": "😤"
+    "icon": "😡"
   },
   {
-    "id": "scholar_wisdom",
-    "name": "博學多才",
-    "description": "飽讀詩書，智力大幅提升",
-    "type": "passive",
+    "id": "night_raid",
+    "name": "夜襲",
+    "description": "善於夜間突擊，打敵人措手不及",
+    "type": "combat",
     "starCost": 1,
     "effects": [
       {
-        "type": "attribute_bonus",
-        "target": "intelligence",
-        "value": 10,
-        "duration": "permanent",
-        "description": "智力+10"
+        "type": "special",
+        "target": "surprise_attack",
+        "value": 25,
+        "description": "25%機率發動夜襲，敵軍防禦-30%"
       }
     ],
-    "trigger": {
-      "condition": "always"
-    },
-    "icon": "📚"
+    "icon": "🌙"
   },
   {
-    "id": "lucky_star",
-    "name": "福星高照",
-    "description": "運氣極佳，好事連連",
-    "type": "special",
+    "id": "siege_master",
+    "name": "攻城專家",
+    "description": "精通攻城戰術，攻城時戰鬥力提升",
+    "type": "combat",
     "starCost": 2,
     "effects": [
       {
-        "type": "attribute_bonus",
-        "target": "destiny",
-        "value": 15,
-        "duration": "permanent",
-        "description": "天命+15"
-      },
-      {
         "type": "special",
-        "target": "positive_event_rate",
-        "value": 50,
-        "duration": "permanent",
-        "description": "正面事件機率+50%"
+        "target": "siege_bonus",
+        "value": 35,
+        "description": "攻城時戰鬥力 +35%"
       }
     ],
-    "trigger": {
-      "condition": "always"
-    },
-    "icon": "🍀"
+    "icon": "🏰"
   },
   {
-    "id": "master_craftsman",
-    "name": "能工巧匠",
-    "description": "手藝精湛，裝備品質提升",
+    "id": "merchant_network",
+    "name": "商賈之道",
+    "description": "建立商業網絡，增加貿易收入",
     "type": "economic",
     "starCost": 1,
     "effects": [
       {
         "type": "special",
-        "target": "equipment_quality",
-        "value": 25,
-        "duration": "permanent",
-        "description": "裝備品質提升25%"
+        "target": "trade_income",
+        "value": 30,
+        "description": "每回合額外獲得金錢"
       }
     ],
-    "trigger": {
-      "condition": "always"
-    },
-    "icon": "🔨"
+    "icon": "🏪"
   },
   {
-    "id": "network_spy",
-    "name": "間諜網絡",
-    "description": "情報網絡發達，戰前能獲得敵情",
-    "type": "combat",
+    "id": "divine_protection",
+    "name": "天神庇佑",
+    "description": "獲得神明保護，減少意外傷亡",
+    "type": "special",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "special",
+        "target": "protection",
+        "value": 40,
+        "description": "所有傷亡減少40%"
+      }
+    ],
+    "icon": "✨"
+  },
+  {
+    "id": "spy_network",
+    "name": "情報網絡",
+    "description": "建立間諜網，提前知曉敵軍動向",
+    "type": "passive",
     "starCost": 2,
     "effects": [
       {
-        "type": "combat_bonus",
-        "target": "pre_battle_info",
-        "value": 100,
-        "duration": "battle",
-        "description": "戰前必定獲得敵軍情報"
-      },
-      {
-        "type": "combat_bonus",
-        "target": "accuracy",
+        "type": "special",
+        "target": "intelligence_network",
         "value": 20,
-        "duration": "battle",
-        "description": "攻擊命中率+20%"
+        "description": "戰鬥勝率 +20%，事件成功率 +15%"
       }
     ],
-    "trigger": {
-      "condition": "battle",
-      "probability": 100
-    },
     "icon": "🕵️"
   },
   {
-    "id": "dragon_bloodline",
+    "id": "dragon_blood",
     "name": "真龍血脈",
     "description": "擁有帝王血統，天生領袖氣質",
     "type": "special",
@@ -397,89 +259,71 @@
     "effects": [
       {
         "type": "attribute_bonus",
-        "target": "charisma",
-        "value": 5,
-        "duration": "permanent",
-        "description": "魅力+5"
+        "target": "leadership",
+        "value": 15,
+        "description": "統治 +15"
       },
       {
         "type": "attribute_bonus",
-        "target": "leadership",
-        "value": 5,
-        "duration": "permanent",
-        "description": "統治+5"
-      },
-      {
-        "type": "special",
-        "target": "general_loyalty",
-        "value": 30,
-        "duration": "permanent",
-        "description": "將領忠誠度+30%"
+        "target": "charisma",
+        "value": 10,
+        "description": "魅力 +10"
       }
     ],
-    "trigger": {
-      "condition": "always"
-    },
     "icon": "🐉"
   },
   {
-    "id": "beast_tamer",
-    "name": "馴獸大師",
-    "description": "善於馴養戰獸，增強軍隊戰力",
-    "type": "combat",
-    "starCost": 2,
+    "id": "weather_control",
+    "name": "呼風喚雨",
+    "description": "能夠影響天氣，戰鬥時獲得天時優勢",
+    "type": "special",
+    "starCost": 3,
     "effects": [
       {
         "type": "special",
-        "target": "cavalry_bonus",
-        "value": 40,
-        "duration": "permanent",
-        "description": "騎兵戰力+40%"
-      },
-      {
-        "type": "special",
-        "target": "mount_drop_rate",
-        "value": 100,
-        "duration": "permanent",
-        "description": "坐騎掉落率+100%"
+        "target": "weather_advantage",
+        "value": 25,
+        "description": "戰鬥時25%機率獲得天氣加成"
       }
     ],
-    "trigger": {
-      "condition": "always"
-    },
-    "icon": "🐎"
+    "icon": "⛈️"
   },
   {
     "id": "medical_knowledge",
     "name": "岐黃之術",
-    "description": "精通醫術，能治療傷兵",
+    "description": "精通醫術，減少軍隊傷亡",
     "type": "passive",
     "starCost": 1,
     "effects": [
       {
         "type": "special",
-        "target": "troop_recovery",
-        "value": 20,
-        "duration": "permanent",
-        "description": "戰後兵力恢復20%"
-      },
-      {
-        "type": "attribute_bonus",
-        "target": "intelligence",
-        "value": 3,
-        "duration": "permanent",
-        "description": "智力+3"
+        "target": "medical_care",
+        "value": 30,
+        "description": "戰後恢復30%傷亡兵力"
       }
     ],
-    "trigger": {
-      "condition": "always"
-    },
-    "icon": "💊"
+    "icon": "⚕️"
   },
   {
-    "id": "iron_fortress",
-    "name": "銅牆鐵壁",
-    "description": "築城技術高超，城池防禦力大增",
+    "id": "beast_tamer",
+    "name": "馴獸師",
+    "description": "能夠馴服猛獸作為戰鬥夥伴",
+    "type": "combat",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "beast_companion",
+        "value": 20,
+        "description": "戰鬥時有猛獸相助，戰鬥力 +20%"
+      }
+    ],
+    "icon": "🐅"
+  },
+  {
+    "id": "architect",
+    "name": "建築大師",
+    "description": "精通建築，城池防禦力大幅提升",
     "type": "passive",
     "starCost": 2,
     "effects": [
@@ -487,21 +331,811 @@
         "type": "special",
         "target": "city_defense",
         "value": 50,
-        "duration": "permanent",
-        "description": "所有城池防禦+50%"
-      },
-      {
-        "type": "combat_bonus",
-        "target": "siege_defense",
-        "value": 30,
-        "duration": "defense",
-        "description": "守城戰傷害減少30%"
+        "description": "所有城池防禦 +50%"
       }
     ],
-    "trigger": {
-      "condition": "defense",
-      "probability": 80
-    },
-    "icon": "🏰"
+    "icon": "🏗️"
+  },
+  {
+    "id": "phoenix_rebirth",
+    "name": "浴火重生",
+    "description": "即使失敗也能東山再起",
+    "type": "special",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "special",
+        "target": "second_chance",
+        "value": 1,
+        "description": "戰敗時有機會重新戰鬥"
+      }
+    ],
+    "icon": "🔥🦅"
+  },
+  {
+    "id": "shadow_step",
+    "name": "影遁之術",
+    "description": "如影隨形，擅長突襲和撤退",
+    "type": "combat",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "evasion",
+        "value": 25,
+        "description": "25%機率閃避敵軍攻擊"
+      }
+    ],
+    "icon": "👤"
+  },
+  {
+    "id": "treasure_hunter",
+    "name": "尋寶達人",
+    "description": "能發現隱藏的寶藏和裝備",
+    "type": "passive",
+    "starCost": 1,
+    "effects": [
+      {
+        "type": "special",
+        "target": "treasure_chance",
+        "value": 20,
+        "description": "20%機率在戰後發現寶物"
+      }
+    ],
+    "icon": "💎"
+  },
+  {
+    "id": "poison_master",
+    "name": "毒術精通",
+    "description": "精通用毒，讓敵軍戰鬥力下降",
+    "type": "combat",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "poison_attack",
+        "value": 30,
+        "description": "敵軍戰鬥力-30%，持續3回合"
+      }
+    ],
+    "icon": "☠️"
+  },
+  {
+    "id": "time_manipulation",
+    "name": "時光逆轉",
+    "description": "操控時間，重新做出關鍵決策",
+    "type": "special",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "special",
+        "target": "rewind",
+        "value": 1,
+        "description": "可以重新選擇一次技能或事件結果"
+      }
+    ],
+    "icon": "⏰"
+  },
+  {
+    "id": "earth_shaker",
+    "name": "撼天動地",
+    "description": "力大無窮，能震動大地",
+    "type": "combat",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "attribute_bonus",
+        "target": "strength",
+        "value": 20,
+        "description": "武力 +20"
+      }
+    ],
+    "icon": "🌍"
+  },
+  {
+    "id": "mind_reader",
+    "name": "讀心術",
+    "description": "能讀取他人心思，洞察敵人意圖",
+    "type": "passive",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "mind_reading",
+        "value": 30,
+        "description": "戰鬥時30%機率預知敵軍行動"
+      }
+    ],
+    "icon": "🔮"
+  },
+  {
+    "id": "lucky_star",
+    "name": "幸運之星",
+    "description": "天生好運，關鍵時刻總有驚喜",
+    "type": "passive",
+    "starCost": 1,
+    "effects": [
+      {
+        "type": "special",
+        "target": "luck_bonus",
+        "value": 15,
+        "description": "所有機率事件成功率 +15%"
+      }
+    ],
+    "icon": "🍀"
+  },
+  {
+    "id": "demon_pact",
+    "name": "魔神契約",
+    "description": "與魔神訂下契約，獲得強大力量",
+    "type": "special",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "attribute_bonus",
+        "target": "strength",
+        "value": 15,
+        "description": "武力 +15"
+      },
+      {
+        "type": "special",
+        "target": "curse",
+        "value": -10,
+        "description": "天命 -10，但獲得強大戰鬥力"
+      }
+    ],
+    "icon": "👹"
+  },
+  {
+    "id": "elemental_mastery",
+    "name": "五行精通",
+    "description": "掌握五行之力，戰鬥時隨機獲得元素加成",
+    "type": "combat",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "special",
+        "target": "elemental_power",
+        "value": 40,
+        "description": "戰鬥時隨機獲得元素加成"
+      }
+    ],
+    "icon": "🔥💧🌿⚡🗻"
+  },
+  {
+    "id": "diplomatic_immunity",
+    "name": "外交豁免",
+    "description": "精通外交，減少敵對勢力攻擊",
+    "type": "passive",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "diplomacy",
+        "value": 40,
+        "description": "40%機率避免敵軍主動攻擊"
+      }
+    ],
+    "icon": "🤝"
+  },
+  {
+    "id": "ancestral_blessing",
+    "name": "祖先庇佑",
+    "description": "獲得祖先之靈的保護和指引",
+    "type": "special",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "attribute_bonus",
+        "target": "destiny",
+        "value": 15,
+        "description": "天命 +15"
+      }
+    ],
+    "icon": "👻"
+  },
+  {
+    "id": "iron_stomach",
+    "name": "鐵胃神功",
+    "description": "免疫毒素，士兵士氣高昂",
+    "type": "passive",
+    "starCost": 1,
+    "effects": [
+      {
+        "type": "special",
+        "target": "poison_immunity",
+        "value": 100,
+        "description": "免疫所有毒素攻擊"
+      }
+    ],
+    "icon": "🛡️💊"
+  },
+  {
+    "id": "battle_cry",
+    "name": "戰吼",
+    "description": "發出震天戰吼，鼓舞己方士氣",
+    "type": "combat",
+    "starCost": 1,
+    "effects": [
+      {
+        "type": "special",
+        "target": "morale_boost",
+        "value": 25,
+        "description": "己方戰鬥力 +25%，持續1戰"
+      }
+    ],
+    "icon": "📯"
+  },
+  {
+    "id": "craftsman",
+    "name": "巧匠之技",
+    "description": "精通工藝，能製作優質裝備",
+    "type": "economic",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "equipment_craft",
+        "value": 25,
+        "description": "25%機率獲得自製裝備"
+      }
+    ],
+    "icon": "🔨"
+  },
+  {
+    "id": "nature_harmony",
+    "name": "與自然同調",
+    "description": "與自然和諧共處，獲得自然之力",
+    "type": "passive",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "nature_power",
+        "value": 20,
+        "description": "在野外戰鬥時戰鬥力 +30%"
+      }
+    ],
+    "icon": "🌳"
+  },
+  {
+    "id": "iron_discipline",
+    "name": "鐵血紀律",
+    "description": "軍隊紀律嚴明，戰鬥力穩定",
+    "type": "passive",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "discipline",
+        "value": 30,
+        "description": "戰鬥力波動減少，最低戰鬥力 +30%"
+      }
+    ],
+    "icon": "⚔️"
+  },
+  {
+    "id": "scholar",
+    "name": "博學多才",
+    "description": "學識淵博，能從書籍中獲得智慧",
+    "type": "passive",
+    "starCost": 1,
+    "effects": [
+      {
+        "type": "special",
+        "target": "learning",
+        "value": 20,
+        "description": "升級時額外獲得智力屬性"
+      }
+    ],
+    "icon": "📚"
+  },
+  {
+    "id": "fearless",
+    "name": "無所畏懼",
+    "description": "永不退縮，面對強敵也毫不畏懼",
+    "type": "combat",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "fearless_bonus",
+        "value": 50,
+        "description": "對抗強敵時戰鬥力 +50%"
+      }
+    ],
+    "icon": "💀"
+  },
+  {
+    "id": "resource_hoarder",
+    "name": "囤積達人",
+    "description": "善於囤積資源，關鍵時刻不缺物資",
+    "type": "economic",
+    "starCost": 1,
+    "effects": [
+      {
+        "type": "special",
+        "target": "resource_bonus",
+        "value": 20,
+        "description": "所有資源產出 +20%"
+      }
+    ],
+    "icon": "📦"
+  },
+  {
+    "id": "master_tactician",
+    "name": "兵法大師",
+    "description": "精通兵法，能制定完美戰術",
+    "type": "combat",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "attribute_bonus",
+        "target": "intelligence",
+        "value": 12,
+        "description": "智力 +12"
+      },
+      {
+        "type": "special",
+        "target": "tactic_bonus",
+        "value": 35,
+        "description": "戰鬥勝率 +35%"
+      }
+    ],
+    "icon": "📜"
+  },
+  {
+    "id": "berserker_healing",
+    "name": "狂戰回復",
+    "description": "戰鬥中越戰越勇，受傷反而更強",
+    "type": "combat",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "battle_healing",
+        "value": 25,
+        "description": "戰鬥中受傷時戰鬥力提升"
+      }
+    ],
+    "icon": "🩸"
+  },
+  {
+    "id": "spirit_medium",
+    "name": "通靈師",
+    "description": "能與靈界溝通，獲得神秘指引",
+    "type": "special",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "spirit_guidance",
+        "value": 25,
+        "description": "重要決策時獲得靈界指引"
+      }
+    ],
+    "icon": "👻"
+  },
+  {
+    "id": "mounted_archery",
+    "name": "騎射精通",
+    "description": "精通騎馬射箭，移動戰鬥專家",
+    "type": "combat",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "mounted_combat",
+        "value": 40,
+        "description": "騎兵戰鬥時戰鬥力 +40%"
+      }
+    ],
+    "icon": "🏹🐎"
+  },
+  {
+    "id": "siege_defense",
+    "name": "守城專家",
+    "description": "精通城池防守，固若金湯",
+    "type": "passive",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "siege_defense",
+        "value": 60,
+        "description": "城池防守時戰鬥力 +60%"
+      }
+    ],
+    "icon": "🏰🛡️"
+  },
+  {
+    "id": "war_elephant",
+    "name": "戰象軍團",
+    "description": "擁有戰象部隊，攻城拔寨無往不利",
+    "type": "combat",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "special",
+        "target": "elephant_charge",
+        "value": 70,
+        "description": "攻城時戰鬥力 +70%"
+      }
+    ],
+    "icon": "🐘"
+  },
+  {
+    "id": "naval_commander",
+    "name": "水師都督",
+    "description": "統領水師，縱橫江海",
+    "type": "combat",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "naval_battle",
+        "value": 80,
+        "description": "水戰時戰鬥力 +80%"
+      }
+    ],
+    "icon": "⛵"
+  },
+  {
+    "id": "crossbow_mastery",
+    "name": "連弩精通",
+    "description": "精通連弩，遠程攻擊無人能敵",
+    "type": "combat",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "ranged_combat",
+        "value": 50,
+        "description": "遠程戰鬥時戰鬥力 +50%"
+      }
+    ],
+    "icon": "🏹"
+  },
+  {
+    "id": "formation_master",
+    "name": "陣法大師",
+    "description": "精通各種陣法，變幻莫測",
+    "type": "combat",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "special",
+        "target": "formation_bonus",
+        "value": 45,
+        "description": "戰鬥時隨機使用不同陣法"
+      }
+    ],
+    "icon": "🔄"
+  },
+  {
+    "id": "escape_artist",
+    "name": "脫逃大師",
+    "description": "善於脫逃，即使戰敗也能安全撤退",
+    "type": "passive",
+    "starCost": 1,
+    "effects": [
+      {
+        "type": "special",
+        "target": "escape_chance",
+        "value": 70,
+        "description": "戰敗時70%機率無傷撤退"
+      }
+    ],
+    "icon": "🏃"
+  },
+  {
+    "id": "blacksmith",
+    "name": "神匠",
+    "description": "頂級鐵匠，能打造神兵利器",
+    "type": "economic",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "special",
+        "target": "weapon_craft",
+        "value": 15,
+        "description": "15%機率打造傳說武器"
+      }
+    ],
+    "icon": "⚒️"
+  },
+  {
+    "id": "plague_doctor",
+    "name": "瘟疫醫師",
+    "description": "專治瘟疫，軍隊永不生病",
+    "type": "passive",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "disease_immunity",
+        "value": 100,
+        "description": "免疫瘟疫事件影響"
+      }
+    ],
+    "icon": "🦠⚕️"
+  },
+  {
+    "id": "storm_caller",
+    "name": "風暴召喚",
+    "description": "能召喚風暴，天候為己所用",
+    "type": "special",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "special",
+        "target": "storm_power",
+        "value": 60,
+        "description": "戰鬥時召喚風暴攻擊敵軍"
+      }
+    ],
+    "icon": "⛈️"
+  },
+  {
+    "id": "monster_hunter",
+    "name": "妖怪獵人",
+    "description": "專門狩獵妖怪，對超自然敵人特別有效",
+    "type": "combat",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "monster_slaying",
+        "value": 100,
+        "description": "對超自然敵人戰鬥力翻倍"
+      }
+    ],
+    "icon": "👹🗡️"
+  },
+  {
+    "id": "fortune_teller",
+    "name": "預言家",
+    "description": "能預知未來，避開災禍",
+    "type": "passive",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "foresight",
+        "value": 30,
+        "description": "30%機率預知並避開負面事件"
+      }
+    ],
+    "icon": "🔮"
+  },
+  {
+    "id": "immortal",
+    "name": "長生不老",
+    "description": "獲得不老之身，永遠不會因年老而死",
+    "type": "special",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "special",
+        "target": "immortality",
+        "value": 1,
+        "description": "免疫年老和疾病死亡"
+      }
+    ],
+    "icon": "♾️"
+  },
+  {
+    "id": "berserker_army",
+    "name": "狂戰軍團",
+    "description": "整支軍隊都是狂戰士，戰鬥力驚人",
+    "type": "combat",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "special",
+        "target": "army_berserker",
+        "value": 80,
+        "description": "全軍戰鬥力 +80%，但傷亡 +30%"
+      }
+    ],
+    "icon": "😡⚔️"
+  },
+  {
+    "id": "teleportation",
+    "name": "瞬間移動",
+    "description": "能夠瞬間移動到任何地方",
+    "type": "special",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "special",
+        "target": "teleport",
+        "value": 1,
+        "description": "可攻擊任意城池，不受距離限制"
+      }
+    ],
+    "icon": "✨👤"
+  },
+  {
+    "id": "dragon_rider",
+    "name": "馭龍者",
+    "description": "騎乘巨龍作戰，威震天下",
+    "type": "combat",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "special",
+        "target": "dragon_mount",
+        "value": 150,
+        "description": "戰鬥力大幅提升，威懾敵軍"
+      }
+    ],
+    "icon": "🐉🏇"
+  },
+  {
+    "id": "master_chef",
+    "name": "神廚",
+    "description": "料理技藝超群，軍隊士氣始終高昂",
+    "type": "passive",
+    "starCost": 1,
+    "effects": [
+      {
+        "type": "special",
+        "target": "food_morale",
+        "value": 20,
+        "description": "軍隊永遠不會因飢餓士氣下降"
+      }
+    ],
+    "icon": "👨‍🍳"
+  },
+  {
+    "id": "mirage",
+    "name": "海市蜃樓",
+    "description": "製造幻象迷惑敵軍",
+    "type": "combat",
+    "starCost": 2,
+    "effects": [
+      {
+        "type": "special",
+        "target": "illusion",
+        "value": 40,
+        "description": "40%機率讓敵軍攻擊失準"
+      }
+    ],
+    "icon": "🌫️"
+  },
+  {
+    "id": "earthquake",
+    "name": "地動山搖",
+    "description": "引發地震，摧毀敵軍陣營",
+    "type": "combat",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "special",
+        "target": "earthquake_power",
+        "value": 90,
+        "description": "對敵方城池造成巨大破壞"
+      }
+    ],
+    "icon": "🌍💥"
+  },
+  {
+    "id": "celestial_blessing",
+    "name": "天降祥瑞",
+    "description": "獲得天庭祝福，萬事如意",
+    "type": "special",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "attribute_bonus",
+        "target": "destiny",
+        "value": 25,
+        "description": "天命 +25，所有事件都有好運"
+      }
+    ],
+    "icon": "☁️✨"
+  },
+  {
+    "id": "void_walker",
+    "name": "虛空行者",
+    "description": "能穿越虛空，無視物理障礙",
+    "type": "special",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "special",
+        "target": "void_travel",
+        "value": 1,
+        "description": "攻擊時無視城池防禦"
+      }
+    ],
+    "icon": "🌌"
+  },
+  {
+    "id": "necromancer",
+    "name": "死靈法師",
+    "description": "操控亡靈為己作戰",
+    "type": "combat",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "special",
+        "target": "undead_army",
+        "value": 50,
+        "description": "戰後復活部分戰死士兵"
+      }
+    ],
+    "icon": "💀🧙"
+  },
+  {
+    "id": "time_lord",
+    "name": "時間之主",
+    "description": "掌控時間流速，操縱戰鬥節奏",
+    "type": "special",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "special",
+        "target": "time_control",
+        "value": 2,
+        "description": "每回合可行動兩次"
+      }
+    ],
+    "icon": "⏳👑"
+  },
+  {
+    "id": "reality_bender",
+    "name": "現實扭曲",
+    "description": "能夠扭曲現實，改變遊戲規則",
+    "type": "special",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "special",
+        "target": "reality_warp",
+        "value": 1,
+        "description": "可以改變一次戰鬥或事件結果"
+      }
+    ],
+    "icon": "🌀"
+  },
+  {
+    "id": "god_slayer",
+    "name": "弒神者",
+    "description": "連神明都能斬殺的存在",
+    "type": "combat",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "special",
+        "target": "divine_slaying",
+        "value": 200,
+        "description": "對所有敵人都有壓倒性戰鬥力"
+      }
+    ],
+    "icon": "⚡🗡️"
+  },
+  {
+    "id": "world_conqueror",
+    "name": "征服者",
+    "description": "天生的征服者，注定要統治世界",
+    "type": "special",
+    "starCost": 3,
+    "effects": [
+      {
+        "type": "attribute_bonus",
+        "target": "all_attributes",
+        "value": 5,
+        "description": "所有屬性 +5"
+      },
+      {
+        "type": "special",
+        "target": "conquest_bonus",
+        "value": 30,
+        "description": "攻城成功率 +30%"
+      }
+    ],
+    "icon": "👑🌍"
   }
 ]

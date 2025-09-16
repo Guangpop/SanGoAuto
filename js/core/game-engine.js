@@ -110,7 +110,10 @@ class GameEngine {
             },
             randomSeed: Date.now(),
             eventHistory: [],
-            status: 'skill_selection'
+            status: 'skill_selection',
+            turnsWithoutEvents: 0,
+            currentSeason: 'spring',
+            weatherEffects: null
         };
     }
 
@@ -134,8 +137,39 @@ class GameEngine {
      * 生成技能選擇項
      */
     generateSkillChoices() {
+        // 動態技能池 - 根據輪次調整技能稀有度
+        let skillPool = [...this.gameData.skills];
+
+        if (this.skillSelection.round === 1) {
+            // 第一輪：更多低星技能，幫助新手起步
+            skillPool = skillPool.filter(skill => skill.starCost <= 2);
+        } else if (this.skillSelection.round === 2) {
+            // 第二輪：平衡的技能選擇
+            const lowCostChance = GameHelpers.randomPercent();
+            if (lowCostChance < 60) {
+                skillPool = skillPool.filter(skill => skill.starCost <= 2);
+            }
+        } else {
+            // 第三輪：如果剩餘星星多，提供更多高星技能
+            if (this.skillSelection.remainingStars >= 3) {
+                const highCostPool = skillPool.filter(skill => skill.starCost >= 2);
+                if (highCostPool.length >= 3) {
+                    skillPool = highCostPool;
+                }
+            }
+        }
+
+        // 避免重複技能
+        const unavailableSkills = this.skillSelection.selectedSkills.map(s => s.id);
+        skillPool = skillPool.filter(skill => !unavailableSkills.includes(skill.id));
+
+        // 確保有足夠的技能可選
+        if (skillPool.length < 3) {
+            skillPool = this.gameData.skills.filter(skill => !unavailableSkills.includes(skill.id));
+        }
+
         // 從技能庫中隨機選擇3個技能
-        this.skillSelection.availableSkills = GameHelpers.randomChoices(this.gameData.skills, 3);
+        this.skillSelection.availableSkills = GameHelpers.randomChoices(skillPool, 3);
 
         gameLogger.game('技能選擇',
             `第${this.skillSelection.round}輪技能選擇：`,
@@ -221,10 +255,36 @@ class GameEngine {
 
         gameLogger.game('屬性分配', `剩餘${this.skillSelection.remainingStars}星轉換為${totalPoints}屬性點`);
 
-        // 隨機分配屬性點
+        // 更智能的屬性分配 - 增加隨機性但避免過度偏科
+        const attributeWeights = {};
+        attributes.forEach(attr => {
+            attributeWeights[attr] = GameHelpers.randomInt(1, 4); // 隨機權重
+        });
+
+        // 根據權重分配點數
         for (let i = 0; i < totalPoints; i++) {
-            const attr = GameHelpers.randomChoice(attributes);
+            const weightedChoices = [];
+            attributes.forEach(attr => {
+                for (let j = 0; j < attributeWeights[attr]; j++) {
+                    weightedChoices.push(attr);
+                }
+            });
+
+            const attr = GameHelpers.randomChoice(weightedChoices);
             this.gameState.player.attributes[attr]++;
+
+            // 每分配10點後調整權重，增加變化
+            if (i % 10 === 9) {
+                const randomAttr = GameHelpers.randomChoice(attributes);
+                attributeWeights[randomAttr] = GameHelpers.randomInt(1, 5);
+            }
+        }
+
+        // 額外隨機獎勵 - 基於剩餘星星數
+        if (this.skillSelection.remainingStars >= 5) {
+            const bonusAttr = GameHelpers.randomChoice(attributes);
+            this.gameState.player.attributes[bonusAttr] += GameHelpers.randomInt(2, 5);
+            gameLogger.game('屬性分配', `🎁 高星星剩餘獎勵：${bonusAttr}+${this.gameState.player.attributes[bonusAttr]}`);
         }
     }
 
@@ -260,15 +320,129 @@ class GameEngine {
         gameLogger.game('遊戲', '🚀 進入主遊戲階段');
         this.isRunning = true;
 
-        // 設定玩家初始城池
-        const startCity = this.gameData.cities.find(c => c.id === 'jiangxia'); // 以江夏為起始
+        // 隨機選擇起始城池 - 增加遊戲變化性
+        const possibleStartCities = ['jiangxia', 'xuchang', 'chengdu', 'jianye', 'luoyang'];
+        const randomStartId = GameHelpers.randomChoice(possibleStartCities);
+        let startCity = this.gameData.cities.find(c => c.id === randomStartId);
+
+        // 備選方案
+        if (!startCity) {
+            startCity = this.gameData.cities.find(c => c.id === 'jiangxia');
+        }
+
         if (startCity) {
             startCity.faction = 'player';
             startCity.garrison = [];
             this.gameState.cities.set(startCity.id, startCity);
+            gameLogger.game('遊戲', `🏰 起始城池：【${startCity.name}】`);
         }
 
+        // 根據起始城池調整初始資源
+        this.randomizeStartingConditions(startCity);
+
         this.executeGameTurn();
+    }
+
+    /**
+     * 隨機化起始條件
+     */
+    randomizeStartingConditions(startCity) {
+        // 根據起始城池的特殊獎勵調整資源
+        if (startCity && startCity.specialBonus) {
+            switch (startCity.specialBonus) {
+                case 'politics':
+                    this.gameState.player.gold += GameHelpers.randomInt(100, 300);
+                    gameLogger.game('起始獎勵', '政治中心獎勵：額外金錢');
+                    break;
+                case 'recruitment':
+                    this.gameState.player.troops += GameHelpers.randomInt(100, 200);
+                    gameLogger.game('起始獎勵', '募兵要地獎勵：額外兵力');
+                    break;
+                case 'trade':
+                    this.gameState.player.gold += GameHelpers.randomInt(150, 250);
+                    gameLogger.game('起始獎勵', '商貿繁榮獎勵：額外金錢');
+                    break;
+                case 'defense':
+                    this.gameState.player.attributes.leadership += GameHelpers.randomInt(3, 8);
+                    gameLogger.game('起始獎勵', '戰略要地獎勵：統治力提升');
+                    break;
+            }
+        }
+
+        // 隨機起始事件機率
+        if (GameHelpers.checkProbability(30)) {
+            this.triggerRandomStartingEvent();
+        }
+
+        // 季節性資源調整
+        const season = GameHelpers.randomChoice(['spring', 'summer', 'autumn', 'winter']);
+        this.applySeasonalEffects(season);
+    }
+
+    /**
+     * 觸發隨機起始事件
+     */
+    triggerRandomStartingEvent() {
+        const startingEvents = [
+            {
+                name: '天降異象',
+                effect: () => {
+                    this.gameState.player.attributes.destiny += GameHelpers.randomInt(5, 15);
+                    gameLogger.game('起始事件', '🌟 天降異象，天命大增！');
+                }
+            },
+            {
+                name: '義士來投',
+                effect: () => {
+                    this.gameState.player.troops += GameHelpers.randomInt(50, 150);
+                    gameLogger.game('起始事件', '⚔️ 義士來投，兵力增加！');
+                }
+            },
+            {
+                name: '商人贊助',
+                effect: () => {
+                    this.gameState.player.gold += GameHelpers.randomInt(200, 500);
+                    gameLogger.game('起始事件', '💰 商人贊助，財富增加！');
+                }
+            },
+            {
+                name: '名師指點',
+                effect: () => {
+                    const attr = GameHelpers.randomChoice(['intelligence', 'politics', 'charisma']);
+                    this.gameState.player.attributes[attr] += GameHelpers.randomInt(5, 10);
+                    gameLogger.game('起始事件', `📚 名師指點，${attr}提升！`);
+                }
+            }
+        ];
+
+        const event = GameHelpers.randomChoice(startingEvents);
+        event.effect();
+    }
+
+    /**
+     * 應用季節效果
+     */
+    applySeasonalEffects(season) {
+        this.gameState.currentSeason = season;
+
+        switch (season) {
+            case 'spring':
+                this.gameState.player.troops += GameHelpers.randomInt(20, 80);
+                gameLogger.game('季節效果', '🌸 春季：萬物復甦，招兵容易');
+                break;
+            case 'summer':
+                this.gameState.player.gold += GameHelpers.randomInt(50, 150);
+                gameLogger.game('季節效果', '☀️ 夏季：農作豐收，稅收增加');
+                break;
+            case 'autumn':
+                this.gameState.player.attributes.politics += GameHelpers.randomInt(2, 6);
+                gameLogger.game('季節效果', '🍂 秋季：思考時節，政治力提升');
+                break;
+            case 'winter':
+                this.gameState.player.attributes.strength += GameHelpers.randomInt(2, 6);
+                gameLogger.game('季節效果', '❄️ 冬季：練兵時節，武力提升');
+                break;
+        }
     }
 
     /**
@@ -308,10 +482,36 @@ class GameEngine {
             gameLogger.error('遊戲', '回合處理出錯', error);
         }
 
+        // 隨機調整回合間隔 - 增加節奏變化
+        let actualInterval = this.turnInterval;
+
+        // 根據天命值和當前狀況調整間隔
+        const destiny = this.gameState.player.attributes.destiny || 0;
+        if (destiny >= 25) {
+            actualInterval *= GameHelpers.randomFloat(0.8, 1.2); // 高天命時間更不規律
+        }
+
+        // 戰鬥時加快節奏
+        if (this.gameState.player.battlesWon > this.gameState.player.battlesLost + 2) {
+            actualInterval *= 0.9; // 連勝時加快
+        }
+
+        // 每10回合有機會觸發"時間流速異常"
+        if (this.gameState.currentTurn % 10 === 0 && GameHelpers.checkProbability(25)) {
+            const timeEffect = GameHelpers.randomChoice(['accelerate', 'decelerate']);
+            if (timeEffect === 'accelerate') {
+                actualInterval *= 0.5;
+                gameLogger.game('時間異象', '⚡ 時光加速，回合間隔縮短！');
+            } else {
+                actualInterval *= 1.5;
+                gameLogger.game('時間異象', '🐌 時光凝滯，回合間隔延長');
+            }
+        }
+
         // 安排下一回合
         this.gameLoop = setTimeout(() => {
             this.executeGameTurn();
-        }, this.turnInterval / this.gameState.settings.gameSpeed);
+        }, actualInterval / this.gameState.settings.gameSpeed);
     }
 
     /**
@@ -398,7 +598,31 @@ class GameEngine {
      * 處理隨機事件
      */
     async processRandomEvents() {
-        const eventCount = GameHelpers.randomInt(0, 2); // 0-2個事件
+        // 動態調整事件觸發數量 - 增加更多隨機性
+        let eventCount;
+        const destiny = this.gameState.player.attributes.destiny || 0;
+        const level = this.gameState.player.level;
+
+        // 根據天命值和等級調整事件頻率
+        if (destiny >= 30) {
+            eventCount = GameHelpers.randomInt(1, 3); // 高天命更多事件
+        } else if (level >= 5) {
+            eventCount = GameHelpers.randomInt(0, 3); // 高等級時事件更頻繁
+        } else {
+            eventCount = GameHelpers.randomInt(0, 2); // 基礎事件頻率
+        }
+
+        // 特殊情況：連續無事件時強制觸發
+        if (this.gameState.turnsWithoutEvents >= 3) {
+            eventCount = Math.max(eventCount, 1);
+            this.gameState.turnsWithoutEvents = 0;
+        }
+
+        if (eventCount === 0) {
+            this.gameState.turnsWithoutEvents = (this.gameState.turnsWithoutEvents || 0) + 1;
+        } else {
+            this.gameState.turnsWithoutEvents = 0;
+        }
 
         for (let i = 0; i < eventCount; i++) {
             const event = this.selectRandomEvent();

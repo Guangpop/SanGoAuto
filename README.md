@@ -181,17 +181,6 @@ git commit -m "Deploy to GitHub Pages"
 git push origin main
 ```
 
-## 🎮 遊戲截圖
-
-### 主選單
-![主選單](docs/images/main-menu.png)
-
-### 技能選擇
-![技能選擇](docs/images/skill-selection.png)
-
-### 遊戲界面
-![遊戲界面](docs/images/game-screen.png)
-
 ## 🤝 貢獻指南
 
 歡迎提交 Issue 和 Pull Request！
@@ -222,7 +211,7 @@ git push origin main
 
 ---
 
-**🎯 立即體驗：** [遊戲連結](https://username.github.io/SanGoAuto)
+**🎯 立即體驗：** [遊戲連結](https://guangpop.github.io/SanGoAuto)
 **⭐ 喜歡的話請給個星星！**
 
 **遊戲時長**: ~10分鐘/局 | **語言**: 中文 | **平台**: Web瀏覽器 | **類型**: 放置養成

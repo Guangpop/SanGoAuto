@@ -1,11 +1,12 @@
 [
   {
-    "id": "divine_weapon_descends",
+    "id": "divine_weapon",
     "name": "天降神兵",
+    "description": "天空降下一件傳說級武器",
     "type": "positive",
-    "description": "天空中忽然雷鳴閃電，一把神兵從天而降！",
     "baseProbability": 3,
-    "destinyModifier": 15,
+    "destinyModifier": 2,
+    "isChoice": false,
     "requirements": [
       {
         "type": "level",
@@ -17,268 +18,378 @@
       {
         "id": "get_legendary_weapon",
         "name": "獲得傳說武器",
-        "description": "你獲得了一把傳說級武器！",
         "probability": 100,
         "effects": [
           {
             "type": "gain_equipment",
             "target": "legendary_weapon",
-            "description": "獲得隨機傳說武器"
+            "value": 1
           }
         ]
       }
-    ],
-    "isChoice": false
+    ]
   },
   {
-    "id": "wise_hermit_visit",
-    "name": "賢才投奔",
-    "type": "positive",
-    "description": "有隱士聽聞你的名聲，前來投奔",
+    "id": "plague_outbreak",
+    "name": "瘟疫爆發",
+    "description": "可怕的瘟疫在軍中蔓延",
+    "type": "negative",
     "baseProbability": 8,
-    "destinyModifier": 10,
+    "destinyModifier": -1,
+    "isChoice": false,
+    "outcomes": [
+      {
+        "id": "heavy_casualties",
+        "name": "慘重傷亡",
+        "probability": 60,
+        "effects": [
+          {
+            "type": "lose_troops",
+            "value": 200
+          }
+        ]
+      },
+      {
+        "id": "light_casualties",
+        "name": "輕微損失",
+        "probability": 40,
+        "effects": [
+          {
+            "type": "lose_troops",
+            "value": 80
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "scholar_visit",
+    "name": "賢士來訪",
+    "description": "一位博學的賢士前來投靠，願意傳授智慧",
+    "type": "positive",
+    "baseProbability": 12,
+    "destinyModifier": 1,
+    "isChoice": true,
     "requirements": [
       {
         "type": "attribute",
         "target": "charisma",
         "operator": ">=",
-        "value": 15
+        "value": 30
       }
     ],
     "outcomes": [
       {
-        "id": "recruit_hermit",
-        "name": "接納隱士",
-        "description": "隱士加入你的陣營，並帶來寶貴的智慧",
-        "probability": 100,
+        "id": "accept_scholar",
+        "name": "接受賢士",
         "effects": [
-          {
-            "type": "gain_general",
-            "description": "獲得高智力將領"
-          },
           {
             "type": "attribute_change",
             "target": "intelligence",
-            "value": 2,
-            "description": "智力+2"
+            "value": 5
+          },
+          {
+            "type": "gain_gold",
+            "value": -100
+          }
+        ]
+      },
+      {
+        "id": "reject_scholar",
+        "name": "婉拒賢士",
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": 50
           }
         ]
       }
-    ],
-    "isChoice": false
+    ]
   },
   {
-    "id": "yellow_turban_rebellion",
-    "name": "黃巾起義",
-    "type": "negative",
-    "description": "黃巾軍在你的領土內發動起義，威脅城池安全",
-    "baseProbability": 12,
-    "destinyModifier": -5,
-    "requirements": [
-      {
-        "type": "city_count",
-        "operator": ">=",
-        "value": 2
-      }
-    ],
+    "id": "merchant_caravan",
+    "name": "商隊過境",
+    "description": "富有的商隊經過，帶來了交易機會",
+    "type": "neutral",
+    "baseProbability": 15,
+    "destinyModifier": 0,
+    "isChoice": true,
     "outcomes": [
       {
-        "id": "suppress_rebellion",
-        "name": "鎮壓起義",
-        "description": "你成功鎮壓了起義，但損失了部分兵力",
+        "id": "trade_with_merchants",
+        "name": "與商人交易",
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": 300
+          },
+          {
+            "type": "gain_equipment",
+            "target": "random",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "id": "tax_merchants",
+        "name": "向商人徵稅",
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": 150
+          },
+          {
+            "type": "attribute_change",
+            "target": "charisma",
+            "value": -2
+          }
+        ]
+      },
+      {
+        "id": "let_pass",
+        "name": "放行商隊",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "charisma",
+            "value": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bandit_attack",
+    "name": "盜賊襲擊",
+    "description": "山賊突然襲擊城池",
+    "type": "negative",
+    "baseProbability": 10,
+    "destinyModifier": -1,
+    "isChoice": false,
+    "outcomes": [
+      {
+        "id": "repel_bandits",
+        "name": "擊退盜賊",
         "probability": 70,
         "effects": [
           {
             "type": "lose_troops",
-            "value": 200,
-            "description": "損失200兵力"
+            "value": 50
           },
           {
-            "type": "attribute_change",
-            "target": "politics",
-            "value": 1,
-            "description": "政治+1（治理經驗）"
+            "type": "gain_gold",
+            "value": 200
           }
         ]
       },
       {
-        "id": "rebellion_spreads",
-        "name": "起義蔓延",
-        "description": "起義蔓延，你失去了一座城池",
+        "id": "bandits_escape",
+        "name": "盜賊逃脫",
         "probability": 30,
         "effects": [
           {
-            "type": "lose_city",
-            "description": "失去一座隨機城池"
+            "type": "lose_troops",
+            "value": 100
+          },
+          {
+            "type": "gain_gold",
+            "value": -150
           }
         ]
       }
-    ],
-    "isChoice": false
+    ]
   },
   {
-    "id": "merchant_caravan",
-    "name": "商隊來訪",
-    "type": "choice",
-    "description": "一支富有的商隊路過你的領地，提出了交易請求",
-    "baseProbability": 15,
-    "destinyModifier": 5,
+    "id": "ancient_relic",
+    "name": "古代遺跡",
+    "description": "發現了一處神秘的古代遺跡",
+    "type": "neutral",
+    "baseProbability": 5,
+    "destinyModifier": 3,
+    "isChoice": true,
+    "requirements": [
+      {
+        "type": "attribute",
+        "target": "intelligence",
+        "operator": ">=",
+        "value": 25
+      }
+    ],
     "outcomes": [
       {
-        "id": "trade_gold_for_equipment",
-        "name": "用金錢購買裝備",
-        "description": "花費500金錢購買優質裝備",
-        "probability": 100,
+        "id": "explore_ruins",
+        "name": "探索遺跡",
         "effects": [
-          {
-            "type": "gain_gold",
-            "value": -500,
-            "description": "支付500金錢"
-          },
           {
             "type": "gain_equipment",
-            "target": "rare_equipment",
-            "description": "獲得稀有裝備"
-          }
-        ]
-      },
-      {
-        "id": "tax_caravan",
-        "name": "徵收過路稅",
-        "description": "向商隊徵收過路稅",
-        "probability": 100,
-        "effects": [
-          {
-            "type": "gain_gold",
-            "value": 300,
-            "description": "獲得300金錢"
+            "target": "legendary",
+            "value": 1
           },
           {
             "type": "attribute_change",
-            "target": "charisma",
-            "value": -1,
-            "description": "魅力-1（名聲受損）"
+            "target": "destiny",
+            "value": 5
           }
         ]
       },
       {
-        "id": "let_pass_freely",
-        "name": "免費放行",
-        "description": "讓商隊自由通過",
-        "probability": 100,
+        "id": "seal_ruins",
+        "name": "封印遺跡",
         "effects": [
           {
             "type": "attribute_change",
-            "target": "charisma",
-            "value": 2,
-            "description": "魅力+2（仁德之名）"
+            "target": "destiny",
+            "value": 2
           }
         ]
       }
-    ],
-    "isChoice": true
+    ]
   },
   {
     "id": "natural_disaster",
-    "name": "天災橫行",
+    "name": "天災降臨",
+    "description": "地震、洪水或其他天災襲擊城池",
     "type": "negative",
-    "description": "你的領地遭受了嚴重的自然災害",
-    "baseProbability": 10,
-    "destinyModifier": -8,
+    "baseProbability": 6,
+    "destinyModifier": -2,
+    "isChoice": false,
     "outcomes": [
       {
-        "id": "disaster_recovery",
-        "name": "災後重建",
-        "description": "災害造成了損失，但人民團結一心重建家園",
-        "probability": 100,
+        "id": "major_damage",
+        "name": "嚴重損失",
+        "probability": 40,
         "effects": [
           {
             "type": "lose_troops",
-            "value": 150,
-            "description": "損失150兵力"
+            "value": 300
           },
           {
             "type": "gain_gold",
-            "value": -200,
-            "description": "損失200金錢用於重建"
-          },
-          {
-            "type": "attribute_change",
-            "target": "politics",
-            "value": 2,
-            "description": "政治+2（災難管理經驗）"
+            "value": -500
           }
         ]
-      }
-    ],
-    "isChoice": false
-  },
-  {
-    "id": "enemy_invasion",
-    "name": "敵軍來襲",
-    "type": "negative",
-    "description": "敵對勢力突然進攻你的邊境城池！",
-    "baseProbability": 15,
-    "destinyModifier": -3,
-    "requirements": [
+      },
       {
-        "type": "city_count",
-        "operator": ">=",
-        "value": 2
-      }
-    ],
-    "outcomes": [
-      {
-        "id": "successful_defense",
-        "name": "成功守城",
-        "description": "你成功擊退了敵軍，還俘虜了一些士兵",
+        "id": "moderate_damage",
+        "name": "中等損失",
         "probability": 60,
         "effects": [
           {
             "type": "lose_troops",
-            "value": 100,
-            "description": "損失100兵力"
-          },
-          {
-            "type": "attribute_change",
-            "target": "strength",
-            "value": 1,
-            "description": "武力+1（實戰經驗）"
+            "value": 150
           },
           {
             "type": "gain_gold",
-            "value": 150,
-            "description": "戰利品+150金錢"
+            "value": -200
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "recruitment_opportunity",
+    "name": "招兵買馬",
+    "description": "有機會招募到更多士兵",
+    "type": "positive",
+    "baseProbability": 18,
+    "destinyModifier": 1,
+    "isChoice": true,
+    "requirements": [
+      {
+        "type": "attribute",
+        "target": "leadership",
+        "operator": ">=",
+        "value": 20
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "recruit_soldiers",
+        "name": "招募士兵",
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": -300
+          },
+          {
+            "type": "gain_troops",
+            "value": 400
           }
         ]
       },
       {
-        "id": "failed_defense",
-        "name": "守城失敗",
-        "description": "敵軍攻破了城池，你損失慘重",
-        "probability": 40,
+        "id": "selective_recruitment",
+        "name": "精挑細選",
         "effects": [
           {
-            "type": "lose_city",
-            "description": "失去被攻擊的城池"
+            "type": "gain_gold",
+            "value": -200
           },
           {
-            "type": "lose_troops",
-            "value": 300,
-            "description": "損失300兵力"
+            "type": "gain_troops",
+            "value": 250
+          },
+          {
+            "type": "attribute_change",
+            "target": "leadership",
+            "value": 1
           }
         ]
       }
-    ],
-    "isChoice": false
+    ]
   },
   {
-    "id": "ancient_artifact",
-    "name": "古物現世",
-    "type": "positive",
-    "description": "你的部下在古墓中發現了神秘的古代遺物",
-    "baseProbability": 5,
-    "destinyModifier": 12,
+    "id": "rival_general",
+    "name": "宿敵挑戰",
+    "description": "一位強大的敵將向你發出決鬥挑戰",
+    "type": "neutral",
+    "baseProbability": 8,
+    "destinyModifier": 0,
+    "isChoice": true,
+    "requirements": [
+      {
+        "type": "level",
+        "operator": ">=",
+        "value": 5
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "accept_duel",
+        "name": "接受決鬥",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "strength",
+            "value": 3
+          },
+          {
+            "type": "lose_troops",
+            "value": 100
+          }
+        ]
+      },
+      {
+        "id": "decline_duel",
+        "name": "拒絕決鬥",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "charisma",
+            "value": -3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "spy_infiltration",
+    "name": "間諜滲透",
+    "description": "發現敵軍間諜試圖滲透",
+    "type": "negative",
+    "baseProbability": 12,
+    "destinyModifier": -1,
+    "isChoice": true,
     "requirements": [
       {
         "type": "attribute",
@@ -289,155 +400,1659 @@
     ],
     "outcomes": [
       {
-        "id": "decipher_artifact",
-        "name": "破解古物",
-        "description": "你成功破解了古物的秘密，獲得了強大的力量",
+        "id": "capture_spy",
+        "name": "捕獲間諜",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "intelligence",
+            "value": 2
+          },
+          {
+            "type": "gain_gold",
+            "value": 100
+          }
+        ]
+      },
+      {
+        "id": "spy_escapes",
+        "name": "間諜逃脫",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "intelligence",
+            "value": -1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dragon_sighting",
+    "name": "神龍現世",
+    "description": "傳說中的神龍在天空中現身",
+    "type": "special",
+    "baseProbability": 1,
+    "destinyModifier": 5,
+    "isChoice": true,
+    "requirements": [
+      {
+        "type": "attribute",
+        "target": "destiny",
+        "operator": ">=",
+        "value": 20
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "seek_dragon_blessing",
+        "name": "尋求龍神庇佑",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "all_attributes",
+            "value": 3
+          },
+          {
+            "type": "attribute_change",
+            "target": "destiny",
+            "value": 10
+          }
+        ]
+      },
+      {
+        "id": "ignore_dragon",
+        "name": "無視神龍",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "harvest_festival",
+    "name": "豐收節慶",
+    "description": "城池舉辦豐收節，人民歡欣鼓舞",
+    "type": "positive",
+    "baseProbability": 20,
+    "destinyModifier": 1,
+    "isChoice": false,
+    "outcomes": [
+      {
+        "id": "abundant_harvest",
+        "name": "豐收慶典",
+        "probability": 100,
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": 400
+          },
+          {
+            "type": "attribute_change",
+            "target": "charisma",
+            "value": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreign_diplomat",
+    "name": "外交使節",
+    "description": "鄰國派遣使節前來談判",
+    "type": "neutral",
+    "baseProbability": 14,
+    "destinyModifier": 0,
+    "isChoice": true,
+    "requirements": [
+      {
+        "type": "city_count",
+        "operator": ">=",
+        "value": 2
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "diplomatic_alliance",
+        "name": "建立同盟",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "politics",
+            "value": 4
+          },
+          {
+            "type": "gain_gold",
+            "value": 300
+          }
+        ]
+      },
+      {
+        "id": "trade_agreement",
+        "name": "貿易協定",
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": 500
+          }
+        ]
+      },
+      {
+        "id": "reject_diplomacy",
+        "name": "拒絕談判",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "strength",
+            "value": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "phantom_army",
+    "name": "幽靈軍團",
+    "description": "神秘的幽靈軍團願意為你作戰",
+    "type": "special",
+    "baseProbability": 2,
+    "destinyModifier": 4,
+    "isChoice": true,
+    "requirements": [
+      {
+        "type": "level",
+        "operator": ">=",
+        "value": 7
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "accept_phantoms",
+        "name": "接受幽靈",
+        "effects": [
+          {
+            "type": "gain_troops",
+            "value": 500
+          },
+          {
+            "type": "attribute_change",
+            "target": "destiny",
+            "value": -5
+          }
+        ]
+      },
+      {
+        "id": "banish_phantoms",
+        "name": "驅散幽靈",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "destiny",
+            "value": 3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "time_rift",
+    "name": "時空裂縫",
+    "description": "一道時空裂縫出現，可以看到未來片段",
+    "type": "special",
+    "baseProbability": 1,
+    "destinyModifier": 6,
+    "isChoice": true,
+    "outcomes": [
+      {
+        "id": "peer_into_future",
+        "name": "窺視未來",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "intelligence",
+            "value": 8
+          },
+          {
+            "type": "attribute_change",
+            "target": "destiny",
+            "value": 15
+          }
+        ]
+      },
+      {
+        "id": "seal_rift",
+        "name": "封印裂縫",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "strength",
+            "value": 5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "meteor_shower",
+    "name": "流星雨",
+    "description": "美麗的流星雨照亮夜空，帶來好運",
+    "type": "positive",
+    "baseProbability": 7,
+    "destinyModifier": 2,
+    "isChoice": false,
+    "outcomes": [
+      {
+        "id": "meteor_blessing",
+        "name": "流星祝福",
         "probability": 100,
         "effects": [
           {
             "type": "attribute_change",
             "target": "destiny",
-            "value": 5,
-            "description": "天命+5"
+            "value": 8
           },
           {
             "type": "gain_equipment",
-            "target": "legendary_accessory",
-            "description": "獲得傳說配飾"
+            "target": "rare",
+            "value": 1
           }
         ]
       }
-    ],
-    "isChoice": false
+    ]
   },
   {
-    "id": "scholarly_debate",
-    "name": "學者辯論",
-    "type": "choice",
-    "description": "一位著名學者挑戰你進行學術辯論",
-    "baseProbability": 12,
-    "destinyModifier": 3,
+    "id": "civil_unrest",
+    "name": "民間動亂",
+    "description": "城池內發生民眾騷亂",
+    "type": "negative",
+    "baseProbability": 11,
+    "destinyModifier": -1,
+    "isChoice": true,
+    "requirements": [
+      {
+        "type": "city_count",
+        "operator": ">=",
+        "value": 3
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "suppress_unrest",
+        "name": "武力鎮壓",
+        "effects": [
+          {
+            "type": "lose_troops",
+            "value": 200
+          },
+          {
+            "type": "attribute_change",
+            "target": "charisma",
+            "value": -4
+          }
+        ]
+      },
+      {
+        "id": "negotiate_peace",
+        "name": "和平談判",
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": -300
+          },
+          {
+            "type": "attribute_change",
+            "target": "politics",
+            "value": 3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "mysterious_merchant",
+    "name": "神秘商人",
+    "description": "一位神秘商人販售奇異商品",
+    "type": "neutral",
+    "baseProbability": 9,
+    "destinyModifier": 2,
+    "isChoice": true,
+    "outcomes": [
+      {
+        "id": "buy_mystery_item",
+        "name": "購買神秘物品",
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": -500
+          },
+          {
+            "type": "gain_equipment",
+            "target": "legendary",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "id": "haggle_price",
+        "name": "討價還價",
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": -300
+          },
+          {
+            "type": "gain_equipment",
+            "target": "rare",
+            "value": 1
+          },
+          {
+            "type": "attribute_change",
+            "target": "charisma",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "id": "ignore_merchant",
+        "name": "無視商人",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "library_discovery",
+    "name": "古代圖書館",
+    "description": "發現一座充滿古老智慧的圖書館",
+    "type": "positive",
+    "baseProbability": 6,
+    "destinyModifier": 1,
+    "isChoice": true,
     "requirements": [
       {
         "type": "attribute",
         "target": "intelligence",
         "operator": ">=",
-        "value": 12
+        "value": 30
       }
     ],
     "outcomes": [
       {
-        "id": "accept_debate",
-        "name": "接受辯論",
-        "description": "你接受了辯論挑戰",
-        "probability": 70,
+        "id": "study_ancient_texts",
+        "name": "研讀古籍",
         "effects": [
           {
             "type": "attribute_change",
             "target": "intelligence",
-            "value": 3,
-            "description": "智力+3（辯論勝利）"
-          },
-          {
-            "type": "attribute_change",
-            "target": "charisma",
-            "value": 2,
-            "description": "魅力+2（學識名聲）"
-          }
-        ]
-      },
-      {
-        "id": "decline_debate",
-        "name": "婉拒辯論",
-        "description": "你禮貌地拒絕了辯論",
-        "probability": 100,
-        "effects": [
-          {
-            "type": "attribute_change",
-            "target": "charisma",
-            "value": -1,
-            "description": "魅力-1（被認為怯戰）"
-          }
-        ]
-      }
-    ],
-    "isChoice": true
-  },
-  {
-    "id": "bumper_harvest",
-    "name": "五穀豐登",
-    "type": "positive",
-    "description": "你的領地迎來了豐收年，糧食充足，人心安定",
-    "baseProbability": 18,
-    "destinyModifier": 8,
-    "outcomes": [
-      {
-        "id": "harvest_prosperity",
-        "name": "豐收繁榮",
-        "description": "豐收帶來了繁榮，增加了稅收和兵員",
-        "probability": 100,
-        "effects": [
-          {
-            "type": "gain_gold",
-            "value": 400,
-            "description": "獲得400金錢（豐收稅收）"
-          },
-          {
-            "type": "lose_troops",
-            "value": -200,
-            "description": "增加200兵力（新兵入伍）"
+            "value": 6
           },
           {
             "type": "attribute_change",
             "target": "politics",
-            "value": 1,
-            "description": "政治+1（民心所向）"
+            "value": 3
+          }
+        ]
+      },
+      {
+        "id": "preserve_library",
+        "name": "保護圖書館",
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": -200
+          },
+          {
+            "type": "attribute_change",
+            "target": "charisma",
+            "value": 2
           }
         ]
       }
-    ],
-    "isChoice": false
+    ]
   },
   {
-    "id": "legendary_general_appears",
-    "name": "英雄慕名",
+    "id": "monster_invasion",
+    "name": "妖魔入侵",
+    "description": "邪惡的妖魔大軍入侵邊境",
+    "type": "negative",
+    "baseProbability": 4,
+    "destinyModifier": -3,
+    "isChoice": false,
+    "requirements": [
+      {
+        "type": "level",
+        "operator": ">=",
+        "value": 6
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "defeat_monsters",
+        "name": "擊敗妖魔",
+        "probability": 60,
+        "effects": [
+          {
+            "type": "lose_troops",
+            "value": 400
+          },
+          {
+            "type": "attribute_change",
+            "target": "strength",
+            "value": 4
+          },
+          {
+            "type": "gain_equipment",
+            "target": "legendary",
+            "value": 1
+          }
+        ]
+      },
+      {
+        "id": "monsters_retreat",
+        "name": "妖魔撤退",
+        "probability": 40,
+        "effects": [
+          {
+            "type": "lose_troops",
+            "value": 600
+          },
+          {
+            "type": "attribute_change",
+            "target": "charisma",
+            "value": -3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "festival_competition",
+    "name": "武藝大會",
+    "description": "城池舉辦武藝競賽，吸引各路英雄",
     "type": "positive",
-    "description": "一位傳奇將領聽聞你的名聲，前來投靠",
-    "baseProbability": 6,
-    "destinyModifier": 20,
+    "baseProbability": 16,
+    "destinyModifier": 1,
+    "isChoice": true,
+    "outcomes": [
+      {
+        "id": "participate_competition",
+        "name": "參加比賽",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "strength",
+            "value": 3
+          },
+          {
+            "type": "attribute_change",
+            "target": "charisma",
+            "value": 2
+          }
+        ]
+      },
+      {
+        "id": "organize_competition",
+        "name": "主辦比賽",
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": -400
+          },
+          {
+            "type": "attribute_change",
+            "target": "leadership",
+            "value": 4
+          },
+          {
+            "type": "attribute_change",
+            "target": "charisma",
+            "value": 3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sage_prophecy",
+    "name": "聖賢預言",
+    "description": "一位聖賢帶來關於未來的重要預言",
+    "type": "special",
+    "baseProbability": 3,
+    "destinyModifier": 4,
+    "isChoice": true,
+    "requirements": [
+      {
+        "type": "attribute",
+        "target": "destiny",
+        "operator": ">=",
+        "value": 15
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "heed_prophecy",
+        "name": "聽從預言",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "destiny",
+            "value": 12
+          },
+          {
+            "type": "attribute_change",
+            "target": "intelligence",
+            "value": 4
+          }
+        ]
+      },
+      {
+        "id": "ignore_prophecy",
+        "name": "無視預言",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "strength",
+            "value": 3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "hidden_treasure",
+    "name": "藏寶圖",
+    "description": "獲得一張標示寶藏位置的古老地圖",
+    "type": "positive",
+    "baseProbability": 8,
+    "destinyModifier": 2,
+    "isChoice": true,
+    "outcomes": [
+      {
+        "id": "search_treasure",
+        "name": "尋找寶藏",
+        "effects": [
+          {
+            "type": "lose_troops",
+            "value": 100
+          },
+          {
+            "type": "gain_gold",
+            "value": 800
+          },
+          {
+            "type": "gain_equipment",
+            "target": "rare",
+            "value": 2
+          }
+        ]
+      },
+      {
+        "id": "sell_map",
+        "name": "出售地圖",
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": 300
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "volcanic_eruption",
+    "name": "火山爆發",
+    "description": "附近火山突然爆發，帶來災難",
+    "type": "negative",
+    "baseProbability": 3,
+    "destinyModifier": -2,
+    "isChoice": false,
+    "outcomes": [
+      {
+        "id": "evacuate_successfully",
+        "name": "成功撤離",
+        "probability": 70,
+        "effects": [
+          {
+            "type": "lose_troops",
+            "value": 250
+          },
+          {
+            "type": "gain_gold",
+            "value": -400
+          }
+        ]
+      },
+      {
+        "id": "trapped_by_lava",
+        "name": "被熔岩困住",
+        "probability": 30,
+        "effects": [
+          {
+            "type": "lose_troops",
+            "value": 500
+          },
+          {
+            "type": "gain_gold",
+            "value": -800
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "fairy_blessing",
+    "name": "仙子賜福",
+    "description": "善良的仙子為你的城池帶來祝福",
+    "type": "positive",
+    "baseProbability": 4,
+    "destinyModifier": 3,
+    "isChoice": false,
     "requirements": [
       {
         "type": "attribute",
         "target": "charisma",
         "operator": ">=",
-        "value": 25
+        "value": 40
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "fairy_gift",
+        "name": "仙子禮物",
+        "probability": 100,
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "all_attributes",
+            "value": 2
+          },
+          {
+            "type": "gain_troops",
+            "value": 300
+          },
+          {
+            "type": "gain_gold",
+            "value": 500
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "earthquake_fissure",
+    "name": "地裂天崩",
+    "description": "強烈地震撕裂大地",
+    "type": "negative",
+    "baseProbability": 5,
+    "destinyModifier": -2,
+    "isChoice": true,
+    "outcomes": [
+      {
+        "id": "rebuild_quickly",
+        "name": "快速重建",
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": -600
+          },
+          {
+            "type": "attribute_change",
+            "target": "leadership",
+            "value": 3
+          }
+        ]
       },
       {
+        "id": "wait_for_help",
+        "name": "等待援助",
+        "effects": [
+          {
+            "type": "lose_troops",
+            "value": 300
+          },
+          {
+            "type": "gain_gold",
+            "value": -200
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "phoenix_sighting",
+    "name": "鳳凰現世",
+    "description": "傳說中的不死鳥鳳凰出現在天空",
+    "type": "special",
+    "baseProbability": 1,
+    "destinyModifier": 6,
+    "isChoice": true,
+    "requirements": [
+      {
         "type": "level",
+        "operator": ">=",
+        "value": 8
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "phoenix_feather",
+        "name": "獲得鳳凰羽毛",
+        "effects": [
+          {
+            "type": "gain_equipment",
+            "target": "legendary",
+            "value": 1
+          },
+          {
+            "type": "attribute_change",
+            "target": "destiny",
+            "value": 20
+          }
+        ]
+      },
+      {
+        "id": "phoenix_blessing",
+        "name": "鳳凰祝福",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "all_attributes",
+            "value": 5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "assassin_plot",
+    "name": "刺客陰謀",
+    "description": "發現有刺客正在策劃暗殺行動",
+    "type": "negative",
+    "baseProbability": 9,
+    "destinyModifier": -1,
+    "isChoice": true,
+    "requirements": [
+      {
+        "type": "city_count",
+        "operator": ">=",
+        "value": 4
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "counter_assassination",
+        "name": "反擊刺殺",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "intelligence",
+            "value": 4
+          },
+          {
+            "type": "lose_troops",
+            "value": 150
+          }
+        ]
+      },
+      {
+        "id": "increase_security",
+        "name": "加強戒備",
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": -300
+          },
+          {
+            "type": "attribute_change",
+            "target": "leadership",
+            "value": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "magical_spring",
+    "name": "靈泉湧現",
+    "description": "發現一處具有神奇療效的溫泉",
+    "type": "positive",
+    "baseProbability": 7,
+    "destinyModifier": 2,
+    "isChoice": true,
+    "outcomes": [
+      {
+        "id": "drink_from_spring",
+        "name": "飲用靈泉",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "all_attributes",
+            "value": 3
+          },
+          {
+            "type": "gain_troops",
+            "value": 200
+          }
+        ]
+      },
+      {
+        "id": "protect_spring",
+        "name": "保護泉源",
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": -200
+          },
+          {
+            "type": "attribute_change",
+            "target": "destiny",
+            "value": 5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "demon_contract",
+    "name": "惡魔契約",
+    "description": "一隻惡魔提出與你簽訂契約",
+    "type": "special",
+    "baseProbability": 2,
+    "destinyModifier": -3,
+    "isChoice": true,
+    "requirements": [
+      {
+        "type": "attribute",
+        "target": "strength",
+        "operator": ">=",
+        "value": 50
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "sign_contract",
+        "name": "簽訂契約",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "strength",
+            "value": 15
+          },
+          {
+            "type": "attribute_change",
+            "target": "destiny",
+            "value": -15
+          },
+          {
+            "type": "gain_troops",
+            "value": 666
+          }
+        ]
+      },
+      {
+        "id": "refuse_demon",
+        "name": "拒絕惡魔",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "destiny",
+            "value": 8
+          },
+          {
+            "type": "lose_troops",
+            "value": 200
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "royal_summons",
+    "name": "皇帝召見",
+    "description": "皇帝下詔召你進京覲見",
+    "type": "neutral",
+    "baseProbability": 5,
+    "destinyModifier": 1,
+    "isChoice": true,
+    "requirements": [
+      {
+        "type": "city_count",
         "operator": ">=",
         "value": 5
       }
     ],
     "outcomes": [
       {
-        "id": "legendary_joins",
-        "name": "傳奇歸順",
-        "description": "傳奇將領決定追隨於你",
-        "probability": 100,
+        "id": "accept_summons",
+        "name": "接受召見",
         "effects": [
           {
-            "type": "gain_general",
-            "description": "獲得傳奇級將領"
+            "type": "attribute_change",
+            "target": "politics",
+            "value": 6
+          },
+          {
+            "type": "gain_gold",
+            "value": 1000
+          },
+          {
+            "type": "lose_troops",
+            "value": 300
+          }
+        ]
+      },
+      {
+        "id": "ignore_summons",
+        "name": "無視召見",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "strength",
+            "value": 4
+          },
+          {
+            "type": "attribute_change",
+            "target": "politics",
+            "value": -5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "legendary_weapon_quest",
+    "name": "神兵傳說",
+    "description": "聽說某處隱藏著傳說中的神兵",
+    "type": "positive",
+    "baseProbability": 4,
+    "destinyModifier": 3,
+    "isChoice": true,
+    "requirements": [
+      {
+        "type": "level",
+        "operator": ">=",
+        "value": 6
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "quest_for_weapon",
+        "name": "尋找神兵",
+        "effects": [
+          {
+            "type": "lose_troops",
+            "value": 400
+          },
+          {
+            "type": "gain_gold",
+            "value": -500
+          },
+          {
+            "type": "gain_equipment",
+            "target": "legendary",
+            "value": 1
+          },
+          {
+            "type": "attribute_change",
+            "target": "strength",
+            "value": 6
+          }
+        ]
+      },
+      {
+        "id": "abandon_quest",
+        "name": "放棄探索",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "barbarian_invasion",
+    "name": "蛮族入侵",
+    "description": "北方蛮族大軍南下入侵",
+    "type": "negative",
+    "baseProbability": 7,
+    "destinyModifier": -2,
+    "isChoice": false,
+    "requirements": [
+      {
+        "type": "city_count",
+        "operator": ">=",
+        "value": 3
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "repel_barbarians",
+        "name": "擊退蛮族",
+        "probability": 65,
+        "effects": [
+          {
+            "type": "lose_troops",
+            "value": 350
+          },
+          {
+            "type": "attribute_change",
+            "target": "strength",
+            "value": 3
+          },
+          {
+            "type": "gain_gold",
+            "value": 400
+          }
+        ]
+      },
+      {
+        "id": "barbarian_victory",
+        "name": "蛮族得勝",
+        "probability": 35,
+        "effects": [
+          {
+            "type": "lose_troops",
+            "value": 600
+          },
+          {
+            "type": "gain_gold",
+            "value": -600
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "celestial_alignment",
+    "name": "天象異變",
+    "description": "天空出現罕見的天文現象",
+    "type": "special",
+    "baseProbability": 3,
+    "destinyModifier": 4,
+    "isChoice": true,
+    "outcomes": [
+      {
+        "id": "study_celestial_event",
+        "name": "觀測天象",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "intelligence",
+            "value": 8
+          },
+          {
+            "type": "attribute_change",
+            "target": "destiny",
+            "value": 12
+          }
+        ]
+      },
+      {
+        "id": "perform_ritual",
+        "name": "舉行祭典",
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": -300
           },
           {
             "type": "attribute_change",
             "target": "charisma",
-            "value": 3,
-            "description": "魅力+3（英雄相惜）"
+            "value": 5
+          },
+          {
+            "type": "attribute_change",
+            "target": "destiny",
+            "value": 8
           }
         ]
       }
+    ]
+  },
+  {
+    "id": "plague_cure",
+    "name": "瘟疫解藥",
+    "description": "發現了能治癒瘟疫的神奇草藥",
+    "type": "positive",
+    "baseProbability": 6,
+    "destinyModifier": 2,
+    "isChoice": true,
+    "outcomes": [
+      {
+        "id": "distribute_cure",
+        "name": "免費發放",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "charisma",
+            "value": 6
+          },
+          {
+            "type": "attribute_change",
+            "target": "politics",
+            "value": 4
+          },
+          {
+            "type": "gain_troops",
+            "value": 400
+          }
+        ]
+      },
+      {
+        "id": "sell_cure",
+        "name": "販售藥草",
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": 800
+          },
+          {
+            "type": "attribute_change",
+            "target": "charisma",
+            "value": -3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ancient_curse",
+    "name": "古老詛咒",
+    "description": "觸發了古墓中的詛咒",
+    "type": "negative",
+    "baseProbability": 4,
+    "destinyModifier": -4,
+    "isChoice": true,
+    "requirements": [
+      {
+        "type": "attribute",
+        "target": "destiny",
+        "operator": "<=",
+        "value": 10
+      }
     ],
-    "isChoice": false
+    "outcomes": [
+      {
+        "id": "break_curse",
+        "name": "破除詛咒",
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": -800
+          },
+          {
+            "type": "attribute_change",
+            "target": "intelligence",
+            "value": 5
+          },
+          {
+            "type": "attribute_change",
+            "target": "destiny",
+            "value": 10
+          }
+        ]
+      },
+      {
+        "id": "endure_curse",
+        "name": "承受詛咒",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "all_attributes",
+            "value": -3
+          },
+          {
+            "type": "lose_troops",
+            "value": 400
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "divine_intervention",
+    "name": "神明干預",
+    "description": "天神親自降臨，改變命運",
+    "type": "special",
+    "baseProbability": 1,
+    "destinyModifier": 8,
+    "isChoice": false,
+    "requirements": [
+      {
+        "type": "attribute",
+        "target": "destiny",
+        "operator": ">=",
+        "value": 50
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "divine_blessing",
+        "name": "神明賜福",
+        "probability": 100,
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "all_attributes",
+            "value": 10
+          },
+          {
+            "type": "gain_troops",
+            "value": 1000
+          },
+          {
+            "type": "gain_gold",
+            "value": 2000
+          },
+          {
+            "type": "gain_equipment",
+            "target": "legendary",
+            "value": 3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "secret_alliance",
+    "name": "秘密結盟",
+    "description": "收到神秘勢力的結盟邀請",
+    "type": "neutral",
+    "baseProbability": 8,
+    "destinyModifier": 1,
+    "isChoice": true,
+    "requirements": [
+      {
+        "type": "attribute",
+        "target": "politics",
+        "operator": ">=",
+        "value": 35
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "join_alliance",
+        "name": "加入聯盟",
+        "effects": [
+          {
+            "type": "gain_troops",
+            "value": 500
+          },
+          {
+            "type": "attribute_change",
+            "target": "politics",
+            "value": 5
+          },
+          {
+            "type": "attribute_change",
+            "target": "destiny",
+            "value": -3
+          }
+        ]
+      },
+      {
+        "id": "refuse_alliance",
+        "name": "拒絕結盟",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "strength",
+            "value": 3
+          },
+          {
+            "type": "lose_troops",
+            "value": 200
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "master_craftsman",
+    "name": "工匠大師",
+    "description": "一位技藝精湛的工匠願意為你服務",
+    "type": "positive",
+    "baseProbability": 10,
+    "destinyModifier": 1,
+    "isChoice": true,
+    "outcomes": [
+      {
+        "id": "hire_craftsman",
+        "name": "雇用工匠",
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": -400
+          },
+          {
+            "type": "gain_equipment",
+            "target": "rare",
+            "value": 2
+          },
+          {
+            "type": "attribute_change",
+            "target": "politics",
+            "value": 2
+          }
+        ]
+      },
+      {
+        "id": "learn_from_master",
+        "name": "拜師學藝",
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": -200
+          },
+          {
+            "type": "attribute_change",
+            "target": "intelligence",
+            "value": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ghostly_visitation",
+    "name": "鬼魂造訪",
+    "description": "先祖的鬼魂前來傳授智慧",
+    "type": "special",
+    "baseProbability": 5,
+    "destinyModifier": 2,
+    "isChoice": true,
+    "requirements": [
+      {
+        "type": "level",
+        "operator": ">=",
+        "value": 4
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "listen_to_ghost",
+        "name": "聆聽教誨",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "intelligence",
+            "value": 5
+          },
+          {
+            "type": "attribute_change",
+            "target": "destiny",
+            "value": 6
+          }
+        ]
+      },
+      {
+        "id": "banish_ghost",
+        "name": "驅散鬼魂",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "strength",
+            "value": 3
+          },
+          {
+            "type": "attribute_change",
+            "target": "destiny",
+            "value": -2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rival_faction",
+    "name": "敵對勢力",
+    "description": "新興勢力對你的統治地位構成威脅",
+    "type": "negative",
+    "baseProbability": 12,
+    "destinyModifier": -1,
+    "isChoice": true,
+    "requirements": [
+      {
+        "type": "city_count",
+        "operator": ">=",
+        "value": 6
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "preemptive_strike",
+        "name": "先發制人",
+        "effects": [
+          {
+            "type": "lose_troops",
+            "value": 500
+          },
+          {
+            "type": "attribute_change",
+            "target": "strength",
+            "value": 4
+          },
+          {
+            "type": "gain_gold",
+            "value": 600
+          }
+        ]
+      },
+      {
+        "id": "diplomatic_solution",
+        "name": "外交解決",
+        "effects": [
+          {
+            "type": "gain_gold",
+            "value": -500
+          },
+          {
+            "type": "attribute_change",
+            "target": "politics",
+            "value": 5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "magical_artifact",
+    "name": "魔法神器",
+    "description": "在古老廢墟中發現神秘的魔法神器",
+    "type": "positive",
+    "baseProbability": 3,
+    "destinyModifier": 4,
+    "isChoice": true,
+    "requirements": [
+      {
+        "type": "attribute",
+        "target": "intelligence",
+        "operator": ">=",
+        "value": 40
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "activate_artifact",
+        "name": "啟動神器",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "all_attributes",
+            "value": 4
+          },
+          {
+            "type": "gain_equipment",
+            "target": "legendary",
+            "value": 1
+          },
+          {
+            "type": "attribute_change",
+            "target": "destiny",
+            "value": 15
+          }
+        ]
+      },
+      {
+        "id": "seal_artifact",
+        "name": "封印神器",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "intelligence",
+            "value": 6
+          },
+          {
+            "type": "attribute_change",
+            "target": "destiny",
+            "value": 5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "royal_marriage",
+    "name": "聯姻提議",
+    "description": "鄰國公主/王子提出聯姻建議",
+    "type": "neutral",
+    "baseProbability": 6,
+    "destinyModifier": 0,
+    "isChoice": true,
+    "requirements": [
+      {
+        "type": "attribute",
+        "target": "charisma",
+        "operator": ">=",
+        "value": 45
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "accept_marriage",
+        "name": "接受聯姻",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "politics",
+            "value": 8
+          },
+          {
+            "type": "attribute_change",
+            "target": "charisma",
+            "value": 5
+          },
+          {
+            "type": "gain_gold",
+            "value": 1500
+          },
+          {
+            "type": "gain_troops",
+            "value": 800
+          }
+        ]
+      },
+      {
+        "id": "decline_marriage",
+        "name": "拒絕聯姻",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "strength",
+            "value": 4
+          },
+          {
+            "type": "lose_troops",
+            "value": 300
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "solar_eclipse",
+    "name": "日食天象",
+    "description": "罕見的日全食現象籠罩大地",
+    "type": "special",
+    "baseProbability": 2,
+    "destinyModifier": 5,
+    "isChoice": true,
+    "outcomes": [
+      {
+        "id": "eclipse_ritual",
+        "name": "舉行日食儀式",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "destiny",
+            "value": 18
+          },
+          {
+            "type": "attribute_change",
+            "target": "intelligence",
+            "value": 6
+          },
+          {
+            "type": "gain_gold",
+            "value": -400
+          }
+        ]
+      },
+      {
+        "id": "ignore_eclipse",
+        "name": "無視天象",
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "strength",
+            "value": 5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "final_battle",
+    "name": "最終決戰",
+    "description": "統一天下的最後一戰即將來臨",
+    "type": "special",
+    "baseProbability": 1,
+    "destinyModifier": 0,
+    "isChoice": false,
+    "requirements": [
+      {
+        "type": "city_count",
+        "operator": ">=",
+        "value": 20
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "destined_victory",
+        "name": "天命所歸",
+        "probability": 80,
+        "effects": [
+          {
+            "type": "attribute_change",
+            "target": "all_attributes",
+            "value": 20
+          },
+          {
+            "type": "gain_troops",
+            "value": 2000
+          }
+        ]
+      },
+      {
+        "id": "pyrrhic_victory",
+        "name": "慘勝收場",
+        "probability": 20,
+        "effects": [
+          {
+            "type": "lose_troops",
+            "value": 1000
+          },
+          {
+            "type": "attribute_change",
+            "target": "strength",
+            "value": 10
+          }
+        ]
+      }
+    ]
   }
 ]

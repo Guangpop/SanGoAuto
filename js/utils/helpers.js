@@ -13,6 +13,16 @@ class GameHelpers {
     }
 
     /**
+     * 生成指定範圍的隨機浮點數
+     * @param {number} min 最小值
+     * @param {number} max 最大值
+     * @returns {number} 隨機浮點數
+     */
+    static randomFloat(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    /**
      * 生成0-100的隨機數，用於機率判定
      * @returns {number} 0-100的隨機數
      */
@@ -231,6 +241,140 @@ class GameHelpers {
         return {
             valid: errors.length === 0,
             errors: errors
+        };
+    }
+
+    /**
+     * 權重隨機選擇器
+     * @param {Array} items 選項陣列，每項需包含 {item, weight}
+     * @returns {*} 根據權重隨機選中的項目
+     */
+    static weightedRandomChoice(items) {
+        if (!items || items.length === 0) return null;
+
+        const totalWeight = items.reduce((sum, item) => sum + (item.weight || 1), 0);
+        let random = Math.random() * totalWeight;
+
+        for (const item of items) {
+            random -= (item.weight || 1);
+            if (random <= 0) {
+                return item.item || item;
+            }
+        }
+
+        return items[items.length - 1].item || items[items.length - 1];
+    }
+
+    /**
+     * 隨機洗牌陣列
+     * @param {Array} array 要洗牌的陣列
+     * @returns {Array} 洗牌後的陣列副本
+     */
+    static shuffleArray(array) {
+        const result = [...array];
+        for (let i = result.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [result[i], result[j]] = [result[j], result[i]];
+        }
+        return result;
+    }
+
+    /**
+     * 生成高斯分布隨機數（Box-Muller變換）
+     * @param {number} mean 平均值
+     * @param {number} stdDev 標準差
+     * @returns {number} 符合高斯分布的隨機數
+     */
+    static gaussianRandom(mean = 0, stdDev = 1) {
+        let u = 0, v = 0;
+        while(u === 0) u = Math.random(); // 避免 log(0)
+        while(v === 0) v = Math.random();
+
+        const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+        return z * stdDev + mean;
+    }
+
+    /**
+     * 基於種子的偽隨機數生成器
+     * @param {number} seed 隨機種子
+     * @returns {Function} 偽隨機數生成函數
+     */
+    static createSeededRandom(seed) {
+        let state = seed;
+        return function() {
+            state = (state * 9301 + 49297) % 233280;
+            return state / 233280;
+        };
+    }
+
+    /**
+     * 計算動態事件權重
+     * @param {Object} event 事件對象
+     * @param {Object} gameState 遊戲狀態
+     * @returns {number} 事件權重
+     */
+    static calculateEventWeight(event, gameState) {
+        let weight = event.baseWeight || 1;
+
+        // 根據天命值調整權重
+        const destiny = gameState.player.attributes.destiny || 0;
+        if (event.destinyModifier) {
+            weight *= (1 + (destiny * event.destinyModifier / 100));
+        }
+
+        // 根據等級調整權重
+        if (event.levelRequirement) {
+            if (gameState.player.level < event.levelRequirement.min) {
+                weight = 0;
+            } else if (event.levelRequirement.preferred) {
+                const levelDiff = Math.abs(gameState.player.level - event.levelRequirement.preferred);
+                weight *= Math.max(0.1, 1 - (levelDiff * 0.2));
+            }
+        }
+
+        // 根據城池數量調整權重
+        if (event.cityRequirement) {
+            const cities = gameState.player.citiesControlled;
+            if (cities < event.cityRequirement.min) {
+                weight = 0;
+            } else if (cities > event.cityRequirement.max) {
+                weight *= 0.5;
+            }
+        }
+
+        return Math.max(0, weight);
+    }
+
+    /**
+     * 動態難度調整器
+     * @param {Object} gameState 遊戲狀態
+     * @returns {Object} 難度調整參數
+     */
+    static calculateDifficultyAdjustments(gameState) {
+        const player = gameState.player;
+        const winRate = player.battlesWon / (player.battlesWon + player.battlesLost + 1);
+
+        let difficultyModifier = 1.0;
+
+        // 根據勝率調整難度
+        if (winRate > 0.8) {
+            difficultyModifier = 1.3; // 增加難度
+        } else if (winRate < 0.3) {
+            difficultyModifier = 0.7; // 降低難度
+        }
+
+        // 根據等級調整
+        const levelBonus = player.level / 10;
+        difficultyModifier += levelBonus * 0.2;
+
+        // 根據城池數量調整
+        const cityBonus = (player.citiesControlled - 1) * 0.1;
+        difficultyModifier += cityBonus;
+
+        return {
+            combatModifier: difficultyModifier,
+            eventSeverity: this.clamp(difficultyModifier, 0.5, 2.0),
+            resourceModifier: 1 / difficultyModifier
         };
     }
 }
