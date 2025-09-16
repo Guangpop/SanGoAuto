@@ -19,17 +19,58 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-Since this is a static web project for GitHub Pages, there are no build commands yet. Once the project structure is established, typical commands would be:
-
 ```bash
 # Serve locally (when using a static server)
 python -m http.server 8000
 # or
 npx serve .
 
+# Testing (Required for all changes)
+npm test                    # Run all Jest tests
+npm test -- --watch        # Run tests in watch mode
+npm test specific.test.js   # Run specific test file
+
 # Deploy to GitHub Pages
 git push origin main
 ```
+
+## ⚠️ CRITICAL: Testing Requirements
+
+**從現在開始，所有的修改或新增功能都必須使用Jest撰寫單元測試來確保修改的正確性以及是否有副作用 (side effect)。**
+
+### 測試驅動開發 (TDD) 規範：
+
+#### 1. 必須測試的情況：
+- **每個新功能** - 必須先寫測試，後寫實現
+- **每個修改** - 必須有對應的測試來驗證修改正確性
+- **每個bug修復** - 必須有測試重現問題並驗證修復
+- **重構代碼** - 必須確保現有測試通過
+
+#### 2. 測試覆蓋要求：
+- **功能測試** - 驗證功能按預期工作
+- **邊界測試** - 測試邊界條件和錯誤情況
+- **副作用檢測** - 確保修改不會破壞現有功能
+- **集成測試** - 驗證組件間正確協作
+
+#### 3. 測試文件結構：
+```
+tests/
+├── setup.js                   # 測試環境設置與mock
+├── integration.test.js        # 集成測試
+├── skill-system.test.js       # 技能系統測試
+├── skill-ui.test.js           # 技能UI測試
+├── [component-name].test.js   # 其他組件測試
+└── [feature-name].test.js     # 功能特定測試
+```
+
+#### 4. 開發流程：
+1. **分析需求** → 2. **編寫測試** → 3. **實現功能** → 4. **運行測試** → 5. **重構優化**
+
+#### 5. 測試標準：
+- 使用中文描述測試用例，便於理解
+- 每個測試專注單一功能點
+- 適當使用mock避免外部依賴
+- 測試必須具有描述性的名稱
 
 ## Architecture
 

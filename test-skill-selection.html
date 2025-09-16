@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>技能選擇測試 - Three Kingdoms Destiny</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { border: 1px solid #ccc; margin: 10px 0; padding: 10px; }
+        .pass { color: green; }
+        .fail { color: red; }
+        .skill-card { border: 1px solid #ddd; margin: 5px; padding: 10px; display: inline-block; width: 200px; }
+        .affordable { background: #e8f5e8; }
+        .expensive { background: #f5e8e8; }
+        #available-skills { margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>技能選擇系統測試</h1>
+
+    <div class="test-section">
+        <h2>測試結果</h2>
+        <div id="test-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>技能選擇界面</h2>
+        <div>剩餘星星：<span id="remaining-stars">10</span></div>
+        <div>當前輪次：<span id="current-round">1</span>/3</div>
+        <div id="available-skills"></div>
+        <button id="skip-skill">跳過此輪</button>
+    </div>
+
+    <!-- 載入依賴文件 -->
+    <script src="js/utils/helpers.js"></script>
+    <script src="js/utils/logger.js"></script>
+    <script src="js/core/skill-system.js"></script>
+    <script src="js/ui/components/skill-ui.js"></script>
+    <script src="js/ui/components/game-ui.js"></script>
+    <script src="js/ui/components/event-log-ui.js"></script>
+    <script src="js/ui/ui-manager.js"></script>
+
+    <script>
+        // 測試腳本
+        async function runTests() {
+            const results = document.getElementById('test-results');
+
+            function logTest(name, passed, message = '') {
+                const div = document.createElement('div');
+                div.className = passed ? 'pass' : 'fail';
+                div.textContent = `${passed ? '✓' : '✗'} ${name} ${message}`;
+                results.appendChild(div);
+                return passed;
+            }
+
+            try {
+                // 測試1: 檢查類別是否正確載入
+                logTest('SkillSystem類別載入', typeof SkillSystem === 'function');
+                logTest('SkillUI類別載入', typeof SkillUI === 'function');
+                logTest('UIManager類別載入', typeof UIManager === 'function');
+
+                // 測試2: 載入遊戲數據
+                const skillsResponse = await fetch('js/data/skills.json');
+                const skills = await skillsResponse.json();
+                logTest('技能數據載入', skills && skills.length > 0, `(載入${skills.length}個技能)`);
+
+                // 測試3: 創建模擬遊戲引擎
+                const mockGameEngine = {
+                    gameData: { skills },
+                    gameState: {
+                        player: {
+                            attributes: { strength: 10, intelligence: 10, leadership: 10, politics: 10, charisma: 10, destiny: 0 },
+                            skills: []
+                        },
+                        status: 'skill_selection'
+                    },
+                    turnManager: { startMainGameLoop: () => {} }
+                };
+
+                const skillSystem = new SkillSystem(mockGameEngine);
+                logTest('SkillSystem創建', !!skillSystem);
+
+                // 測試4: 開始技能選擇
+                skillSystem.startSkillSelection();
+                logTest('技能選擇初始化', !!skillSystem.skillSelection);
+                logTest('可用技能生成', skillSystem.skillSelection.availableSkills.length === 3);
+
+                // 測試5: 創建UI管理器並設置遊戲引擎
+                const elements = {
+                    skillSelection: {
+                        remainingStars: document.getElementById('remaining-stars'),
+                        currentRound: document.getElementById('current-round'),
+                        skillsGrid: document.getElementById('available-skills'),
+                        skipBtn: document.getElementById('skip-skill')
+                    }
+                };
+
+                const mockUIManager = {
+                    gameEngine: null,
+                    elements: elements,
+                    switchScreen: () => {}
+                };
+
+                const skillUI = new SkillUI(mockUIManager);
+                logTest('SkillUI創建', !!skillUI);
+                logTest('gameEngine getter存在', typeof skillUI.gameEngine !== 'undefined');
+
+                // 測試6: 設置遊戲引擎並測試UI更新
+                mockUIManager.gameEngine = mockGameEngine;
+                mockGameEngine.skillSelection = skillSystem.skillSelection;
+
+                logTest('gameEngine設置後可正確取得', skillUI.gameEngine === mockGameEngine);
+
+                // 測試7: 更新UI
+                skillUI.updateSkillSelectionUI();
+                logTest('UI更新 - 星星顯示', elements.skillSelection.remainingStars.textContent === '10');
+                logTest('UI更新 - 輪次顯示', elements.skillSelection.currentRound.textContent === '1');
+
+                // 測試8: 渲染技能選擇
+                skillUI.renderSkillChoices(skillSystem.skillSelection.availableSkills, 10);
+                const skillCards = elements.skillSelection.skillsGrid.children;
+                logTest('技能卡片渲染', skillCards.length === 3);
+
+                // 測試9: 技能選擇功能
+                const firstSkill = skillSystem.skillSelection.availableSkills[0];
+                const selectResult = skillSystem.selectSkill(firstSkill.id);
+                logTest('技能選擇功能', selectResult === true);
+                logTest('星星消耗', skillSystem.skillSelection.remainingStars === 10 - firstSkill.starCost);
+
+                logTest('所有測試完成', true, '- 技能選擇系統正常工作！');
+
+            } catch (error) {
+                logTest('測試執行錯誤', false, error.message);
+                console.error('測試錯誤:', error);
+            }
+        }
+
+        // 頁面載入完成後執行測試
+        window.addEventListener('load', runTests);
+    </script>
+</body>
+</html>

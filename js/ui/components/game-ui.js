@@ -4,7 +4,10 @@
 class GameUI {
     constructor(uiManager) {
         this.uiManager = uiManager;
-        this.gameEngine = uiManager.gameEngine;
+    }
+
+    get gameEngine() {
+        return this.uiManager.gameEngine;
     }
 
     /**
