@@ -110,6 +110,7 @@ class TurnManager {
 
         // 收集回合內所有訊息，稍後分批顯示
         const turnMessages = [];
+        let actualInterval = this.turnInterval; // 移到外面避免作用域問題
 
         turnMessages.push({
             category: '回合',
@@ -142,7 +143,6 @@ class TurnManager {
             turnMessages.push(...maintenanceMessages);
 
             // 分批延遲顯示所有訊息
-            let actualInterval = this.turnInterval;
             if (turnMessages.length > 0) {
                 gameLogger.delayedLogBatch(turnMessages, 200, 2000);
 
