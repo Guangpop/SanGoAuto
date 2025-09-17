@@ -73,3 +73,5 @@ temp/
 # Game specific
 save_data/
 user_data/
+
+claude_prd.md
