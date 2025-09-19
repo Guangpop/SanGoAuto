@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/game-layout.css">
 
     <!-- Preload critical resources -->
     <link rel="preload" href="js/core/game-engine.js" as="script">
@@ -73,75 +74,53 @@
 
     <!-- Game Screen -->
     <div id="game-screen" class="screen">
-        <!-- Player Info Panel -->
-        <header class="game-header">
-            <div class="player-info-full">
-                <div class="player-basic">
-                    <h3 id="player-name">玩家</h3>
-                    <span class="player-level">Lv.<span id="player-level">1</span></span>
+        <div id="app">
+            <!-- 頂部資訊欄 (純 DOM) -->
+            <header id="top-bar" class="ui-block">
+                <div id="player-name">玩家 Lv.<span id="player-level">1</span></div>
+                <div id="stats">
+                    <span class="stat">武力: <span id="stat-attack">0</span></span>
+                    <span class="stat">智力: <span id="stat-skill">0</span></span>
+                    <span class="stat">統治: <span id="stat-rule">0</span></span>
+                    <span class="stat">政治: <span id="stat-politics">0</span></span>
+                    <span class="stat">魅力: <span id="stat-charisma">0</span></span>
                 </div>
-                <div class="player-attributes">
-                    <div class="attribute">
-                        <span class="attr-label">武力</span>
-                        <span id="attr-strength" class="attr-value">10</span>
-                    </div>
-                    <div class="attribute">
-                        <span class="attr-label">智力</span>
-                        <span id="attr-intelligence" class="attr-value">10</span>
-                    </div>
-                    <div class="attribute">
-                        <span class="attr-label">統治</span>
-                        <span id="attr-leadership" class="attr-value">10</span>
-                    </div>
-                    <div class="attribute">
-                        <span class="attr-label">政治</span>
-                        <span id="attr-politics" class="attr-value">10</span>
-                    </div>
-                    <div class="attribute">
-                        <span class="attr-label">魅力</span>
-                        <span id="attr-charisma" class="attr-value">10</span>
-                    </div>
+                <div id="resources">
+                    金錢: <span id="money">0</span> 兵力: <span id="troops">0</span> 城池: <span id="cities">0</span>
                 </div>
-                <div class="player-resources">
-                    <div class="resource">
-                        <span class="resource-label">金錢</span>
-                        <span id="player-gold" class="resource-value">0</span>
-                    </div>
-                    <div class="resource">
-                        <span class="resource-label">兵力</span>
-                        <span id="player-troops" class="resource-value">100</span>
-                    </div>
-                    <div class="resource">
-                        <span class="resource-label">城池</span>
-                        <span id="cities-controlled" class="resource-value">1</span>
+            </header>
+
+            <!-- 主內容區 -->
+            <main id="main-area">
+                <!-- Phaser 專屬容器（**唯一可被 Phaser 操作的 DOM**） -->
+                <div id="phaser-root" class="phaser-block" aria-label="game-canvas"></div>
+
+                <!-- UI Overlay：純 DOM (絕對定位) -->
+                <div id="ui-overlay" class="ui-block">
+                    <!-- 左下：事件日誌 (純 DOM) -->
+                    <aside id="event-log" class="overlay left-bottom" aria-live="polite"></aside>
+
+                    <!-- 右下或底部：Tabs 與列表（覆蓋於畫面下方） -->
+                    <div id="bottom-tabs" class="overlay bottom-tabs">
+                        <div class="tab-buttons">
+                            <button data-tab="generals" class="tab-btn active">武將</button>
+                            <button data-tab="cities" class="tab-btn">城池</button>
+                            <button data-tab="gear" class="tab-btn">裝備</button>
+                        </div>
+                        <div id="tab-content" class="tab-content">
+                            <!-- 切換顯示的 item 列表 -->
+                        </div>
                     </div>
                 </div>
+            </main>
+
+            <!-- 戰鬥 Modal (純 DOM) -->
+            <div id="battle-modal" class="modal hidden" role="dialog" aria-hidden="true">
+                <div id="battle-header"></div>
+                <div id="battle-log"></div>
+                <button id="battle-close">返回</button>
             </div>
-        </header>
-
-        <!-- Main Game Area -->
-        <main class="game-main">
-            <!-- Event Log -->
-            <section class="event-log">
-                <header class="section-header">
-                    <h3>事件記錄</h3>
-                    <button id="clear-log" class="btn btn-small">清除</button>
-                </header>
-                <div id="event-messages" class="messages-container">
-                    <!-- Event messages will be populated by JavaScript -->
-                </div>
-            </section>
-
-            <!-- Map Overview -->
-            <section class="map-overview">
-                <header class="section-header">
-                    <h3>天下大勢</h3>
-                </header>
-                <div id="game-map" class="map-container">
-                    <!-- Map will be rendered by JavaScript -->
-                </div>
-            </section>
-        </main>
+        </div>
     </div>
 
     <!-- Game Over Screen -->
@@ -211,6 +190,8 @@
     <!-- Scripts -->
     <script src="js/utils/helpers.js"></script>
     <script src="js/utils/logger.js"></script>
+    <!-- Game API (Must load first for DOM-Phaser communication) -->
+    <script src="js/ui/game-api.js"></script>
     <!-- Core Game Modules -->
     <script src="js/core/skill-system.js"></script>
     <script src="js/core/battle-system.js"></script>
@@ -222,6 +203,6 @@
     <script src="js/ui/components/game-ui.js"></script>
     <script src="js/ui/components/event-log-ui.js"></script>
     <script src="js/ui/ui-manager.js"></script>
-    <script src="js/core/demo.js"></script>
+    <script src="js/init-game.js"></script>
 </body>
 </html>

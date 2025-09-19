@@ -35,6 +35,11 @@ class TurnManager {
         // 根據起始城池調整初始資源
         this.randomizeStartingConditions(startCity);
 
+        // 立即更新UI顯示初始狀態
+        setTimeout(() => {
+            this.updateGameUI();
+        }, 500);
+
         this.executeGameTurn();
     }
 
@@ -144,11 +149,11 @@ class TurnManager {
 
             // 分批延遲顯示所有訊息
             if (turnMessages.length > 0) {
-                gameLogger.delayedLogBatch(turnMessages, 200, 2000);
+                gameLogger.delayedLogBatch(turnMessages, 200, 800);
 
                 // 計算事件顯示完畢需要的時間
                 const baseDelay = 200;
-                const eventInterval = 2000;
+                const eventInterval = 800;
                 const lastEventTime = baseDelay + ((turnMessages.length - 1) * eventInterval);
                 const buffer = 500; // 緩衝時間
 
@@ -195,6 +200,9 @@ class TurnManager {
                 gameLogger.game('時間異象', '🐌 時光凝滯，回合間隔延長');
             }
         }
+
+        // 更新UI顯示
+        this.updateGameUI();
 
         // 安排下一回合
         this.gameLoop = setTimeout(() => {
@@ -378,6 +386,43 @@ class TurnManager {
         gameLogger.logGameEnd(victory, finalStats);
     }
 
+
+    /**
+     * 更新遊戲UI顯示
+     */
+    updateGameUI() {
+        if (window.gameAPI && typeof window.gameAPI.updatePlayerStats === 'function') {
+            const player = this.gameEngine.gameState.player;
+
+            console.log('🔄 TurnManager 更新UI:', {
+                level: player.level,
+                money: player.gold,
+                troops: player.troops,
+                cities: player.citiesControlled
+            });
+
+            window.gameAPI.updatePlayerStats({
+                level: player.level,
+                money: player.gold,
+                troops: player.troops,
+                cities: player.citiesControlled,
+                stats: {
+                    attack: player.attributes.strength,
+                    intellect: player.attributes.intelligence,
+                    rule: player.attributes.leadership,
+                    politics: player.attributes.politics,
+                    charisma: player.attributes.charisma
+                }
+            });
+
+            // 同時更新tab內容
+            if (typeof window.gameAPI.updateTabContent === 'function') {
+                window.gameAPI.updateTabContent();
+            }
+        } else {
+            console.warn('⚠️ gameAPI 不可用，無法更新UI');
+        }
+    }
 
     /**
      * 獲取屬性名稱

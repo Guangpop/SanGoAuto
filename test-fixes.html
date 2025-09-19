@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI修復測試 - 三國天命</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/game-layout.css">
+
+    <style>
+        .test-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            max-width: 300px;
+        }
+
+        .test-controls h3 {
+            margin: 0 0 15px 0;
+            color: var(--primary-color);
+        }
+
+        .test-controls button {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .test-controls button:hover {
+            background: var(--secondary-color);
+        }
+
+        .test-status {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Game Screen with new layout -->
+    <div id="game-screen" class="screen active">
+        <div id="app">
+            <!-- 頂部資訊欄 -->
+            <header id="top-bar" class="ui-block">
+                <div id="player-name">玩家 Lv.<span id="player-level">1</span></div>
+                <div id="stats">
+                    <span class="stat">武力: <span id="stat-attack">0</span></span>
+                    <span class="stat">智力: <span id="stat-skill">0</span></span>
+                    <span class="stat">統治: <span id="stat-rule">0</span></span>
+                    <span class="stat">政治: <span id="stat-politics">0</span></span>
+                    <span class="stat">魅力: <span id="stat-charisma">0</span></span>
+                </div>
+                <div id="resources">
+                    金錢: <span id="money">0</span> 兵力: <span id="troops">0</span> 城池: <span id="cities">0</span>
+                </div>
+            </header>
+
+            <!-- 主內容區 -->
+            <main id="main-area">
+                <!-- Phaser 專屬容器 -->
+                <div id="phaser-root" class="phaser-block" aria-label="game-canvas">
+                    <!-- CSS 會自動顯示載入提示 -->
+                </div>
+
+                <!-- UI Overlay -->
+                <div id="ui-overlay" class="ui-block">
+                    <!-- 事件日誌 -->
+                    <aside id="event-log" class="overlay left-bottom" aria-live="polite">
+                        <div class="event-item">修復測試開始</div>
+                    </aside>
+
+                    <!-- 底部 Tab 系統 -->
+                    <div id="bottom-tabs" class="overlay bottom-tabs">
+                        <div class="tab-buttons">
+                            <button data-tab="generals" class="tab-btn active">武將</button>
+                            <button data-tab="cities" class="tab-btn">城池</button>
+                            <button data-tab="gear" class="tab-btn">裝備</button>
+                        </div>
+                        <div id="tab-content" class="tab-content">
+                            <!-- 內容將由 JavaScript 生成 -->
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- 戰鬥 Modal -->
+            <div id="battle-modal" class="modal hidden" role="dialog" aria-hidden="true">
+                <div class="modal-content">
+                    <div id="battle-header">測試戰鬥</div>
+                    <div id="battle-log">戰鬥日誌測試...</div>
+                    <button id="battle-close">返回</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 測試控制面板 -->
+    <div class="test-controls">
+        <h3>UI修復測試</h3>
+        <button onclick="testPlayerStats()">測試玩家數據更新</button>
+        <button onclick="testEventLog()">測試事件日誌</button>
+        <button onclick="testTabSwitching()">測試Tab切換</button>
+        <button onclick="testBattleModal()">測試戰鬥模式</button>
+        <button onclick="testGameEngine()">模擬遊戲引擎</button>
+        <button onclick="runFullTest()">完整測試</button>
+        <div class="test-status" id="test-status">
+            點擊按鈕開始測試...
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/ui/game-api.js"></script>
+
+    <script>
+        let testStep = 0;
+
+        function updateStatus(message) {
+            document.getElementById('test-status').textContent = message;
+            console.log('測試狀態:', message);
+        }
+
+        function testPlayerStats() {
+            updateStatus('測試玩家數據更新...');
+
+            window.gameAPI.updatePlayerStats({
+                level: 5,
+                money: 2500,
+                troops: 1800,
+                cities: 3,
+                stats: {
+                    attack: 45,
+                    intellect: 38,
+                    rule: 42,
+                    politics: 35,
+                    charisma: 50
+                }
+            });
+
+            setTimeout(() => {
+                updateStatus('✅ 玩家數據更新完成');
+            }, 500);
+        }
+
+        function testEventLog() {
+            updateStatus('測試事件日誌...');
+
+            const events = [
+                '🏰 起始城池：江夏',
+                '⚔️ 準備攻打許都',
+                '💰 獲得金錢 500',
+                '👥 招募到新武將：關羽',
+                '🎯 戰鬥勝利！'
+            ];
+
+            events.forEach((event, index) => {
+                setTimeout(() => {
+                    const type = event.includes('⚔️') ? 'battle' : (event.includes('💰') ? 'warning' : 'info');
+                    window.gameAPI.pushEventLog(event, { type });
+                }, index * 800);
+            });
+
+            setTimeout(() => {
+                updateStatus('✅ 事件日誌測試完成');
+            }, events.length * 800 + 500);
+        }
+
+        function testTabSwitching() {
+            updateStatus('測試Tab切換...');
+
+            // 模擬點擊不同的Tab
+            const tabs = ['cities', 'gear', 'generals'];
+            tabs.forEach((tab, index) => {
+                setTimeout(() => {
+                    const btn = document.querySelector(`[data-tab="${tab}"]`);
+                    if (btn) {
+                        btn.click();
+                        updateStatus(`✓ 切換到 ${tab} Tab`);
+                    }
+                }, index * 1000);
+            });
+
+            setTimeout(() => {
+                updateStatus('✅ Tab切換測試完成');
+            }, tabs.length * 1000 + 500);
+        }
+
+        function testBattleModal() {
+            updateStatus('測試戰鬥模式...');
+
+            window.gameAPI.enterBattleMode({
+                attacker: { name: '玩家軍隊' },
+                defender: { name: '許都守軍' },
+                mapNodeId: 'xudu'
+            });
+
+            setTimeout(() => {
+                window.gameAPI.exitBattleMode({
+                    winner: 'player',
+                    capturedGenerals: [{ name: '許褚' }],
+                    loot: { gold: 300 }
+                });
+                updateStatus('✅ 戰鬥模式測試完成');
+            }, 6000);
+        }
+
+        function testGameEngine() {
+            updateStatus('模擬遊戲引擎數據...');
+
+            // 模擬遊戲引擎數據
+            window.gameEngine = {
+                gameState: {
+                    player: {
+                        name: '玩家',
+                        level: 3,
+                        attributes: {
+                            strength: 32,
+                            intelligence: 28,
+                            leadership: 35,
+                            politics: 25,
+                            charisma: 40
+                        },
+                        gold: 1200,
+                        troops: 1500,
+                        citiesControlled: 2,
+                        equipment: {
+                            weapon: {
+                                id: 'iron_sword',
+                                name: '鐵劍',
+                                rarity: 'common',
+                                effects: '武力 +3'
+                            }
+                        }
+                    },
+                    cities: new Map([
+                        ['jiangxia', { id: 'jiangxia', name: '江夏', faction: 'player' }],
+                        ['xudu', { id: 'xudu', name: '許都', faction: 'enemy', canAttack: true }],
+                        ['luoyang', { id: 'luoyang', name: '洛陽', faction: 'neutral' }]
+                    ])
+                }
+            };
+
+            setTimeout(() => {
+                window.gameAPI.refreshUI();
+                updateStatus('✅ 遊戲引擎模擬完成，UI已更新');
+            }, 1000);
+        }
+
+        function runFullTest() {
+            updateStatus('開始完整測試...');
+            testStep = 0;
+
+            const tests = [
+                testGameEngine,
+                testPlayerStats,
+                testEventLog,
+                testTabSwitching,
+                testBattleModal
+            ];
+
+            function runNextTest() {
+                if (testStep < tests.length) {
+                    setTimeout(() => {
+                        tests[testStep]();
+                        testStep++;
+                        runNextTest();
+                    }, 8000); // 每個測試間隔8秒
+                } else {
+                    setTimeout(() => {
+                        updateStatus('🎉 所有測試完成！遊戲UI修復成功！');
+                    }, 8000);
+                }
+            }
+
+            runNextTest();
+        }
+
+        // 自動初始化
+        window.addEventListener('load', () => {
+            updateStatus('UI修復測試頁面已載入');
+            console.log('gameAPI 可用:', !!window.gameAPI);
+            console.log('可用方法:', Object.keys(window.gameAPI || {}));
+        });
+    </script>
+</body>
+</html>

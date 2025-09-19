@@ -123,16 +123,61 @@ class SkillSystem {
      * 完成技能選擇階段
      */
     finishSkillSelection() {
+        console.log('🎯 開始完成技能選擇流程...');
+
         // 剩餘星星轉換為屬性點
         this.convertStarsToAttributes();
 
         // 將選中的技能添加到玩家
         this.gameEngine.gameState.player.skills = [...this.skillSelection.selectedSkills];
 
+        console.log('✅ 玩家最終狀態:', this.gameEngine.gameState.player);
+
         gameLogger.logAttributeAllocation(this.gameEngine.gameState.player.attributes);
 
         // 開始主遊戲循環
         this.gameEngine.gameState.status = 'playing';
+
+        console.log('🔄 準備顯示遊戲主畫面...');
+
+        // 顯示遊戲主畫面並更新UI
+        if (window.uiManager) {
+            console.log('📱 UIManager 存在，調用 showGameScreen...');
+            window.uiManager.gameUI.showGameScreen();
+
+            // 確保UI正確更新玩家數據
+            setTimeout(() => {
+                console.log('🔄 更新遊戲UI...');
+                window.uiManager.gameUI.updateGameUI();
+
+                // 同時使用 gameAPI 更新
+                if (window.gameAPI) {
+                    console.log('🔄 使用 gameAPI 更新UI...');
+                    window.gameAPI.updatePlayerStats({
+                        level: this.gameEngine.gameState.player.level,
+                        money: this.gameEngine.gameState.player.gold,
+                        troops: this.gameEngine.gameState.player.troops,
+                        cities: this.gameEngine.gameState.player.citiesControlled,
+                        stats: {
+                            attack: this.gameEngine.gameState.player.attributes.strength,
+                            intellect: this.gameEngine.gameState.player.attributes.intelligence,
+                            rule: this.gameEngine.gameState.player.attributes.leadership,
+                            politics: this.gameEngine.gameState.player.attributes.politics,
+                            charisma: this.gameEngine.gameState.player.attributes.charisma
+                        }
+                    });
+
+                    window.gameAPI.pushEventLog('🎮 遊戲開始！', { type: 'info' });
+                    window.gameAPI.pushEventLog(`⭐ 最終屬性分配完成`, { type: 'info' });
+                } else {
+                    console.error('❌ gameAPI 不存在');
+                }
+            }, 200);
+        } else {
+            console.error('❌ UIManager 不存在');
+        }
+
+        console.log('🚀 啟動主遊戲循環...');
         this.gameEngine.turnManager.startMainGameLoop();
     }
 

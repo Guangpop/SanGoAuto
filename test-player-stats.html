@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>測試玩家資訊更新</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/game-layout.css">
+
+    <style>
+        body { background: #1a1a1a; color: white; }
+
+        .test-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            color: lime;
+            padding: 20px;
+            border-radius: 8px;
+            z-index: 1000;
+            max-width: 400px;
+            border: 2px solid lime;
+        }
+
+        .test-panel button {
+            display: block;
+            width: 100%;
+            margin: 5px 0;
+            padding: 8px;
+            background: #333;
+            color: lime;
+            border: 1px solid lime;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: monospace;
+        }
+
+        .test-panel button:hover {
+            background: #555;
+        }
+
+        .status {
+            background: #000;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #333;
+        }
+
+        #top-bar {
+            border: 3px solid yellow !important;
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- 頂部資訊欄 (純 DOM) -->
+        <header id="top-bar" class="ui-block">
+            <div id="player-name">玩家 Lv.<span id="player-level">1</span></div>
+            <div id="stats">
+                <span class="stat">武力: <span id="stat-attack">0</span></span>
+                <span class="stat">智力: <span id="stat-skill">0</span></span>
+                <span class="stat">統治: <span id="stat-rule">0</span></span>
+                <span class="stat">政治: <span id="stat-politics">0</span></span>
+                <span class="stat">魅力: <span id="stat-charisma">0</span></span>
+            </div>
+            <div id="resources">
+                金錢: <span id="money">0</span> 兵力: <span id="troops">0</span> 城池: <span id="cities">0</span>
+            </div>
+        </header>
+
+        <main id="main-area">
+            <div id="phaser-root" class="phaser-block">
+                <div style="color: white; text-align: center; padding-top: 200px;">
+                    <h2>玩家資訊更新測試</h2>
+                    <p>檢查上方玩家資訊欄是否正確更新</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 測試面板 -->
+    <div class="test-panel">
+        <h3>🧪 玩家資訊更新測試</h3>
+        <button onclick="initGameAPI()">1. 初始化 gameAPI</button>
+        <button onclick="testBasicUpdate()">2. 測試基本數據更新</button>
+        <button onclick="testAdvancedUpdate()">3. 測試進階數據更新</button>
+        <button onclick="testGameEngineUpdate()">4. 模擬遊戲引擎更新</button>
+        <button onclick="testAutoUpdate()">5. 測試自動更新</button>
+        <button onclick="checkElements()">6. 檢查DOM元素</button>
+        <button onclick="clearStatus()">清除狀態</button>
+
+        <div class="status" id="status-log">
+            點擊"初始化 gameAPI"開始測試...
+        </div>
+    </div>
+
+    <!-- 載入必要腳本 -->
+    <script src="js/utils/helpers.js"></script>
+    <script src="js/utils/logger.js"></script>
+    <script src="js/ui/game-api.js"></script>
+
+    <script>
+        const statusLog = document.getElementById('status-log');
+
+        function log(message, color = 'lime') {
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.style.color = color;
+            entry.textContent = `[${time}] ${message}`;
+            statusLog.appendChild(entry);
+            statusLog.scrollTop = statusLog.scrollHeight;
+            console.log(`[TEST] ${message}`);
+        }
+
+        function clearStatus() {
+            statusLog.innerHTML = '';
+        }
+
+        function initGameAPI() {
+            log('=== 初始化 gameAPI ===', 'yellow');
+
+            if (window.gameAPI) {
+                log('✅ gameAPI 已存在');
+                window.gameAPI.init();
+                log('✅ gameAPI 初始化完成');
+            } else {
+                log('❌ gameAPI 不存在', 'red');
+            }
+        }
+
+        function testBasicUpdate() {
+            log('=== 測試基本數據更新 ===', 'yellow');
+
+            if (!window.gameAPI) {
+                log('❌ gameAPI 不存在，請先初始化', 'red');
+                return;
+            }
+
+            const testData = {
+                level: 5,
+                money: 1500,
+                troops: 2500,
+                cities: 3
+            };
+
+            log(`📤 發送測試數據: ${JSON.stringify(testData)}`);
+            window.gameAPI.updatePlayerStats(testData);
+            log('✅ 基本數據更新完成');
+        }
+
+        function testAdvancedUpdate() {
+            log('=== 測試進階數據更新 ===', 'yellow');
+
+            if (!window.gameAPI) {
+                log('❌ gameAPI 不存在，請先初始化', 'red');
+                return;
+            }
+
+            const testData = {
+                level: 8,
+                money: 5000,
+                troops: 4500,
+                cities: 6,
+                stats: {
+                    attack: 45,
+                    intellect: 38,
+                    rule: 42,
+                    politics: 35,
+                    charisma: 50
+                }
+            };
+
+            log(`📤 發送完整測試數據: ${JSON.stringify(testData)}`);
+            window.gameAPI.updatePlayerStats(testData);
+            log('✅ 進階數據更新完成');
+        }
+
+        function testGameEngineUpdate() {
+            log('=== 模擬遊戲引擎更新 ===', 'yellow');
+
+            // 模擬遊戲引擎狀態
+            window.gameEngine = {
+                gameState: {
+                    player: {
+                        level: 3,
+                        gold: 800,
+                        troops: 1200,
+                        citiesControlled: 2,
+                        attributes: {
+                            strength: 25,
+                            intelligence: 22,
+                            leadership: 28,
+                            politics: 20,
+                            charisma: 18
+                        }
+                    }
+                }
+            };
+
+            log('✅ 模擬遊戲引擎已創建');
+
+            // 使用 turn-manager 的更新方法邏輯
+            const player = window.gameEngine.gameState.player;
+            const updateData = {
+                level: player.level,
+                money: player.gold,
+                troops: player.troops,
+                cities: player.citiesControlled,
+                stats: {
+                    attack: player.attributes.strength,
+                    intellect: player.attributes.intelligence,
+                    rule: player.attributes.leadership,
+                    politics: player.attributes.politics,
+                    charisma: player.attributes.charisma
+                }
+            };
+
+            log(`📤 模擬遊戲引擎數據: ${JSON.stringify(updateData)}`);
+            window.gameAPI.updatePlayerStats(updateData);
+            log('✅ 遊戲引擎模擬更新完成');
+        }
+
+        function testAutoUpdate() {
+            log('=== 測試自動更新 ===', 'yellow');
+
+            let counter = 0;
+            const interval = setInterval(() => {
+                counter++;
+
+                const randomData = {
+                    level: Math.min(10, 1 + counter),
+                    money: Math.floor(Math.random() * 5000) + 500,
+                    troops: Math.floor(Math.random() * 3000) + 1000,
+                    cities: Math.min(10, counter),
+                    stats: {
+                        attack: Math.floor(Math.random() * 50) + 10,
+                        intellect: Math.floor(Math.random() * 50) + 10,
+                        rule: Math.floor(Math.random() * 50) + 10,
+                        politics: Math.floor(Math.random() * 50) + 10,
+                        charisma: Math.floor(Math.random() * 50) + 10
+                    }
+                };
+
+                log(`🔄 自動更新 #${counter}`);
+                window.gameAPI.updatePlayerStats(randomData);
+
+                if (counter >= 5) {
+                    clearInterval(interval);
+                    log('✅ 自動更新測試完成', 'lime');
+                }
+            }, 1000);
+        }
+
+        function checkElements() {
+            log('=== 檢查DOM元素 ===', 'yellow');
+
+            const elements = [
+                'player-level', 'stat-attack', 'stat-skill', 'stat-rule',
+                'stat-politics', 'stat-charisma', 'money', 'troops', 'cities'
+            ];
+
+            elements.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    log(`✅ ${id}: "${element.textContent}"`);
+                } else {
+                    log(`❌ ${id}: 元素不存在`, 'red');
+                }
+            });
+
+            log('✅ DOM元素檢查完成');
+        }
+
+        // 頁面載入時自動初始化
+        window.addEventListener('load', () => {
+            log('🌟 測試頁面已載入', 'lime');
+            setTimeout(() => {
+                initGameAPI();
+                setTimeout(() => {
+                    checkElements();
+                }, 500);
+            }, 500);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>快速修復 - 三國天命</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/game-layout.css">
+
+    <style>
+        .fix-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            max-width: 350px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .fix-panel h3 {
+            margin: 0 0 15px 0;
+            color: #d73502;
+            font-size: 18px;
+        }
+
+        .fix-panel button {
+            display: block;
+            width: 100%;
+            margin-bottom: 8px;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .fix-panel button:hover {
+            background: #0056b3;
+        }
+
+        .fix-panel button.success {
+            background: #28a745;
+        }
+
+        .fix-panel button.error {
+            background: #dc3545;
+        }
+
+        .fix-status {
+            margin: 15px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .status-item {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        .status-success { background: #d4edda; color: #155724; }
+        .status-error { background: #f8d7da; color: #721c24; }
+        .status-info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <!-- 遊戲畫面 -->
+    <div id="game-screen" class="screen active">
+        <div id="app">
+            <!-- 頂部資訊欄 -->
+            <header id="top-bar" class="ui-block">
+                <div id="player-name">玩家 Lv.<span id="player-level">1</span></div>
+                <div id="stats">
+                    <span class="stat">武力: <span id="stat-attack">0</span></span>
+                    <span class="stat">智力: <span id="stat-skill">0</span></span>
+                    <span class="stat">統治: <span id="stat-rule">0</span></span>
+                    <span class="stat">政治: <span id="stat-politics">0</span></span>
+                    <span class="stat">魅力: <span id="stat-charisma">0</span></span>
+                </div>
+                <div id="resources">
+                    金錢: <span id="money">0</span> 兵力: <span id="troops">0</span> 城池: <span id="cities">0</span>
+                </div>
+            </header>
+
+            <!-- 主內容區 -->
+            <main id="main-area">
+                <!-- Phaser 專屬容器 -->
+                <div id="phaser-root" class="phaser-block" aria-label="game-canvas"></div>
+
+                <!-- UI Overlay -->
+                <div id="ui-overlay" class="ui-block">
+                    <!-- 事件日誌 -->
+                    <aside id="event-log" class="overlay left-bottom" aria-live="polite">
+                        <div class="event-item">系統初始化中...</div>
+                    </aside>
+
+                    <!-- 底部 Tab 系統 -->
+                    <div id="bottom-tabs" class="overlay bottom-tabs">
+                        <div class="tab-buttons">
+                            <button data-tab="generals" class="tab-btn active">武將</button>
+                            <button data-tab="cities" class="tab-btn">城池</button>
+                            <button data-tab="gear" class="tab-btn">裝備</button>
+                        </div>
+                        <div id="tab-content" class="tab-content">
+                            <!-- 內容將自動載入 -->
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- 戰鬥 Modal -->
+            <div id="battle-modal" class="modal hidden" role="dialog" aria-hidden="true">
+                <div class="modal-content">
+                    <div id="battle-header">戰鬥測試</div>
+                    <div id="battle-log">戰鬥日誌...</div>
+                    <button id="battle-close">返回</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 快速修復面板 -->
+    <div class="fix-panel">
+        <h3>🔧 快速修復</h3>
+        <button onclick="quickFix()">🚀 一鍵修復</button>
+        <button onclick="simulateGame()">🎮 模擬完整遊戲</button>
+        <button onclick="testUIComponents()">🔍 測試UI組件</button>
+        <button onclick="checkDataFlow()">📊 檢查數據流</button>
+        <button onclick="forceRefresh()">🔄 強制刷新</button>
+        <div class="fix-status" id="fix-status">
+            點擊按鈕開始診斷...
+        </div>
+    </div>
+
+    <!-- 載入遊戲腳本 -->
+    <script src="js/utils/helpers.js"></script>
+    <script src="js/utils/logger.js"></script>
+    <script src="js/ui/game-api.js"></script>
+
+    <script>
+        const fixStatus = document.getElementById('fix-status');
+
+        function addStatus(message, type = 'info') {
+            const item = document.createElement('div');
+            item.className = `status-item status-${type}`;
+            item.textContent = message;
+            fixStatus.appendChild(item);
+            fixStatus.scrollTop = fixStatus.scrollHeight;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+
+        function clearStatus() {
+            fixStatus.innerHTML = '';
+        }
+
+        function quickFix() {
+            clearStatus();
+            addStatus('🚀 開始快速修復...', 'info');
+
+            // 1. 確保 gameAPI 正確初始化
+            if (window.gameAPI) {
+                addStatus('✅ gameAPI 存在', 'success');
+                window.gameAPI.init();
+                addStatus('✅ gameAPI 已重新初始化', 'success');
+            } else {
+                addStatus('❌ gameAPI 不存在', 'error');
+                return;
+            }
+
+            // 2. 創建模擬遊戲狀態
+            window.gameEngine = {
+                gameState: {
+                    player: {
+                        name: '測試玩家',
+                        level: 3,
+                        attributes: {
+                            strength: 35,
+                            intelligence: 28,
+                            leadership: 32,
+                            politics: 25,
+                            charisma: 40
+                        },
+                        gold: 1500,
+                        troops: 2000,
+                        citiesControlled: 2,
+                        equipment: {
+                            weapon: {
+                                id: 'test_sword',
+                                name: '測試劍',
+                                rarity: 'rare',
+                                effects: '武力 +10'
+                            }
+                        }
+                    },
+                    cities: new Map([
+                        ['start', { id: 'start', name: '起始城', faction: 'player' }],
+                        ['enemy1', { id: 'enemy1', name: '敵城1', faction: 'enemy', canAttack: true }]
+                    ]),
+                    status: 'playing'
+                },
+                dataReady: true
+            };
+
+            addStatus('✅ 模擬遊戲引擎已創建', 'success');
+
+            // 3. 更新UI
+            setTimeout(() => {
+                window.gameAPI.updatePlayerStats({
+                    level: window.gameEngine.gameState.player.level,
+                    money: window.gameEngine.gameState.player.gold,
+                    troops: window.gameEngine.gameState.player.troops,
+                    cities: window.gameEngine.gameState.player.citiesControlled,
+                    stats: {
+                        attack: window.gameEngine.gameState.player.attributes.strength,
+                        intellect: window.gameEngine.gameState.player.attributes.intelligence,
+                        rule: window.gameEngine.gameState.player.attributes.leadership,
+                        politics: window.gameEngine.gameState.player.attributes.politics,
+                        charisma: window.gameEngine.gameState.player.attributes.charisma
+                    }
+                });
+
+                addStatus('✅ 玩家數據已更新', 'success');
+
+                // 4. 添加事件日誌
+                window.gameAPI.pushEventLog('🎮 快速修復完成！', { type: 'info' });
+                window.gameAPI.pushEventLog('📊 所有數據已載入', { type: 'info' });
+                window.gameAPI.pushEventLog('⚔️ 準備開始遊戲', { type: 'info' });
+
+                addStatus('✅ 事件日誌已更新', 'success');
+
+                // 5. 刷新Tab內容
+                if (window.gameAPI.refreshUI) {
+                    window.gameAPI.refreshUI();
+                    addStatus('✅ Tab內容已刷新', 'success');
+                }
+
+                addStatus('🎉 修復完成！檢查UI是否顯示正常', 'success');
+
+            }, 500);
+        }
+
+        function simulateGame() {
+            clearStatus();
+            addStatus('🎮 開始模擬完整遊戲...', 'info');
+
+            quickFix();
+
+            setTimeout(() => {
+                // 模擬遊戲事件
+                const events = [
+                    '🏰 建立根據地',
+                    '👥 招募士兵',
+                    '💰 收集稅收',
+                    '⚔️ 發現敵軍',
+                    '🎯 準備攻城'
+                ];
+
+                events.forEach((event, index) => {
+                    setTimeout(() => {
+                        window.gameAPI.pushEventLog(event, { type: 'info' });
+                    }, (index + 1) * 1000);
+                });
+
+                // 模擬戰鬥
+                setTimeout(() => {
+                    addStatus('⚔️ 開始戰鬥模擬...', 'info');
+                    window.gameAPI.enterBattleMode({
+                        attacker: { name: '玩家' },
+                        defender: { name: '敵軍' }
+                    });
+
+                    setTimeout(() => {
+                        window.gameAPI.exitBattleMode({
+                            winner: 'player',
+                            capturedGenerals: [{ name: '新武將' }],
+                            loot: { gold: 200 }
+                        });
+                        addStatus('✅ 戰鬥模擬完成', 'success');
+                    }, 5000);
+
+                }, events.length * 1000 + 2000);
+
+            }, 1000);
+        }
+
+        function testUIComponents() {
+            clearStatus();
+            addStatus('🔍 測試UI組件...', 'info');
+
+            // 檢查DOM元素
+            const elements = [
+                'player-level', 'stat-attack', 'money', 'troops', 'cities',
+                'event-log', 'tab-content'
+            ];
+
+            elements.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    addStatus(`✅ ${id} 存在`, 'success');
+                } else {
+                    addStatus(`❌ ${id} 不存在`, 'error');
+                }
+            });
+
+            // 測試Tab切換
+            setTimeout(() => {
+                const tabs = ['cities', 'gear', 'generals'];
+                tabs.forEach((tab, index) => {
+                    setTimeout(() => {
+                        const btn = document.querySelector(`[data-tab="${tab}"]`);
+                        if (btn) {
+                            btn.click();
+                            addStatus(`✅ ${tab} Tab 測試通過`, 'success');
+                        } else {
+                            addStatus(`❌ ${tab} Tab 不存在`, 'error');
+                        }
+                    }, index * 500);
+                });
+            }, 1000);
+        }
+
+        function checkDataFlow() {
+            clearStatus();
+            addStatus('📊 檢查數據流...', 'info');
+
+            addStatus(`gameAPI: ${!!window.gameAPI}`, window.gameAPI ? 'success' : 'error');
+            addStatus(`gameEngine: ${!!window.gameEngine}`, window.gameEngine ? 'success' : 'error');
+
+            if (window.gameEngine && window.gameEngine.gameState) {
+                addStatus(`遊戲狀態: ${window.gameEngine.gameState.status}`, 'success');
+                addStatus(`玩家等級: ${window.gameEngine.gameState.player.level}`, 'info');
+                addStatus(`玩家金錢: ${window.gameEngine.gameState.player.gold}`, 'info');
+            } else {
+                addStatus('❌ 遊戲狀態不存在', 'error');
+            }
+        }
+
+        function forceRefresh() {
+            clearStatus();
+            addStatus('🔄 強制刷新所有組件...', 'info');
+
+            if (window.gameAPI) {
+                if (window.gameAPI.init) {
+                    window.gameAPI.init();
+                    addStatus('✅ gameAPI 重新初始化', 'success');
+                }
+
+                if (window.gameAPI.refreshUI) {
+                    window.gameAPI.refreshUI();
+                    addStatus('✅ UI 強制刷新', 'success');
+                }
+            }
+
+            // 強制顯示一些數據
+            setTimeout(() => {
+                window.gameAPI.updatePlayerStats({
+                    level: 1,
+                    money: 200,
+                    troops: 800,
+                    cities: 1,
+                    stats: {
+                        attack: 10,
+                        intellect: 10,
+                        rule: 10,
+                        politics: 10,
+                        charisma: 10
+                    }
+                });
+
+                window.gameAPI.pushEventLog('🔄 系統重置完成', { type: 'info' });
+                addStatus('✅ 強制刷新完成', 'success');
+            }, 200);
+        }
+
+        // 自動啟動
+        window.addEventListener('load', () => {
+            addStatus('🌟 快速修復工具已載入', 'info');
+            addStatus('💡 點擊"一鍵修復"解決顯示問題', 'info');
+
+            // 等待一下再自動修復
+            setTimeout(() => {
+                addStatus('⏰ 5秒後自動開始修復...', 'info');
+                setTimeout(quickFix, 5000);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

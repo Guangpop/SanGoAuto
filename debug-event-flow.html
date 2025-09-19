@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事件流程調試</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/game-layout.css">
+
+    <style>
+        body {
+            background: #1a1a1a;
+            color: white;
+            font-family: monospace;
+        }
+
+        .debug-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            color: lime;
+            padding: 20px;
+            border-radius: 8px;
+            z-index: 1000;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 2px solid lime;
+        }
+
+        .debug-panel button {
+            display: block;
+            width: 100%;
+            margin: 5px 0;
+            padding: 8px;
+            background: #333;
+            color: lime;
+            border: 1px solid lime;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: monospace;
+        }
+
+        .debug-panel button:hover {
+            background: #555;
+        }
+
+        .log {
+            background: #000;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #333;
+        }
+
+        #event-log {
+            border: 3px solid red !important;
+            background: rgba(255, 255, 255, 1) !important;
+            color: black !important;
+        }
+
+        .event-item {
+            background: #f0f8ff;
+            margin: 2px 0;
+            padding: 4px;
+            border-radius: 3px;
+            border-left: 3px solid #007bff;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 遊戲畫面 -->
+    <div id="app">
+        <main id="main-area">
+            <div id="phaser-root" class="phaser-block">
+                <div style="color: white; text-align: center; padding-top: 200px;">
+                    <h2>事件流程調試</h2>
+                    <p>檢查事件從產生到UI顯示的完整路徑</p>
+                </div>
+            </div>
+
+            <div id="ui-overlay" class="ui-block">
+                <!-- 事件日誌 -->
+                <aside id="event-log" class="overlay left-bottom" aria-live="polite">
+                    <div class="event-item">調試初始化...</div>
+                </aside>
+
+                <!-- 底部 Tab -->
+                <div id="bottom-tabs" class="overlay bottom-tabs">
+                    <div class="tab-buttons">
+                        <button data-tab="debug" class="tab-btn active">調試</button>
+                    </div>
+                    <div id="tab-content" class="tab-content">
+                        事件流程調試中...
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 調試面板 -->
+    <div class="debug-panel">
+        <h3>🔍 事件流程調試</h3>
+        <button onclick="testDirectEventLog()">1. 測試直接事件日誌</button>
+        <button onclick="testGameAPI()">2. 測試 gameAPI</button>
+        <button onclick="testGameLogger()">3. 測試 gameLogger</button>
+        <button onclick="interceptEventFlow()">4. 攔截事件流</button>
+        <button onclick="checkElements()">5. 檢查DOM元素</button>
+        <button onclick="clearDebugLog()">清除日誌</button>
+
+        <div class="log" id="debug-log"></div>
+    </div>
+
+    <!-- 載入遊戲腳本 -->
+    <script src="js/utils/helpers.js"></script>
+    <script src="js/utils/logger.js"></script>
+    <script src="js/ui/game-api.js"></script>
+
+    <script>
+        const debugLog = document.getElementById('debug-log');
+
+        function log(message, color = 'lime') {
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.style.color = color;
+            entry.textContent = `[${time}] ${message}`;
+            debugLog.appendChild(entry);
+            debugLog.scrollTop = debugLog.scrollHeight;
+            console.log(`[DEBUG] ${message}`);
+        }
+
+        function clearDebugLog() {
+            debugLog.innerHTML = '';
+        }
+
+        function testDirectEventLog() {
+            log('=== 測試直接添加到事件日誌 ===', 'yellow');
+
+            const eventLog = document.getElementById('event-log');
+            if (!eventLog) {
+                log('❌ event-log 元素不存在', 'red');
+                return;
+            }
+
+            log('✅ event-log 元素存在');
+
+            const testItem = document.createElement('div');
+            testItem.className = 'event-item';
+            testItem.textContent = `🔧 直接添加測試 - ${new Date().toLocaleTimeString()}`;
+            testItem.style.background = '#ffeb3b';
+
+            eventLog.appendChild(testItem);
+            log('✅ 直接添加成功');
+        }
+
+        function testGameAPI() {
+            log('=== 測試 gameAPI ===', 'yellow');
+
+            if (!window.gameAPI) {
+                log('❌ gameAPI 不存在', 'red');
+                return;
+            }
+
+            log('✅ gameAPI 存在');
+
+            if (typeof window.gameAPI.pushEventLog !== 'function') {
+                log('❌ pushEventLog 方法不存在', 'red');
+                return;
+            }
+
+            log('✅ pushEventLog 方法存在');
+
+            try {
+                window.gameAPI.pushEventLog('🧪 gameAPI 測試事件', { type: 'info' });
+                log('✅ pushEventLog 調用成功');
+            } catch (error) {
+                log(`❌ pushEventLog 調用失敗: ${error.message}`, 'red');
+            }
+        }
+
+        function testGameLogger() {
+            log('=== 測試 gameLogger ===', 'yellow');
+
+            if (!window.gameLogger) {
+                log('❌ gameLogger 不存在', 'red');
+                return;
+            }
+
+            log('✅ gameLogger 存在');
+
+            try {
+                window.gameLogger.game('測試', '🧪 gameLogger 測試事件');
+                log('✅ gameLogger.game 調用成功');
+            } catch (error) {
+                log(`❌ gameLogger.game 調用失敗: ${error.message}`, 'red');
+            }
+        }
+
+        function interceptEventFlow() {
+            log('=== 攔截事件流 ===', 'yellow');
+
+            // 攔截 gameLogger.game
+            if (window.gameLogger && window.gameLogger.game) {
+                const originalGame = window.gameLogger.game;
+                window.gameLogger.game = function(category, message, data) {
+                    log(`📥 gameLogger.game: ${category} - ${message}`, 'cyan');
+                    return originalGame.call(this, category, message, data);
+                };
+                log('✅ gameLogger.game 已攔截');
+            }
+
+            // 攔截 gameAPI.pushEventLog
+            if (window.gameAPI && window.gameAPI.pushEventLog) {
+                const originalPush = window.gameAPI.pushEventLog;
+                window.gameAPI.pushEventLog = function(text, meta) {
+                    log(`📤 gameAPI.pushEventLog: ${text}`, 'magenta');
+                    return originalPush.call(this, text, meta);
+                };
+                log('✅ gameAPI.pushEventLog 已攔截');
+            }
+
+            // 攔截 DOM appendChild
+            const eventLog = document.getElementById('event-log');
+            if (eventLog) {
+                const originalAppendChild = eventLog.appendChild;
+                eventLog.appendChild = function(child) {
+                    if (child.className && child.className.includes('event-item')) {
+                        log(`📋 DOM appendChild: ${child.textContent}`, 'orange');
+                    }
+                    return originalAppendChild.call(this, child);
+                };
+                log('✅ DOM appendChild 已攔截');
+            }
+
+            log('🎯 現在觸發一個測試事件...');
+            window.gameLogger.game('攔截測試', '這是一個測試事件');
+        }
+
+        function checkElements() {
+            log('=== 檢查DOM元素 ===', 'yellow');
+
+            const eventLog = document.getElementById('event-log');
+            if (eventLog) {
+                const rect = eventLog.getBoundingClientRect();
+                log(`✅ event-log: ${rect.width}x${rect.height} at (${rect.left}, ${rect.top})`);
+                log(`   子元素數量: ${eventLog.children.length}`);
+                log(`   可見性: ${getComputedStyle(eventLog).display}`);
+                log(`   z-index: ${getComputedStyle(eventLog).zIndex}`);
+            } else {
+                log('❌ event-log 元素不存在', 'red');
+            }
+
+            // 檢查 gameAPI 內部狀態
+            if (window.gameAPI) {
+                log('✅ gameAPI 存在');
+
+                // 嘗試訪問內部元素（如果可能）
+                if (window.gameAPI.test && window.gameAPI.test.checkElements) {
+                    try {
+                        window.gameAPI.test.checkElements();
+                        log('✅ gameAPI 內部檢查完成');
+                    } catch (error) {
+                        log(`❌ gameAPI 內部檢查失敗: ${error.message}`, 'red');
+                    }
+                }
+            }
+        }
+
+        // 頁面載入時自動執行
+        window.addEventListener('load', () => {
+            log('🌟 事件流程調試頁面已載入', 'lime');
+
+            setTimeout(() => {
+                log('🚀 開始自動調試序列...', 'yellow');
+                checkElements();
+
+                setTimeout(() => {
+                    interceptEventFlow();
+
+                    setTimeout(() => {
+                        testGameLogger();
+
+                        setTimeout(() => {
+                            testGameAPI();
+
+                            setTimeout(() => {
+                                testDirectEventLog();
+                                log('✅ 所有測試完成', 'lime');
+                            }, 1000);
+                        }, 1000);
+                    }, 1000);
+                }, 1000);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

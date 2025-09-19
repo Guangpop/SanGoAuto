@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>遊戲循環測試</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/game-layout.css">
+
+    <style>
+        body {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .test-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            color: black;
+            padding: 20px;
+            border-radius: 8px;
+            z-index: 100;
+            max-width: 400px;
+        }
+
+        .test-panel button {
+            display: block;
+            width: 100%;
+            margin: 5px 0;
+            padding: 8px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        #event-log {
+            border: 2px solid lime !important;
+            background: rgba(255, 255, 255, 1) !important;
+        }
+
+        .event-item {
+            background: #e7f3ff;
+            margin: 3px 0;
+            padding: 6px;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 簡化的遊戲畫面結構 -->
+    <div id="app">
+        <main id="main-area">
+            <div id="phaser-root" class="phaser-block">
+                <div style="color: white; text-align: center; padding-top: 200px;">
+                    <h2>遊戲循環測試</h2>
+                    <p>檢查事件是否能正常從遊戲引擎傳到UI</p>
+                </div>
+            </div>
+
+            <div id="ui-overlay" class="ui-block">
+                <!-- 事件日誌 -->
+                <aside id="event-log" class="overlay left-bottom" aria-live="polite">
+                    <div class="event-item">等待遊戲引擎啟動...</div>
+                </aside>
+
+                <!-- 底部 Tab -->
+                <div id="bottom-tabs" class="overlay bottom-tabs">
+                    <div class="tab-buttons">
+                        <button data-tab="test" class="tab-btn active">測試</button>
+                    </div>
+                    <div id="tab-content" class="tab-content">
+                        遊戲循環測試中...
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 測試控制面板 -->
+    <div class="test-panel">
+        <h3>🔄 遊戲循環測試</h3>
+        <button onclick="initializeGame()">🚀 初始化遊戲引擎</button>
+        <button onclick="startGameLoop()">▶️ 啟動遊戲循環</button>
+        <button onclick="forceGameTurn()">⚡ 強制執行一輪</button>
+        <button onclick="testGameLogger()">📝 測試遊戲日誌</button>
+        <button onclick="simulateRealGame()">🎮 模擬真實遊戲</button>
+        <button onclick="checkStatus()">🔍 檢查狀態</button>
+        <div class="status" id="test-status">
+            準備測試遊戲循環...
+        </div>
+    </div>
+
+    <!-- 載入遊戲腳本 -->
+    <script src="js/utils/helpers.js"></script>
+    <script src="js/utils/logger.js"></script>
+    <script src="js/ui/game-api.js"></script>
+    <script src="js/core/skill-system.js"></script>
+    <script src="js/core/battle-system.js"></script>
+    <script src="js/core/event-system.js"></script>
+    <script src="js/core/turn-manager.js"></script>
+    <script src="js/core/game-engine.js"></script>
+
+    <script>
+        const testStatus = document.getElementById('test-status');
+
+        function addStatus(message) {
+            const item = document.createElement('div');
+            item.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            testStatus.appendChild(item);
+            testStatus.scrollTop = testStatus.scrollHeight;
+            console.log('測試:', message);
+        }
+
+        function initializeGame() {
+            addStatus('🚀 初始化遊戲引擎...');
+
+            try {
+                // 確保 gameAPI 初始化
+                if (window.gameAPI) {
+                    window.gameAPI.init();
+                    addStatus('✅ gameAPI 已初始化');
+                }
+
+                // 創建遊戲引擎
+                if (!window.gameEngine) {
+                    window.gameEngine = new GameEngine();
+                    addStatus('✅ 遊戲引擎已創建');
+                }
+
+                // 等待數據載入
+                const checkData = () => {
+                    if (window.gameEngine.dataReady) {
+                        addStatus('✅ 遊戲數據已載入');
+
+                        // 創建遊戲狀態
+                        window.gameEngine.gameState = window.gameEngine.createInitialGameState();
+                        window.gameEngine.gameState.status = 'playing';
+                        window.gameEngine.isRunning = true;
+
+                        addStatus('✅ 遊戲狀態已創建');
+                        addStatus(`📊 玩家數據: 金錢=${window.gameEngine.gameState.player.gold}, 兵力=${window.gameEngine.gameState.player.troops}`);
+
+                    } else {
+                        addStatus('⏳ 等待遊戲數據載入...');
+                        setTimeout(checkData, 500);
+                    }
+                };
+
+                checkData();
+
+            } catch (error) {
+                addStatus('❌ 初始化失敗: ' + error.message);
+            }
+        }
+
+        function startGameLoop() {
+            addStatus('▶️ 啟動遊戲主循環...');
+
+            if (!window.gameEngine || !window.gameEngine.gameState) {
+                addStatus('❌ 請先初始化遊戲引擎');
+                return;
+            }
+
+            try {
+                window.gameEngine.turnManager.startMainGameLoop();
+                addStatus('✅ 遊戲循環已啟動');
+                addStatus('⏰ 等待第一輪事件...');
+
+            } catch (error) {
+                addStatus('❌ 啟動失敗: ' + error.message);
+            }
+        }
+
+        function forceGameTurn() {
+            addStatus('⚡ 強制執行一個遊戲輪次...');
+
+            if (!window.gameEngine || !window.gameEngine.turnManager) {
+                addStatus('❌ 遊戲引擎未準備好');
+                return;
+            }
+
+            try {
+                window.gameEngine.turnManager.executeGameTurn();
+                addStatus('✅ 遊戲輪次已執行');
+
+            } catch (error) {
+                addStatus('❌ 執行失敗: ' + error.message);
+            }
+        }
+
+        function testGameLogger() {
+            addStatus('📝 測試遊戲日誌系統...');
+
+            if (!window.gameLogger) {
+                addStatus('❌ gameLogger 不存在');
+                return;
+            }
+
+            // 測試不同類型的日誌
+            gameLogger.game('測試', '這是一個測試事件');
+            gameLogger.game('戰鬥', '模擬戰鬥開始');
+            gameLogger.game('資源', '獲得 100 金錢');
+
+            addStatus('✅ 測試事件已發送');
+
+            // 測試批量事件
+            const testMessages = [
+                { category: '回合', message: '第 1 回合開始' },
+                { category: '資源', message: '產生 50 金錢' },
+                { category: '事件', message: '發現新的商隊' },
+                { category: '戰鬥', message: '攻打鄰近城池' }
+            ];
+
+            gameLogger.delayedLogBatch(testMessages, 500, 800);
+            addStatus('✅ 批量事件已發送（間隔0.8秒）');
+        }
+
+        function simulateRealGame() {
+            addStatus('🎮 模擬真實遊戲流程...');
+
+            // 先初始化
+            initializeGame();
+
+            setTimeout(() => {
+                // 然後啟動循環
+                startGameLoop();
+
+                // 定期執行輪次
+                let turnCount = 0;
+                const turnInterval = setInterval(() => {
+                    turnCount++;
+                    addStatus(`🔄 執行第 ${turnCount} 輪...`);
+                    forceGameTurn();
+
+                    if (turnCount >= 5) {
+                        clearInterval(turnInterval);
+                        addStatus('✅ 模擬完成（5輪）');
+                    }
+                }, 3000);
+
+            }, 2000);
+        }
+
+        function checkStatus() {
+            addStatus('🔍 檢查系統狀態...');
+
+            addStatus(`gameEngine: ${!!window.gameEngine}`);
+            addStatus(`gameLogger: ${!!window.gameLogger}`);
+            addStatus(`gameAPI: ${!!window.gameAPI}`);
+
+            if (window.gameEngine) {
+                addStatus(`數據準備: ${window.gameEngine.dataReady}`);
+                addStatus(`遊戲運行: ${window.gameEngine.isRunning}`);
+                if (window.gameEngine.gameState) {
+                    addStatus(`遊戲狀態: ${window.gameEngine.gameState.status}`);
+                    addStatus(`當前回合: ${window.gameEngine.gameState.currentTurn}`);
+                }
+            }
+
+            const eventLog = document.getElementById('event-log');
+            if (eventLog) {
+                addStatus(`事件日誌子元素: ${eventLog.children.length}`);
+            }
+        }
+
+        // 頁面載入時自動執行
+        window.addEventListener('load', () => {
+            addStatus('🌟 遊戲循環測試頁面已載入');
+
+            setTimeout(() => {
+                addStatus('🤖 5秒後自動啟動測試...');
+                setTimeout(simulateRealGame, 5000);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

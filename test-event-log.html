@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事件日誌測試</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/game-layout.css">
+
+    <style>
+        body {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .test-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            color: black;
+            padding: 20px;
+            border-radius: 8px;
+            z-index: 100;
+        }
+
+        .test-panel button {
+            display: block;
+            width: 100%;
+            margin: 5px 0;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        /* 讓事件日誌更明顯 */
+        #event-log {
+            border: 3px solid red !important;
+            background: rgba(255, 255, 255, 1) !important;
+        }
+
+        .event-item {
+            background: #e7f3ff;
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <!-- 簡化的遊戲畫面結構 -->
+    <div id="app">
+        <main id="main-area">
+            <div id="phaser-root" class="phaser-block" style="background: #333;">
+                <div style="color: white; text-align: center; padding-top: 200px;">
+                    <h2>事件日誌測試區域</h2>
+                    <p>事件日誌應該顯示在左下角</p>
+                </div>
+            </div>
+
+            <div id="ui-overlay" class="ui-block">
+                <!-- 事件日誌 -->
+                <aside id="event-log" class="overlay left-bottom" aria-live="polite">
+                    <div class="event-item">初始事件 - 如果看到這個，說明CSS正常</div>
+                </aside>
+
+                <!-- 底部 Tab（簡化版） -->
+                <div id="bottom-tabs" class="overlay bottom-tabs">
+                    <div class="tab-buttons">
+                        <button data-tab="test" class="tab-btn active">測試</button>
+                    </div>
+                    <div id="tab-content" class="tab-content">
+                        測試內容
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 測試控制面板 -->
+    <div class="test-panel">
+        <h3>🧪 事件日誌測試</h3>
+        <button onclick="testBasicEvent()">📝 測試基本事件</button>
+        <button onclick="testMultipleEvents()">📚 測試多個事件</button>
+        <button onclick="testEventTypes()">🎨 測試事件類型</button>
+        <button onclick="testDirectAdd()">⚡ 直接添加測試</button>
+        <button onclick="checkElements()">🔍 檢查元素</button>
+        <button onclick="clearLog()">🗑️ 清空日誌</button>
+        <div class="status" id="test-status">
+            準備開始測試...
+        </div>
+    </div>
+
+    <!-- 載入 gameAPI -->
+    <script src="js/ui/game-api.js"></script>
+
+    <script>
+        const testStatus = document.getElementById('test-status');
+
+        function addStatus(message) {
+            const item = document.createElement('div');
+            item.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            testStatus.appendChild(item);
+            testStatus.scrollTop = testStatus.scrollHeight;
+            console.log(message);
+        }
+
+        function testBasicEvent() {
+            addStatus('測試基本事件...');
+            if (window.gameAPI) {
+                window.gameAPI.pushEventLog('🎮 這是一個測試事件', { type: 'info' });
+                addStatus('✅ 基本事件已發送');
+            } else {
+                addStatus('❌ gameAPI 不存在');
+            }
+        }
+
+        function testMultipleEvents() {
+            addStatus('測試多個事件...');
+            const events = [
+                '🏰 建立根據地',
+                '👥 招募士兵',
+                '💰 收集稅收',
+                '⚔️ 發現敵軍',
+                '🎯 準備戰鬥'
+            ];
+
+            events.forEach((event, index) => {
+                setTimeout(() => {
+                    window.gameAPI.pushEventLog(event, { type: 'info' });
+                    addStatus(`✅ 事件 ${index + 1} 已發送`);
+                }, index * 500);
+            });
+        }
+
+        function testEventTypes() {
+            addStatus('測試不同事件類型...');
+
+            window.gameAPI.pushEventLog('ℹ️ 一般資訊事件', { type: 'info' });
+            setTimeout(() => {
+                window.gameAPI.pushEventLog('⚠️ 警告事件', { type: 'warning' });
+            }, 1000);
+            setTimeout(() => {
+                window.gameAPI.pushEventLog('⚔️ 戰鬥事件', { type: 'battle' });
+            }, 2000);
+
+            addStatus('✅ 三種類型事件已發送');
+        }
+
+        function testDirectAdd() {
+            addStatus('直接添加到DOM測試...');
+            const eventLog = document.getElementById('event-log');
+
+            if (eventLog) {
+                const testItem = document.createElement('div');
+                testItem.className = 'event-item';
+                testItem.textContent = '🔧 直接添加的測試事件 - ' + new Date().toLocaleTimeString();
+                testItem.style.background = '#ffeb3b';
+                eventLog.appendChild(testItem);
+                addStatus('✅ 直接添加成功');
+            } else {
+                addStatus('❌ 找不到事件日誌元素');
+            }
+        }
+
+        function checkElements() {
+            addStatus('檢查DOM元素...');
+
+            const eventLog = document.getElementById('event-log');
+            addStatus(`事件日誌元素: ${eventLog ? '✅ 存在' : '❌ 不存在'}`);
+
+            if (eventLog) {
+                const rect = eventLog.getBoundingClientRect();
+                addStatus(`位置: left=${rect.left}, top=${rect.top}, width=${rect.width}, height=${rect.height}`);
+                addStatus(`子元素數量: ${eventLog.children.length}`);
+                addStatus(`樣式可見: ${window.getComputedStyle(eventLog).display !== 'none' ? '✅ 可見' : '❌ 隱藏'}`);
+            }
+
+            addStatus(`gameAPI 存在: ${window.gameAPI ? '✅ 是' : '❌ 否'}`);
+            if (window.gameAPI && window.gameAPI.pushEventLog) {
+                addStatus(`pushEventLog 函數: ✅ 可用`);
+            } else {
+                addStatus(`pushEventLog 函數: ❌ 不可用`);
+            }
+        }
+
+        function clearLog() {
+            const eventLog = document.getElementById('event-log');
+            if (eventLog) {
+                eventLog.innerHTML = '';
+                addStatus('✅ 日誌已清空');
+            }
+        }
+
+        // 頁面載入時自動檢查
+        window.addEventListener('load', () => {
+            addStatus('🌟 事件日誌測試頁面已載入');
+            setTimeout(checkElements, 500);
+
+            // 自動運行測試
+            setTimeout(() => {
+                addStatus('🚀 開始自動測試...');
+                testBasicEvent();
+                setTimeout(testEventTypes, 2000);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

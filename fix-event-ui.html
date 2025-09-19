@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>修復事件UI顯示</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/game-layout.css">
+
+    <style>
+        body { background: #111; color: white; }
+
+        .fix-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fix-panel {
+            background: #222;
+            color: lime;
+            padding: 30px;
+            border-radius: 10px;
+            border: 2px solid lime;
+            max-width: 600px;
+            font-family: monospace;
+        }
+
+        .fix-panel button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 12px;
+            background: #333;
+            color: lime;
+            border: 1px solid lime;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .fix-panel button:hover {
+            background: #444;
+        }
+
+        .fix-panel button.success {
+            background: #050;
+            border-color: #0f0;
+        }
+
+        .fix-panel button.error {
+            background: #500;
+            border-color: #f00;
+        }
+
+        .status {
+            margin: 15px 0;
+            padding: 10px;
+            background: #111;
+            border-radius: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 12px;
+        }
+
+        #event-log {
+            border: 3px solid yellow !important;
+            background: rgba(255, 255, 255, 1) !important;
+            color: black !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- 遊戲畫面 -->
+    <div id="app">
+        <main id="main-area">
+            <div id="phaser-root" class="phaser-block">
+                <div style="padding: 200px 50px; text-align: center;">
+                    <h2>事件UI修復工具</h2>
+                    <p>點擊中央的修復按鈕解決事件顯示問題</p>
+                </div>
+            </div>
+
+            <div id="ui-overlay" class="ui-block">
+                <aside id="event-log" class="overlay left-bottom" aria-live="polite">
+                    <div class="event-item">等待修復...</div>
+                </aside>
+
+                <div id="bottom-tabs" class="overlay bottom-tabs">
+                    <div class="tab-buttons">
+                        <button data-tab="fix" class="tab-btn active">修復</button>
+                    </div>
+                    <div id="tab-content" class="tab-content">
+                        事件UI修復工具
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 修復面板 -->
+    <div class="fix-overlay" id="fix-overlay">
+        <div class="fix-panel">
+            <h2>🔧 事件UI修復工具</h2>
+            <p>解決事件有產生但UI不顯示的問題</p>
+
+            <button onclick="runDiagnostic()" id="btn-diagnostic">🔍 1. 執行診斷</button>
+            <button onclick="fixEventFlow()" id="btn-fix">🛠️ 2. 修復事件流</button>
+            <button onclick="testEvents()" id="btn-test">🧪 3. 測試事件</button>
+            <button onclick="simulateGame()" id="btn-simulate">🎮 4. 模擬遊戲</button>
+            <button onclick="closePanel()" id="btn-close">✅ 修復完成</button>
+
+            <div class="status" id="status-log">
+                點擊"執行診斷"開始...
+            </div>
+        </div>
+    </div>
+
+    <!-- 載入遊戲腳本 -->
+    <script src="js/utils/helpers.js"></script>
+    <script src="js/utils/logger.js"></script>
+    <script src="js/ui/game-api.js"></script>
+    <script src="js/core/skill-system.js"></script>
+    <script src="js/core/battle-system.js"></script>
+    <script src="js/core/event-system.js"></script>
+    <script src="js/core/turn-manager.js"></script>
+    <script src="js/core/game-engine.js"></script>
+
+    <script>
+        const statusLog = document.getElementById('status-log');
+
+        function log(message, type = 'info') {
+            const time = new Date().toLocaleTimeString();
+            const colors = { info: 'lime', error: 'red', success: 'green', warning: 'yellow' };
+            const entry = document.createElement('div');
+            entry.style.color = colors[type] || 'lime';
+            entry.textContent = `[${time}] ${message}`;
+            statusLog.appendChild(entry);
+            statusLog.scrollTop = statusLog.scrollHeight;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+
+        function setButtonState(btnId, state) {
+            const btn = document.getElementById(btnId);
+            btn.className = state; // success, error, or default
+        }
+
+        function runDiagnostic() {
+            log('🔍 開始診斷...', 'info');
+
+            // 檢查 gameAPI
+            if (window.gameAPI) {
+                log('✅ gameAPI 存在', 'success');
+                setButtonState('btn-diagnostic', 'success');
+
+                // 檢查 DOM 元素
+                const eventLog = document.getElementById('event-log');
+                if (eventLog) {
+                    log('✅ event-log 元素存在', 'success');
+                    log(`   位置: ${eventLog.getBoundingClientRect().left}, ${eventLog.getBoundingClientRect().top}`, 'info');
+                    log(`   大小: ${eventLog.offsetWidth} x ${eventLog.offsetHeight}`, 'info');
+                    log(`   子元素: ${eventLog.children.length}`, 'info');
+                } else {
+                    log('❌ event-log 元素不存在', 'error');
+                    setButtonState('btn-diagnostic', 'error');
+                }
+
+                // 檢查 gameLogger
+                if (window.gameLogger) {
+                    log('✅ gameLogger 存在', 'success');
+                } else {
+                    log('❌ gameLogger 不存在', 'error');
+                    setButtonState('btn-diagnostic', 'error');
+                }
+
+            } else {
+                log('❌ gameAPI 不存在', 'error');
+                setButtonState('btn-diagnostic', 'error');
+            }
+
+            log('📋 診斷完成', 'info');
+        }
+
+        function fixEventFlow() {
+            log('🛠️ 開始修復事件流...', 'info');
+
+            try {
+                // 1. 強制重新初始化 gameAPI
+                if (window.gameAPI) {
+                    window.gameAPI.init();
+                    log('✅ gameAPI 重新初始化', 'success');
+
+                    if (window.gameAPI.forceReinit) {
+                        window.gameAPI.forceReinit();
+                        log('✅ gameAPI 強制重新初始化', 'success');
+                    }
+                }
+
+                // 2. 攔截和修復事件流
+                const originalGameLoggerGame = window.gameLogger.game;
+                window.gameLogger.game = function(category, message, data) {
+                    log(`📥 攔截到事件: ${category} - ${message}`, 'info');
+
+                    // 調用原始方法
+                    originalGameLoggerGame.call(this, category, message, data);
+
+                    // 強制發送到UI（備用機制）
+                    setTimeout(() => {
+                        if (window.gameAPI && window.gameAPI.pushEventLog) {
+                            const formattedMessage = `${category}: ${message}`;
+                            window.gameAPI.pushEventLog(formattedMessage, { type: 'info' });
+                            log(`📤 強制發送到UI: ${formattedMessage}`, 'success');
+                        }
+                    }, 100);
+                };
+
+                log('✅ 事件流攔截器已安裝', 'success');
+                setButtonState('btn-fix', 'success');
+
+            } catch (error) {
+                log(`❌ 修復失敗: ${error.message}`, 'error');
+                setButtonState('btn-fix', 'error');
+            }
+        }
+
+        function testEvents() {
+            log('🧪 開始測試事件...', 'info');
+
+            const testEvents = [
+                { category: '測試', message: '這是測試事件 1' },
+                { category: '系統', message: '這是測試事件 2' },
+                { category: '戰鬥', message: '這是測試事件 3' }
+            ];
+
+            testEvents.forEach((event, index) => {
+                setTimeout(() => {
+                    if (window.gameLogger) {
+                        window.gameLogger.game(event.category, event.message);
+                        log(`📝 發送測試事件 ${index + 1}`, 'info');
+                    }
+                }, index * 1000);
+            });
+
+            setButtonState('btn-test', 'success');
+            log('✅ 測試事件已發送', 'success');
+        }
+
+        function simulateGame() {
+            log('🎮 模擬遊戲事件...', 'info');
+
+            // 創建簡單的遊戲引擎狀態
+            if (!window.gameEngine) {
+                window.gameEngine = {
+                    gameState: {
+                        player: {
+                            name: '測試玩家',
+                            level: 1,
+                            attributes: { strength: 20, intelligence: 15 },
+                            gold: 500,
+                            troops: 1000,
+                            citiesControlled: 1
+                        }
+                    },
+                    isRunning: true
+                };
+                log('✅ 創建模擬遊戲引擎', 'success');
+            }
+
+            // 模擬遊戲事件
+            const gameEvents = [
+                { category: '回合', message: '第 1 回合開始' },
+                { category: '資源', message: '產生 50 金錢' },
+                { category: '事件', message: '發現商隊' },
+                { category: '戰鬥', message: '攻打許都' },
+                { category: '勝利', message: '戰鬥勝利！' }
+            ];
+
+            gameEvents.forEach((event, index) => {
+                setTimeout(() => {
+                    window.gameLogger.game(event.category, event.message);
+                    log(`🎯 遊戲事件: ${event.category} - ${event.message}`, 'success');
+                }, index * 800);
+            });
+
+            setButtonState('btn-simulate', 'success');
+            log('✅ 遊戲事件模擬已啟動', 'success');
+        }
+
+        function closePanel() {
+            document.getElementById('fix-overlay').style.display = 'none';
+            log('✅ 修復完成，面板已關閉', 'success');
+
+            // 持續監控事件
+            setInterval(() => {
+                if (window.gameLogger && Math.random() < 0.3) {
+                    const randomEvents = [
+                        '自動事件：收集稅收',
+                        '自動事件：訓練士兵',
+                        '自動事件：探索領土'
+                    ];
+                    const event = randomEvents[Math.floor(Math.random() * randomEvents.length)];
+                    window.gameLogger.game('自動', event);
+                }
+            }, 3000);
+        }
+
+        // 頁面載入時自動執行
+        window.addEventListener('load', () => {
+            log('🌟 事件UI修復工具已載入', 'success');
+
+            setTimeout(() => {
+                log('🤖 3秒後自動開始修復...', 'info');
+                setTimeout(() => {
+                    runDiagnostic();
+                    setTimeout(() => {
+                        fixEventFlow();
+                        setTimeout(() => {
+                            testEvents();
+                        }, 1000);
+                    }, 1000);
+                }, 3000);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

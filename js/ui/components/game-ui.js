@@ -14,7 +14,46 @@ class GameUI {
      * 顯示遊戲主界面
      */
     showGameScreen() {
+        console.log('🖥️ 顯示遊戲主界面...');
+        console.log('📱 當前螢幕:', this.uiManager.currentScreen);
+
         this.uiManager.switchScreen('gameScreen');
+
+        console.log('📱 切換後螢幕:', this.uiManager.currentScreen);
+        console.log('🎮 遊戲畫面元素:', this.uiManager.elements.screens.gameScreen);
+
+        // 等待DOM更新後再初始化gameAPI
+        setTimeout(() => {
+            // 檢查事件日誌元素是否存在
+            const eventLog = document.getElementById('event-log');
+            console.log('🔍 事件日誌元素檢查:', eventLog);
+            if (eventLog) {
+                console.log('✅ 事件日誌元素已存在');
+                console.log('📏 事件日誌大小:', eventLog.offsetWidth, 'x', eventLog.offsetHeight);
+                console.log('📍 事件日誌位置:', eventLog.getBoundingClientRect());
+            } else {
+                console.error('❌ 事件日誌元素不存在，檢查DOM結構');
+                // 檢查整個頁面的事件相關元素
+                const allEventElements = document.querySelectorAll('[id*="event"], [class*="event"]');
+                console.log('🔍 頁面中所有事件相關元素:', allEventElements);
+            }
+
+            // 強制重新初始化gameAPI
+            if (window.gameAPI && typeof window.gameAPI.forceReinit === 'function') {
+                console.log('🔧 強制重新初始化gameAPI...');
+                window.gameAPI.forceReinit();
+            }
+
+            // 立即發送一個測試事件
+            setTimeout(() => {
+                if (window.gameAPI && typeof window.gameAPI.pushEventLog === 'function') {
+                    console.log('🧪 發送測試事件...');
+                    window.gameAPI.pushEventLog('🎮 遊戲主界面已載入', { type: 'info' });
+                }
+            }, 500);
+
+        }, 100);
+
         this.updateGameUI();
     }
 
@@ -27,14 +66,37 @@ class GameUI {
         this.updatePlayerInfo();
         this.updateCitiesList();
         this.updateGeneralsList();
+
+        // 同時更新新的 gameAPI UI
+        if (window.gameAPI && typeof window.gameAPI.refreshUI === 'function') {
+            window.gameAPI.refreshUI();
+        }
     }
 
     /**
-     * 更新玩家信息
+     * 更新玩家信息 - 使用新的 gameAPI
      */
     updatePlayerInfo() {
         const player = this.gameEngine.gameState.player;
 
+        // 使用新的 gameAPI 更新 UI
+        if (window.gameAPI) {
+            window.gameAPI.updatePlayerStats({
+                level: player.level,
+                money: player.gold,
+                troops: player.troops,
+                cities: player.citiesControlled,
+                stats: {
+                    attack: player.attributes.strength,
+                    intellect: player.attributes.intelligence,
+                    rule: player.attributes.leadership,
+                    politics: player.attributes.politics,
+                    charisma: player.attributes.charisma
+                }
+            });
+        }
+
+        // 舊的更新方式保留作為備用
         // 基本信息
         if (this.uiManager.elements.playerInfo.name) {
             this.uiManager.elements.playerInfo.name.textContent = player.name;

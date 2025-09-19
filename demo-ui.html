@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="三國天命放置小遊戲 - UI Demo">
+    <title>三國天命 UI Demo | SanGoAuto</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/game-layout.css">
+
+    <style>
+        /* Demo specific styles */
+        .demo-controls {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .demo-controls h4 {
+            margin: 0 0 12px 0;
+            color: var(--primary-color);
+        }
+
+        .demo-controls button {
+            display: block;
+            width: 100%;
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .demo-controls button:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Phaser placeholder */
+        #phaser-root {
+            background: linear-gradient(45deg, #1a1a1a 25%, #2a2a2a 25%, #2a2a2a 50%, #1a1a1a 50%, #1a1a1a 75%, #2a2a2a 75%, #2a2a2a);
+            background-size: 20px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 18px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Game Screen with new layout -->
+    <div id="game-screen" class="screen active">
+        <div id="app">
+            <!-- 頂部資訊欄 (純 DOM) -->
+            <header id="top-bar" class="ui-block">
+                <div id="player-name">玩家 Lv.<span id="player-level">1</span></div>
+                <div id="stats">
+                    <span class="stat">武力: <span id="stat-attack">0</span></span>
+                    <span class="stat">智力: <span id="stat-skill">0</span></span>
+                    <span class="stat">統治: <span id="stat-rule">0</span></span>
+                    <span class="stat">政治: <span id="stat-politics">0</span></span>
+                    <span class="stat">魅力: <span id="stat-charisma">0</span></span>
+                </div>
+                <div id="resources">
+                    金錢: <span id="money">0</span> 兵力: <span id="troops">0</span> 城池: <span id="cities">0</span>
+                </div>
+            </header>
+
+            <!-- 主內容區 -->
+            <main id="main-area">
+                <!-- Phaser 專屬容器 -->
+                <div id="phaser-root" class="phaser-block" aria-label="game-canvas">
+                    <div>
+                        <h3>Phaser 遊戲畫布區域</h3>
+                        <p>地圖、戰鬥動畫將在此顯示</p>
+                        <p>僅此區域可被 Phaser 操作</p>
+                    </div>
+                </div>
+
+                <!-- UI Overlay：純 DOM -->
+                <div id="ui-overlay" class="ui-block">
+                    <!-- 左下：事件日誌 -->
+                    <aside id="event-log" class="overlay left-bottom" aria-live="polite">
+                        <div class="event-item">歡迎來到三國天命！</div>
+                        <div class="event-item">點擊右側按鈕測試功能</div>
+                    </aside>
+
+                    <!-- 底部：Tabs 與列表 -->
+                    <div id="bottom-tabs" class="overlay bottom-tabs">
+                        <div class="tab-buttons">
+                            <button data-tab="generals" class="tab-btn active">武將</button>
+                            <button data-tab="cities" class="tab-btn">城池</button>
+                            <button data-tab="gear" class="tab-btn">裝備</button>
+                        </div>
+                        <div id="tab-content" class="tab-content">
+                            <!-- 內容將由 JavaScript 生成 -->
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- 戰鬥 Modal -->
+            <div id="battle-modal" class="modal hidden" role="dialog" aria-hidden="true">
+                <div class="modal-content">
+                    <div id="battle-header">戰鬥標題</div>
+                    <div id="battle-log">戰鬥日誌...</div>
+                    <button id="battle-close">返回</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demo Controls -->
+    <div class="demo-controls">
+        <h4>功能測試</h4>
+        <button onclick="window.gameAPI.test.updateStats()">更新玩家數據</button>
+        <button onclick="window.gameAPI.test.addTestEvents()">添加測試事件</button>
+        <button onclick="window.gameAPI.test.startBattle()">開始戰鬥演示</button>
+        <button onclick="testResponsive()">測試響應式</button>
+        <button onclick="toggleBattleMode()">切換戰鬥模式</button>
+    </div>
+
+    <!-- Game API -->
+    <script src="js/ui/game-api.js"></script>
+
+    <script>
+        // 演示腳本
+        let isMobile = false;
+
+        function testResponsive() {
+            const viewport = document.querySelector('meta[name="viewport"]');
+            if (!isMobile) {
+                // 模擬手機視窗
+                document.body.style.width = '375px';
+                document.body.style.height = '667px';
+                document.body.style.border = '2px solid #ccc';
+                document.body.style.margin = '20px auto';
+                isMobile = true;
+                alert('切換到手機視圖 (375px width)');
+            } else {
+                // 恢復桌面視窗
+                document.body.style.width = '';
+                document.body.style.height = '';
+                document.body.style.border = '';
+                document.body.style.margin = '';
+                isMobile = false;
+                alert('切換到桌面視圖');
+            }
+        }
+
+        let battleMode = false;
+        function toggleBattleMode() {
+            battleMode = !battleMode;
+            if (battleMode) {
+                document.body.classList.add('in-battle');
+            } else {
+                document.body.classList.remove('in-battle');
+            }
+        }
+
+        // 自動演示
+        setTimeout(() => {
+            console.log('開始自動演示...');
+            window.gameAPI.test.updateStats();
+        }, 1000);
+
+        setTimeout(() => {
+            window.gameAPI.test.addTestEvents();
+        }, 2000);
+
+        // 鍵盤快捷鍵
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case '1':
+                    window.gameAPI.test.updateStats();
+                    break;
+                case '2':
+                    window.gameAPI.test.addTestEvents();
+                    break;
+                case '3':
+                    window.gameAPI.test.startBattle();
+                    break;
+                case 'r':
+                    testResponsive();
+                    break;
+                case 'b':
+                    toggleBattleMode();
+                    break;
+            }
+        });
+
+        console.log('UI Demo 載入完成！');
+        console.log('快捷鍵：1=更新數據, 2=添加事件, 3=戰鬥, R=響應式, B=戰鬥模式');
+    </script>
+</body>
+</html>

@@ -172,6 +172,23 @@ class GameLogger {
 
     game(category, message, data) {
         this._log('GAME', category, message, data);
+
+        // 同時發送到新的 gameAPI 事件日誌
+        if (window.gameAPI && typeof window.gameAPI.pushEventLog === 'function') {
+            // 格式化訊息
+            const formattedMessage = `${category}: ${message}`;
+
+            // 根據分類決定事件類型
+            let eventType = 'info';
+            if (category.includes('戰鬥') || category.includes('攻城') || category.includes('戰爭')) {
+                eventType = 'battle';
+            } else if (category.includes('警告') || category.includes('失敗') || category.includes('錯誤')) {
+                eventType = 'warning';
+            }
+
+            console.log('🎯 gameLogger.game -> gameAPI:', formattedMessage);
+            window.gameAPI.pushEventLog(formattedMessage, { type: eventType });
+        }
     }
 
     // === 遊戲專用日誌方法 ===

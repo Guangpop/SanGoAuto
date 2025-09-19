@@ -1,0 +1,427 @@
+/* 三國天命 - 遊戲主畫面布局 (按照PRD規範) */
+
+/* 整體布局 */
+#app {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 64px 1fr;
+    grid-template-areas:
+        "header"
+        "main";
+    font-family: var(--font-family);
+    background-color: var(--background);
+    overflow: hidden;
+}
+
+/* 頂部資訊欄 (純 DOM) */
+#top-bar {
+    grid-area: header;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-4);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: var(--text-light);
+    box-shadow: 0 2px 8px var(--shadow);
+    z-index: 10;
+    min-font-size: 14px;
+}
+
+#player-name {
+    font-size: var(--font-size-lg);
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+#stats {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.stat {
+    font-size: var(--font-size-sm);
+    white-space: nowrap;
+}
+
+#resources {
+    font-size: var(--font-size-sm);
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+/* 主內容區 */
+#main-area {
+    grid-area: main;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Phaser 專屬容器 */
+#phaser-root {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #1a1a1a 25%, #2a2a2a 25%, #2a2a2a 50%, #1a1a1a 50%, #1a1a1a 75%, #2a2a2a 75%, #2a2a2a);
+    background-size: 20px 20px;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 16px;
+    text-align: center;
+}
+
+#phaser-root::before {
+    content: "遊戲畫布載入中...\A地圖與動畫將在此顯示";
+    white-space: pre-line;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+}
+
+/* 當 Phaser 載入後，隱藏預設內容 */
+#phaser-root.phaser-loaded::before {
+    display: none;
+}
+
+/* UI 覆蓋層 */
+#ui-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+#ui-overlay > * {
+    pointer-events: auto;
+}
+
+/* 事件日誌 (左下角) */
+#event-log {
+    position: absolute;
+    left: 16px;
+    bottom: calc(140px + 16px); /* bottomTabHeight + margin */
+    width: 360px;
+    height: 220px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius);
+    padding: var(--space-4);
+    box-shadow: 0 4px 12px var(--shadow);
+    overflow-y: auto;
+    font-size: var(--font-size-sm);
+    z-index: 10; /* 確保在最上層 */
+    border: 2px solid rgba(139, 69, 19, 0.3); /* 添加邊框以便調試 */
+}
+
+#event-log.paused {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.event-item {
+    padding: var(--space-2);
+    margin-bottom: var(--space-2);
+    background: var(--surface-alt);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--accent-color);
+    animation: slideIn 300ms ease-out;
+    transition: transform 300ms ease;
+}
+
+.event-item.entering {
+    transform: translateX(-100%);
+}
+
+.event-item.entered {
+    transform: translateX(0);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* 底部 Tab 系統 */
+#bottom-tabs {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 140px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 -2px 8px var(--shadow);
+    display: flex;
+    flex-direction: column;
+}
+
+.tab-buttons {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+}
+
+.tab-btn {
+    flex: 1;
+    padding: var(--space-3);
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.tab-btn.active {
+    background: var(--primary-color);
+    color: var(--text-light);
+}
+
+.tab-btn:hover:not(.active) {
+    background: var(--surface-alt);
+}
+
+.tab-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-3);
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+}
+
+/* Item 卡片樣式 */
+.item-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--space-2);
+    min-width: 80px;
+    box-shadow: 0 2px 4px var(--shadow);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.item-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--shadow);
+}
+
+.item-card .faction {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    background: var(--surface-alt);
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-bottom: var(--space-1);
+}
+
+.item-card .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-bottom: var(--space-1);
+    background: var(--surface-alt);
+}
+
+.item-card .stars {
+    color: var(--secondary-color);
+    font-size: var(--font-size-xs);
+    margin-bottom: var(--space-1);
+}
+
+.item-card .name {
+    font-size: var(--font-size-sm);
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: var(--space-1);
+}
+
+.item-card .subtext {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    text-align: center;
+    line-height: 1.2;
+}
+
+/* 戰鬥 Modal */
+#battle-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+#battle-modal.hidden {
+    display: none;
+}
+
+#battle-modal > div {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    max-width: 500px;
+    width: 90%;
+}
+
+#battle-header {
+    font-size: var(--font-size-xl);
+    font-weight: bold;
+    margin-bottom: var(--space-4);
+    text-align: center;
+}
+
+#battle-log {
+    margin-bottom: var(--space-4);
+    max-height: 200px;
+    overflow-y: auto;
+    padding: var(--space-3);
+    background: var(--surface-alt);
+    border-radius: var(--radius);
+}
+
+#battle-close {
+    display: block;
+    margin: 0 auto;
+    padding: var(--space-3) var(--space-6);
+    background: var(--primary-color);
+    color: var(--text-light);
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: var(--font-size-base);
+}
+
+/* 戰鬥模式狀態 */
+body.in-battle #event-log {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+body.in-battle #bottom-tabs {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* 響應式設計 (手機適配) */
+@media (max-width: 768px) {
+    #app {
+        grid-template-rows: 56px 1fr;
+    }
+
+    #top-bar {
+        padding: 0 var(--space-2);
+        flex-wrap: wrap;
+        gap: var(--space-2);
+        min-height: 56px;
+    }
+
+    #player-name {
+        font-size: var(--font-size-base);
+    }
+
+    #stats {
+        gap: var(--space-2);
+    }
+
+    .stat {
+        font-size: 14px; /* 最小字體 */
+    }
+
+    #resources {
+        font-size: 14px; /* 最小字體 */
+    }
+
+    /* 事件日誌變成 90% 寬度 */
+    #event-log {
+        width: 90%;
+        max-width: 360px;
+        height: min(220px, 28vh);
+        left: 5%;
+        bottom: calc(220px + 16px);
+    }
+
+    /* 底部 Tab 高度調整為 220px */
+    #bottom-tabs {
+        height: 220px;
+    }
+
+    .item-card {
+        min-width: 70px;
+    }
+
+    .item-card .avatar {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+/* 超小螢幕適配 */
+@media (max-width: 480px) {
+    #stats {
+        display: none; /* 隱藏部分資訊以節省空間 */
+    }
+
+    #top-bar {
+        justify-content: space-between;
+    }
+
+    #event-log {
+        left: 2%;
+        width: 96%;
+    }
+}
+
+/* 確保所有文字最小 14px */
+@media (max-width: 768px) {
+    body, body * {
+        font-size: max(14px, inherit) !important;
+    }
+}
+
+/* Utility Classes */
+.ui-block {
+    /* 純 DOM 控制的區塊 */
+}
+
+.phaser-block {
+    /* Phaser 控制的區塊 */
+}
+
+.overlay {
+    /* 覆蓋層元素 */
+}
+
+.left-bottom {
+    /* 左下角定位 */
+}
+
+.bottom-tabs {
+    /* 底部標籤 */
+}

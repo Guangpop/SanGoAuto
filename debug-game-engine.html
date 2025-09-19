@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>遊戲引擎調試</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .debug-panel {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .warning { background: #fff3cd; color: #856404; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+        }
+        button:hover { background: #0056b3; }
+        .data-view {
+            max-height: 400px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <h1>遊戲引擎調試面板</h1>
+
+    <div class="debug-panel">
+        <h3>系統狀態檢查</h3>
+        <div id="system-status"></div>
+        <button onclick="checkSystemStatus()">檢查系統狀態</button>
+        <button onclick="initializeGameEngine()">強制初始化遊戲引擎</button>
+        <button onclick="simulateSkillCompletion()">模擬技能選擇完成</button>
+    </div>
+
+    <div class="debug-panel">
+        <h3>遊戲引擎狀態</h3>
+        <div id="engine-status"></div>
+        <button onclick="showGameEngine()">顯示遊戲引擎</button>
+        <button onclick="showGameState()">顯示遊戲狀態</button>
+        <button onclick="testUIUpdate()">測試UI更新</button>
+    </div>
+
+    <div class="debug-panel">
+        <h3>控制台日誌</h3>
+        <div id="console-log" class="data-view"></div>
+        <button onclick="clearConsoleLog()">清除日誌</button>
+    </div>
+
+    <!-- 載入所有遊戲腳本 -->
+    <script src="js/utils/helpers.js"></script>
+    <script src="js/utils/logger.js"></script>
+    <script src="js/ui/game-api.js"></script>
+    <script src="js/core/skill-system.js"></script>
+    <script src="js/core/battle-system.js"></script>
+    <script src="js/core/event-system.js"></script>
+    <script src="js/core/turn-manager.js"></script>
+    <script src="js/core/game-engine.js"></script>
+    <script src="js/ui/components/skill-ui.js"></script>
+    <script src="js/ui/components/game-ui.js"></script>
+    <script src="js/ui/components/event-log-ui.js"></script>
+    <script src="js/ui/ui-manager.js"></script>
+
+    <script>
+        // 攔截 console.log 用於顯示
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        const consoleLog = document.getElementById('console-log');
+
+        function addToConsoleLog(type, ...args) {
+            const timestamp = new Date().toLocaleTimeString();
+            const message = args.map(arg =>
+                typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+            ).join(' ');
+
+            const logEntry = document.createElement('div');
+            logEntry.className = type;
+            logEntry.innerHTML = `<strong>[${timestamp}]</strong> ${message}`;
+            consoleLog.appendChild(logEntry);
+            consoleLog.scrollTop = consoleLog.scrollHeight;
+        }
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToConsoleLog('info', ...args);
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToConsoleLog('error', ...args);
+        };
+
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            addToConsoleLog('warning', ...args);
+        };
+
+        function clearConsoleLog() {
+            consoleLog.innerHTML = '';
+        }
+
+        function addStatus(containerId, message, type = 'info') {
+            const container = document.getElementById(containerId);
+            const status = document.createElement('div');
+            status.className = `status ${type}`;
+            status.textContent = message;
+            container.appendChild(status);
+        }
+
+        function clearStatus(containerId) {
+            document.getElementById(containerId).innerHTML = '';
+        }
+
+        function checkSystemStatus() {
+            clearStatus('system-status');
+
+            console.log('=== 開始系統狀態檢查 ===');
+
+            // 檢查基本對象
+            addStatus('system-status',
+                `gameLogger 存在: ${!!window.gameLogger}`,
+                window.gameLogger ? 'success' : 'error'
+            );
+
+            addStatus('system-status',
+                `gameAPI 存在: ${!!window.gameAPI}`,
+                window.gameAPI ? 'success' : 'error'
+            );
+
+            addStatus('system-status',
+                `GameEngine 類存在: ${!!window.GameEngine}`,
+                window.GameEngine ? 'success' : 'error'
+            );
+
+            addStatus('system-status',
+                `gameEngine 實例存在: ${!!window.gameEngine}`,
+                window.gameEngine ? 'success' : 'error'
+            );
+
+            addStatus('system-status',
+                `UIManager 類存在: ${!!window.UIManager}`,
+                window.UIManager ? 'success' : 'error'
+            );
+
+            addStatus('system-status',
+                `uiManager 實例存在: ${!!window.uiManager}`,
+                window.uiManager ? 'success' : 'error'
+            );
+
+            // 檢查遊戲數據
+            if (window.gameEngine) {
+                addStatus('system-status',
+                    `遊戲數據準備完成: ${!!window.gameEngine.dataReady}`,
+                    window.gameEngine.dataReady ? 'success' : 'warning'
+                );
+
+                addStatus('system-status',
+                    `遊戲狀態存在: ${!!window.gameEngine.gameState}`,
+                    window.gameEngine.gameState ? 'success' : 'warning'
+                );
+            }
+
+            console.log('=== 系統狀態檢查完成 ===');
+        }
+
+        function initializeGameEngine() {
+            console.log('=== 強制初始化遊戲引擎 ===');
+
+            try {
+                if (!window.gameEngine) {
+                    console.log('創建新的遊戲引擎實例...');
+                    window.gameEngine = new GameEngine();
+                }
+
+                if (!window.uiManager) {
+                    console.log('創建新的UI管理器實例...');
+                    window.uiManager = new UIManager();
+                }
+
+                console.log('遊戲引擎初始化完成');
+                checkSystemStatus();
+
+            } catch (error) {
+                console.error('初始化遊戲引擎時發生錯誤:', error);
+            }
+        }
+
+        function simulateSkillCompletion() {
+            console.log('=== 模擬技能選擇完成 ===');
+
+            if (!window.gameEngine) {
+                console.error('遊戲引擎不存在，無法模擬');
+                return;
+            }
+
+            try {
+                // 創建基本遊戲狀態
+                window.gameEngine.gameState = {
+                    player: {
+                        name: '測試玩家',
+                        level: 2,
+                        attributes: {
+                            strength: 25,
+                            intelligence: 20,
+                            leadership: 22,
+                            politics: 18,
+                            charisma: 30
+                        },
+                        skills: [],
+                        equipment: {},
+                        gold: 500,
+                        troops: 1200,
+                        citiesControlled: 1
+                    },
+                    cities: new Map(),
+                    currentTurn: 0,
+                    status: 'playing'
+                };
+
+                console.log('遊戲狀態已創建:', window.gameEngine.gameState);
+
+                // 觸發UI更新
+                if (window.gameAPI) {
+                    window.gameAPI.updatePlayerStats({
+                        level: window.gameEngine.gameState.player.level,
+                        money: window.gameEngine.gameState.player.gold,
+                        troops: window.gameEngine.gameState.player.troops,
+                        cities: window.gameEngine.gameState.player.citiesControlled,
+                        stats: {
+                            attack: window.gameEngine.gameState.player.attributes.strength,
+                            intellect: window.gameEngine.gameState.player.attributes.intelligence,
+                            rule: window.gameEngine.gameState.player.attributes.leadership,
+                            politics: window.gameEngine.gameState.player.attributes.politics,
+                            charisma: window.gameEngine.gameState.player.attributes.charisma
+                        }
+                    });
+
+                    window.gameAPI.pushEventLog('模擬技能選擇完成', { type: 'info' });
+                    window.gameAPI.pushEventLog('遊戲開始進行', { type: 'info' });
+                }
+
+                console.log('UI更新完成');
+
+            } catch (error) {
+                console.error('模擬技能完成時發生錯誤:', error);
+            }
+        }
+
+        function showGameEngine() {
+            clearStatus('engine-status');
+
+            if (window.gameEngine) {
+                const engineInfo = {
+                    dataReady: window.gameEngine.dataReady,
+                    isRunning: window.gameEngine.isRunning,
+                    gameDataKeys: Object.keys(window.gameEngine.gameData || {}),
+                    gameStateExists: !!window.gameEngine.gameState
+                };
+
+                const div = document.createElement('div');
+                div.className = 'data-view';
+                div.innerHTML = `<pre>${JSON.stringify(engineInfo, null, 2)}</pre>`;
+                document.getElementById('engine-status').appendChild(div);
+            } else {
+                addStatus('engine-status', '遊戲引擎不存在', 'error');
+            }
+        }
+
+        function showGameState() {
+            clearStatus('engine-status');
+
+            if (window.gameEngine && window.gameEngine.gameState) {
+                const div = document.createElement('div');
+                div.className = 'data-view';
+                div.innerHTML = `<pre>${JSON.stringify(window.gameEngine.gameState, null, 2)}</pre>`;
+                document.getElementById('engine-status').appendChild(div);
+            } else {
+                addStatus('engine-status', '遊戲狀態不存在', 'error');
+            }
+        }
+
+        function testUIUpdate() {
+            console.log('=== 測試UI更新 ===');
+
+            if (window.gameAPI) {
+                window.gameAPI.updatePlayerStats({
+                    level: 99,
+                    money: 9999,
+                    troops: 9999,
+                    cities: 9,
+                    stats: {
+                        attack: 99,
+                        intellect: 99,
+                        rule: 99,
+                        politics: 99,
+                        charisma: 99
+                    }
+                });
+
+                window.gameAPI.pushEventLog('UI更新測試完成', { type: 'info' });
+                console.log('UI更新測試已執行');
+            } else {
+                console.error('gameAPI 不存在');
+            }
+        }
+
+        // 頁面載入時自動檢查
+        window.addEventListener('load', () => {
+            console.log('調試頁面已載入');
+            setTimeout(checkSystemStatus, 1000);
+        });
+    </script>
+</body>
+</html>
