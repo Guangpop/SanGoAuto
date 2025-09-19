@@ -65,13 +65,7 @@ class UIManager {
         };
 
         // 遊戲控制元素
-        this.elements.gameControls = {
-            pauseBtn: document.getElementById('pause-game'),
-            saveBtn: document.getElementById('save-game'),
-            speed1x: document.getElementById('speed-1x'),
-            speed2x: document.getElementById('speed-2x'),
-            speed4x: document.getElementById('speed-4x')
-        };
+        this.elements.gameControls = {};
 
         // 事件日誌元素
         this.elements.eventLog = {
@@ -82,7 +76,6 @@ class UIManager {
         // 主選單元素
         this.elements.mainMenu = {
             newGameBtn: document.getElementById('start-new-game'),
-            loadGameBtn: document.getElementById('load-game'),
             settingsBtn: document.getElementById('show-settings'),
             rulesBtn: document.getElementById('show-rules')
         };
@@ -107,22 +100,7 @@ class UIManager {
             this.elements.mainMenu.newGameBtn.addEventListener('click', () => this.startNewGame());
         }
 
-        // 遊戲控制事件
-        if (this.elements.gameControls.pauseBtn) {
-            this.elements.gameControls.pauseBtn.addEventListener('click', () => this.togglePause());
-        }
-
-        if (this.elements.gameControls.saveBtn) {
-            this.elements.gameControls.saveBtn.addEventListener('click', () => this.saveGame());
-        }
-
-        // 速度控制
-        ['1', '2', '4'].forEach(speed => {
-            const btn = document.getElementById(`speed-${speed}x`);
-            if (btn) {
-                btn.addEventListener('click', () => this.setGameSpeed(parseInt(speed)));
-            }
-        });
+        // 遊戲控制事件已移除
 
         // 事件日誌清除
         if (this.elements.eventLog.clearBtn) {
@@ -191,43 +169,7 @@ class UIManager {
         }, 1000); // 每秒更新一次
     }
 
-    /**
-     * 切換暫停狀態
-     */
-    togglePause() {
-        if (this.gameEngine) {
-            this.gameEngine.togglePause();
-            const btn = this.elements.gameControls.pauseBtn;
-            if (btn) {
-                btn.textContent = this.gameEngine.isRunning ? '暫停' : '繼續';
-            }
-        }
-    }
 
-    /**
-     * 設置遊戲速度
-     */
-    setGameSpeed(speed) {
-        if (this.gameEngine) {
-            this.gameEngine.setGameSpeed(speed);
-
-            // 更新速度按鈕樣式
-            ['1', '2', '4'].forEach(s => {
-                const btn = document.getElementById(`speed-${s}x`);
-                if (btn) {
-                    btn.classList.toggle('active', s === speed.toString());
-                }
-            });
-        }
-    }
-
-    /**
-     * 保存遊戲
-     */
-    saveGame() {
-        // TODO: 實現保存功能
-        console.log('保存功能尚未實現');
-    }
 
     /**
      * 切換螢幕

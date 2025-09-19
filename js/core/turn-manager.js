@@ -199,7 +199,7 @@ class TurnManager {
         // 安排下一回合
         this.gameLoop = setTimeout(() => {
             this.executeGameTurn();
-        }, actualInterval / this.gameEngine.gameState.settings.gameSpeed);
+        }, actualInterval);
     }
 
     /**
@@ -378,28 +378,6 @@ class TurnManager {
         gameLogger.logGameEnd(victory, finalStats);
     }
 
-    /**
-     * 暫停/繼續遊戲
-     */
-    togglePause() {
-        if (this.gameEngine.gameState.status === 'playing') {
-            this.gameEngine.isRunning = !this.gameEngine.isRunning;
-            if (this.gameEngine.isRunning) {
-                this.executeGameTurn();
-            } else if (this.gameLoop) {
-                clearTimeout(this.gameLoop);
-                this.gameLoop = null;
-            }
-        }
-    }
-
-    /**
-     * 設置遊戲速度
-     */
-    setGameSpeed(speed) {
-        this.gameEngine.gameState.settings.gameSpeed = GameHelpers.clamp(speed, 0.5, 4);
-        gameLogger.info('設定', `遊戲速度設為 ${speed}x`);
-    }
 
     /**
      * 獲取屬性名稱

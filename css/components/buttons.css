@@ -52,31 +52,3 @@
     min-width: auto;
 }
 
-/* Speed control buttons */
-.speed-control {
-    display: flex;
-    gap: var(--space-1);
-}
-
-.speed-btn {
-    padding: var(--space-1) var(--space-2);
-    font-size: var(--font-size-sm);
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: var(--transition);
-    border-radius: var(--radius-sm);
-    min-width: auto;
-}
-
-.speed-btn:hover {
-    background: var(--background-hover);
-    border-color: var(--primary-color);
-}
-
-.speed-btn.active {
-    background: var(--primary-color);
-    color: var(--text-light);
-    border-color: var(--primary-color);
-}

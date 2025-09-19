@@ -144,7 +144,7 @@ body {
 
 #game-screen .game-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     padding: var(--space-4);
     background: var(--surface);
@@ -152,10 +152,12 @@ body {
     box-shadow: 0 2px 4px var(--shadow);
 }
 
-.player-info {
+.player-info-full {
     display: flex;
-    gap: var(--space-6);
+    gap: var(--space-8);
     align-items: center;
+    width: 100%;
+    justify-content: space-around;
 }
 
 .player-basic {
@@ -216,36 +218,7 @@ body {
     color: var(--primary-color);
 }
 
-.game-controls {
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-}
 
-.speed-control {
-    display: flex;
-    gap: var(--space-1);
-}
-
-.speed-btn {
-    padding: var(--space-1) var(--space-2);
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text-secondary);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.speed-btn:hover {
-    background: var(--surface-alt);
-}
-
-.speed-btn.active {
-    background: var(--secondary-color);
-    color: var(--text-light);
-    border-color: var(--secondary-color);
-}
 
 .game-main {
     flex: 1;
@@ -307,13 +280,19 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .player-info {
+    .player-info-full {
         flex-direction: column;
         gap: var(--space-3);
+        justify-content: center;
     }
 
     .player-attributes {
         gap: var(--space-2);
+        justify-content: center;
+    }
+
+    .player-resources {
+        justify-content: center;
     }
 
     .game-main {

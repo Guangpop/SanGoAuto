@@ -39,7 +39,6 @@
 
             <nav class="main-nav">
                 <button id="start-new-game" class="btn btn-primary">開始新遊戲</button>
-                <button id="load-game" class="btn btn-secondary">載入遊戲</button>
                 <button id="show-rules" class="btn btn-secondary">遊戲規則</button>
                 <button id="show-settings" class="btn btn-secondary">設定</button>
             </nav>
@@ -76,7 +75,7 @@
     <div id="game-screen" class="screen">
         <!-- Player Info Panel -->
         <header class="game-header">
-            <div class="player-info">
+            <div class="player-info-full">
                 <div class="player-basic">
                     <h3 id="player-name">玩家</h3>
                     <span class="player-level">Lv.<span id="player-level">1</span></span>
@@ -117,16 +116,6 @@
                         <span id="cities-controlled" class="resource-value">1</span>
                     </div>
                 </div>
-            </div>
-
-            <div class="game-controls">
-                <button id="pause-game" class="btn btn-small">暫停</button>
-                <div class="speed-control">
-                    <button id="speed-1x" class="speed-btn active">1x</button>
-                    <button id="speed-2x" class="speed-btn">2x</button>
-                    <button id="speed-4x" class="speed-btn">4x</button>
-                </div>
-                <button id="save-game" class="btn btn-small">存檔</button>
             </div>
         </header>
 

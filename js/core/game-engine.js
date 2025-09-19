@@ -108,7 +108,6 @@ class GameEngine {
             currentTurn: 0,
             gameStartTime: Date.now(),
             settings: {
-                gameSpeed: 1,
                 language: 'zh',
                 soundEnabled: true,
                 musicEnabled: true,
@@ -137,19 +136,6 @@ class GameEngine {
         this.skillSystem.skipSkillRound();
     }
 
-    /**
-     * 暫停/繼續遊戲 (委託給回合管理器)
-     */
-    togglePause() {
-        this.turnManager.togglePause();
-    }
-
-    /**
-     * 設置遊戲速度 (委託給回合管理器)
-     */
-    setGameSpeed(speed) {
-        this.turnManager.setGameSpeed(speed);
-    }
 
     /**
      * 獲取遊戲狀態
